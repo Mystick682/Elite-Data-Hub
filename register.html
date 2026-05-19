@@ -212,7 +212,7 @@
             });
 
             if (error) {
-                alert("Auth Error: " + error.message);
+                showToast(error.message, "error");
             } else {
                 showToast("Account created successfully! Welcome to Elite Data.");
                 setTimeout(() => { window.location.href = "login.html"; }, 2000);
