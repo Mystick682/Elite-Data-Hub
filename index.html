@@ -11,6 +11,46 @@
         body { font-family: 'Plus Jakarta Sans', sans-serif; scroll-behavior: smooth; }
         .hero-gradient { background: radial-gradient(circle at 20% 50%, rgba(0, 82, 255, 0.05) 0%, rgba(255, 255, 255, 0) 50%); }
         .feature-card:hover { transform: translateY(-10px); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        /* Elite Dark Mode Colors - Corrected Syntax */
+.dark body { 
+    background-color: #0B1120 !important; 
+    color: #F1F5F9 !important; 
+}
+
+/* This targets the white cards and white backgrounds */
+.dark .bg-white, 
+.dark aside, 
+.dark nav, 
+.dark header { 
+    background-color: #111827 !important; 
+    border-color: #1F2937 !important; 
+    color: #F1F5F9 !important; 
+}
+
+/* This targets the light blue background sections */
+.dark [class*="bg-[#F8FAFF]"], 
+.dark .bg-slate-50 { 
+    background-color: #0B1120 !important; 
+}
+
+/* This targets the dark navy text sections */
+.dark [class*="text-[#081B4B]"], 
+.dark .text-slate-900 { 
+    color: #F1F5F9 !important; 
+}
+
+/* This targets inputs */
+.dark input { 
+    background-color: #1F2937 !important; 
+    border-color: #374151 !important; 
+    color: white !important; 
+}
+
+/* Muted text colors */
+.dark .text-slate-400, 
+.dark .text-slate-500 { 
+    color: #94A3B8 !important; 
+}
     </style>
 </head>
 <body class="bg-white text-[#081B4B] antialiased">

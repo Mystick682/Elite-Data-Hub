@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Withdraw | Elite Data Services</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #F8FAFF; margin: 0; padding: 0; overflow-x: hidden; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="text-[#081B4B] antialiased">
+    <div class="min-h-screen flex flex-col items-center justify-center p-6 bg-slate-50">
+        <div class="w-full max-w-md bg-white p-8 rounded-[40px] shadow-2xl border border-slate-100">
+            <header class="text-center mb-10">
+                <div class="w-14 h-14 bg-green-50 text-green-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    <i data-lucide="landmark" class="w-8 h-8"></i>
+                </div>
+                <h2 class="text-2xl font-black">Withdraw Earnings</h2>
+                <p class="text-slate-400 text-sm font-medium">Send your referral bonus to your bank.</p>
+            </header>
+
+            <form class="space-y-6">
+                <div>
+                    <label class="text-[10px] font-black uppercase text-slate-400 tracking-widest ml-1">Bank Name</label>
+                    <select class="w-full p-4 mt-1 bg-slate-50 border border-slate-100 rounded-2xl font-bold outline-none">
+                        <option>OPay / Palmpay</option>
+                        <option>GTBank</option>
+                        <option>Zenith Bank</option>
+                        <option>Kuda Bank</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="text-[10px] font-black uppercase text-slate-400 tracking-widest ml-1">Account Number</label>
+                    <input type="number" class="w-full p-4 mt-1 bg-slate-50 border border-slate-100 rounded-2xl font-bold outline-none" placeholder="0123456789">
+                </div>
+                <div>
+                    <label class="text-[10px] font-black uppercase text-slate-400 tracking-widest ml-1">Amount to Withdraw</label>
+                    <input type="number" class="w-full p-4 mt-1 bg-slate-50 border border-slate-100 rounded-2xl font-bold outline-none" placeholder="Min ₦2,000">
+                </div>
+
+                <button type="button" onclick="showToast('Withdrawal request submitted!', 'success'); setTimeout(()=>window.location.href='referrals.html', 2000)" class="w-full bg-[#0052FF] text-white py-5 rounded-2xl font-black shadow-xl shadow-blue-100 active:scale-95 transition-all">
+                    Submit Request
+                </button>
+            </form>
+            
+            <a href="referrals.html" class="block text-center mt-8 text-xs font-bold text-slate-400 uppercase tracking-widest">Cancel & Go Back</a>
+        </div>
+    </div>
+    <script src="supabase-config.js"></script>
+    <script src="notifications.js"></script>
+    <script>lucide.createIcons();</script>
+</body>
+</html>

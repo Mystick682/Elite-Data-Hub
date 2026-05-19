@@ -21,6 +21,46 @@
 .animate-toast {
     animation: slideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
+/* Elite Dark Mode Colors - Corrected Syntax */
+.dark body { 
+    background-color: #0B1120 !important; 
+    color: #F1F5F9 !important; 
+}
+
+/* This targets the white cards and white backgrounds */
+.dark .bg-white, 
+.dark aside, 
+.dark nav, 
+.dark header { 
+    background-color: #111827 !important; 
+    border-color: #1F2937 !important; 
+    color: #F1F5F9 !important; 
+}
+
+/* This targets the light blue background sections */
+.dark [class*="bg-[#F8FAFF]"], 
+.dark .bg-slate-50 { 
+    background-color: #0B1120 !important; 
+}
+
+/* This targets the dark navy text sections */
+.dark [class*="text-[#081B4B]"], 
+.dark .text-slate-900 { 
+    color: #F1F5F9 !important; 
+}
+
+/* This targets inputs */
+.dark input { 
+    background-color: #1F2937 !important; 
+    border-color: #374151 !important; 
+    color: white !important; 
+}
+
+/* Muted text colors */
+.dark .text-slate-400, 
+.dark .text-slate-500 { 
+    color: #94A3B8 !important; 
+}
     </style>
 </head>
 <body class="text-[#081B4B] antialiased">
@@ -51,6 +91,10 @@
                 <button onclick="toggleMenu()"><i data-lucide="menu" class="w-6 h-6 text-slate-700"></i></button>
                 <span class="font-extrabold text-sm text-[#0052FF]">Fund Wallet</span>
                 <i data-lucide="bell" class="w-6 h-6 text-slate-400"></i>
+                <button onclick="toggleTheme()" class="w-10 h-10 flex items-center justify-center bg-slate-50 dark:bg-slate-800 rounded-xl transition-all">
+    <i data-lucide="moon" class="w-5 h-5 text-slate-400 dark:hidden"></i>
+    <i data-lucide="sun" class="hidden dark:block w-5 h-5 text-yellow-400"></i>
+</button>
             </header>
 
             <div class="w-full pb-32">
@@ -74,7 +118,7 @@
                         </section>
 
                         <div class="max-w-md mx-auto lg:mx-0">
-                            <button type="button" onclick="payWithFlutterwave()" id="payBtn" class="w-full bg-[#0052FF] text-white py-5 rounded-2xl font-black text-lg shadow-xl shadow-blue-200 hover:bg-blue-700 transition-all active:scale-95">
+                            <button type="button" onclick="payWithFlutterwave()" id="payBtn" class="w-full bg-[#0052FF] text-white py-5 rounded-2xl font-black text-lg shadow-blue-200 hover:bg-blue-700 transition-all active:scale-95">
                                 Pay Now
                             </button>
                         </div>
@@ -84,9 +128,9 @@
         </main>
     </div>
 
-    <!-- IMPORTANT: Order of scripts matters -->
-     <script src="notifications.js"></script>
-    <script src="supabase-config.js"></script>
+    <script src="theme.js"></script> <!-- Add this before your other scripts -->
+<script src="supabase-config.js"></script>
+<script src="notifications.js"></script>
     <script>
         lucide.createIcons();
         let userId = "";

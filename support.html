@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support | Elite Data Services</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #F8FAFF; margin: 0; padding: 0; overflow-x: hidden; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .active-nav { background: #0052FF !important; color: white !important; }
+        #sidebar { transition: transform 0.3s ease; }
+
+        /* Elite Dark Mode Colors */
+        .dark body { background-color: #0B1120 !important; color: #F1F5F9 !important; }
+        .dark .bg-white, .dark aside, .dark nav, .dark header { background-color: #111827 !important; border-color: #1F2937 !important; color: #F1F5F9 !important; }
+        .dark [class*="bg-[#F8FAFF]"], .dark .bg-slate-50 { background-color: #0B1120 !important; }
+        .dark [class*="text-[#081B4B]"], .dark .text-slate-900 { color: #F1F5F9 !important; }
+        .dark .text-slate-400, .dark .text-slate-500 { color: #94A3B8 !important; }
+        .dark .border-slate-50, .dark .border-slate-100 { border-color: #1F2937 !important; }
+    </style>
+    <!-- Apply theme before page loads to prevent flicker -->
+    <script src="theme.js"></script>
+</head>
+<body class="text-[#081B4B] antialiased">
+
+    <!-- SIDEBAR OVERLAY -->
+    <div id="overlay" class="fixed inset-0 bg-black/40 z-[80] hidden lg:hidden" onclick="toggleMenu()"></div>
+    
+    <div class="flex min-h-screen">
+        <!-- 1. SIDEBAR (Full 10 Items) -->
+        <aside id="sidebar" class="fixed lg:sticky top-0 left-0 h-screen w-72 bg-white border-r border-slate-100 z-[90] flex flex-col p-6 -translate-x-full lg:translate-x-0 transition-transform duration-300">
+            <div class="flex items-center gap-3 mb-10">
+                <div class="w-10 h-10 bg-[#0052FF] rounded-xl flex items-center justify-center text-white shadow-lg"><i data-lucide="zap" class="w-6 h-6 fill-current"></i></div>
+                <h1 class="text-lg font-extrabold tracking-tight">Elite Data</h1>
+            </div>
+            <nav class="flex-1 space-y-1 overflow-y-auto no-scrollbar font-bold text-[13px]">
+                <a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="layout-grid" class="w-4 h-4"></i> Dashboard</a>
+                <a href="buy-data.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="shopping-cart" class="w-4 h-4"></i> Buy Data</a>
+                <a href="buy-airtime.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="smartphone" class="w-4 h-4"></i> Airtime</a>
+                <a href="cable-tv.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="tv" class="w-4 h-4"></i> Cable TV</a>
+                <a href="electricity.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="zap" class="w-4 h-4"></i> Electricity</a>
+                <a href="history.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="history" class="w-4 h-4"></i> History</a>
+                <a href="fund-wallet.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="wallet" class="w-4 h-4"></i> Wallet</a>
+                <a href="referrals.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="users" class="w-4 h-4"></i> Referrals</a>
+                <a href="support.html" class="active-nav flex items-center gap-3 px-4 py-3 rounded-2xl"><i data-lucide="headset" class="w-4 h-4"></i> Support</a>
+                <a href="settings.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="settings" class="w-4 h-4"></i> Settings</a>
+            </nav>
+            <div class="pt-6 border-t border-slate-50 mt-auto">
+                <button onclick="handleLogout()" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-red-500 hover:bg-red-50 transition-all"><i data-lucide="log-out" class="w-4 h-4"></i> Logout</button>
+            </div>
+        </aside>
+
+        <!-- 2. MAIN CONTENT AREA -->
+        <main class="flex-1 flex flex-col min-w-0 bg-[#F8FAFF]">
+            
+            <!-- MOBILE HEADER (Sticky white bar) -->
+            <header class="lg:hidden bg-white px-6 py-4 flex justify-between items-center border-b border-slate-50 sticky top-0 z-[60]">
+                <button onclick="toggleMenu()"><i data-lucide="menu" class="w-6 h-6 text-slate-700"></i></button>
+                <span class="font-extrabold text-sm text-[#0052FF]">Help Center</span>
+                <button onclick="toggleTheme()" class="w-8 h-8 flex items-center justify-center bg-slate-50 dark:bg-slate-800 rounded-lg">
+                    <i data-lucide="moon" class="w-4 h-4 text-slate-400 dark:hidden"></i>
+                    <i data-lucide="sun" class="hidden dark:block w-4 h-4 text-yellow-400"></i>
+                </button>
+            </header>
+
+            <!-- DESKTOP TOP NAV -->
+            <header class="hidden lg:flex bg-white border-b border-slate-100 px-10 py-5 justify-between items-center sticky top-0 z-50">
+                <div class="font-bold text-sm">Customer Support</div>
+                <div class="flex items-center gap-6">
+                    <!-- Dark Mode Toggle Desktop -->
+                    <button onclick="toggleTheme()" class="w-10 h-10 flex items-center justify-center bg-slate-50 dark:bg-slate-800 rounded-xl transition-all">
+                        <i data-lucide="moon" class="w-5 h-5 text-slate-400 dark:hidden"></i>
+                        <i data-lucide="sun" class="hidden dark:block w-5 h-5 text-yellow-400"></i>
+                    </button>
+                    <div class="flex items-center gap-4 bg-slate-50 px-4 py-2 rounded-xl border border-slate-100">
+                        <span class="text-[10px] font-bold text-slate-400 uppercase">Balance</span>
+                        <span class="text-sm font-black text-[#0052FF]">₦<span id="user-balance-desktop">0.00</span></span>
+                    </div>
+                </div>
+            </header>
+
+            <div class="w-full h-full pb-32 overflow-y-auto">
+                <!-- MOBILE BLUE SECTION (Greeting) -->
+                <div class="lg:hidden bg-[#0052FF] p-6 pb-24 text-white flex justify-between items-start rounded-b-[40px]">
+                    <div>
+                        <p class="text-blue-100 text-[10px] font-bold uppercase tracking-widest mb-1">We are here,</p>
+                        <h2 class="text-xl font-bold">To Help You 👋</h2>
+                    </div>
+                    <img src="https://i.pravatar.cc/100" class="w-12 h-12 rounded-full border-2 border-white/20">
+                </div>
+
+                <!-- FLOATING CONTACT CARD (EXACT OVERLAP) -->
+                <div class="max-w-5xl mx-auto px-6">
+                    <div class="lg:hidden relative z-20 bg-white p-8 rounded-[32px] -mt-16 shadow-2xl border border-slate-50 flex flex-col items-center">
+                        <p class="text-slate-400 text-[10px] font-bold uppercase mb-2 tracking-widest text-center leading-none">Quick Support</p>
+                        <h3 class="text-lg font-black text-[#081B4B] text-center mb-6">Chat with an Expert</h3>
+                        <a href="https://wa.me/2348012345678" class="w-full bg-[#10b981] text-white py-4 rounded-2xl font-bold text-center flex items-center justify-center gap-2 active:scale-95 transition-transform">
+                            <i data-lucide="phone" class="w-5 h-5"></i> WhatsApp
+                        </a>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-12 lg:gap-10 mt-10">
+                        <div class="lg:col-span-8 space-y-8">
+                            <!-- Support Cards -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="bg-white p-6 rounded-[32px] border border-slate-100 shadow-sm flex items-center gap-4">
+                                    <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center shrink-0"><i data-lucide="mail" class="w-6 h-6"></i></div>
+                                    <div><p class="font-black text-sm">Email Us</p><p class="text-[10px] text-slate-400 font-bold uppercase">support@elite.ng</p></div>
+                                </div>
+                                <div class="bg-white p-6 rounded-[32px] border border-slate-100 shadow-sm flex items-center gap-4">
+                                    <div class="w-12 h-12 bg-orange-50 text-orange-600 rounded-2xl flex items-center justify-center shrink-0"><i data-lucide="phone-call" class="w-6 h-6"></i></div>
+                                    <div><p class="font-black text-sm">Phone Call</p><p class="text-[10px] text-slate-400 font-bold uppercase">0801 234 5678</p></div>
+                                </div>
+                            </div>
+
+                            <!-- FAQ Section -->
+                            <section>
+                                <h4 class="font-extrabold text-sm mb-6 uppercase tracking-wider text-slate-400 px-1">Common Questions</h4>
+                                <div class="space-y-3">
+                                    <div class="bg-white p-5 rounded-2xl border border-slate-50 shadow-sm cursor-pointer" onclick="this.querySelector('.ans').classList.toggle('hidden')">
+                                        <div class="flex justify-between items-center font-bold text-sm"><span>How do I fund my wallet?</span> <i data-lucide="chevron-down" class="w-4 h-4"></i></div>
+                                        <p class="ans hidden text-xs text-slate-400 mt-3 font-medium">Click on 'Fund Wallet' on your dashboard, enter amount and pay via Card or Transfer.</p>
+                                    </div>
+                                    <div class="bg-white p-5 rounded-2xl border border-slate-50 shadow-sm cursor-pointer" onclick="this.querySelector('.ans').classList.toggle('hidden')">
+                                        <div class="flex justify-between items-center font-bold text-sm"><span>Is my card info safe?</span> <i data-lucide="chevron-down" class="w-4 h-4"></i></div>
+                                        <p class="ans hidden text-xs text-slate-400 mt-3 font-medium">Yes. All payments are handled by Flutterwave. We never see or store your card details.</p>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+
+                        <!-- Right Sidebar (Desktop) -->
+                        <div class="hidden lg:block lg:col-span-4 space-y-6">
+                            <div class="bg-[#F0F5FF] p-8 rounded-[32px] border border-blue-50 relative overflow-hidden">
+                                <h5 class="font-extrabold text-xs mb-1 uppercase tracking-widest text-[#0052FF]">Office Hours</h5>
+                                <p class="text-sm font-black text-[#081B4B]">9:00 AM - 6:00 PM</p>
+                                <p class="text-[10px] text-slate-400 font-bold mt-4">Monday - Saturday</p>
+                                <i data-lucide="clock" class="w-16 h-16 absolute -right-3 -bottom-3 text-blue-200/50"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MOBILE BOTTOM NAV -->
+            <nav class="lg:hidden fixed bottom-0 left-0 w-full bg-white border-t border-slate-100 flex justify-around p-4 z-50">
+                <a href="dashboard.html" class="flex flex-col items-center gap-1 text-slate-300"><i data-lucide="home" class="w-5 h-5"></i><span class="text-[8px] font-black uppercase">Home</span></a>
+                <a href="support.html" class="flex flex-col items-center gap-1 text-[#0052FF]"><i data-lucide="headphones" class="w-5 h-5"></i><span class="text-[8px] font-black uppercase">Support</span></a>
+                <a href="fund-wallet.html" class="flex flex-col items-center gap-1 text-slate-300"><i data-lucide="wallet" class="w-5 h-5"></i><span class="text-[8px] font-black uppercase">Wallet</span></a>
+                <a href="settings.html" class="flex flex-col items-center gap-1 text-slate-300"><i data-lucide="settings" class="w-5 h-5"></i><span class="text-[8px] font-black uppercase">Settings</span></a>
+            </nav>
+        </main>
+    </div>
+
+    <script src="supabase-config.js"></script>
+    <script>
+        lucide.createIcons();
+        async function loadData() {
+            const { data: { session } } = await _supabase.auth.getSession();
+            if (!session) { window.location.href = "login.html"; return; }
+            const { data: wall } = await _supabase.from('wallets').select('balance').eq('id', session.user.id).single();
+            if (wall) document.getElementById('user-balance-desktop').innerText = parseFloat(wall.balance).toLocaleString();
+        }
+        function toggleMenu() {
+            document.getElementById('sidebar').classList.toggle('-translate-x-full');
+            document.getElementById('overlay').classList.toggle('hidden');
+        }
+        async function handleLogout() { await _supabase.auth.signOut(); window.location.href = "login.html"; }
+        window.onload = loadData;
+    </script>
+</body>
+</html>

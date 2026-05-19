@@ -11,6 +11,46 @@
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #F8FAFF; margin: 0; padding: 0; overflow-x: hidden; }
         .active-nav { background: #0052FF !important; color: white !important; }
+        /* Elite Dark Mode Colors - Corrected Syntax */
+.dark body { 
+    background-color: #0B1120 !important; 
+    color: #F1F5F9 !important; 
+}
+
+/* This targets the white cards and white backgrounds */
+.dark .bg-white, 
+.dark aside, 
+.dark nav, 
+.dark header { 
+    background-color: #111827 !important; 
+    border-color: #1F2937 !important; 
+    color: #F1F5F9 !important; 
+}
+
+/* This targets the light blue background sections */
+.dark [class*="bg-[#F8FAFF]"], 
+.dark .bg-slate-50 { 
+    background-color: #0B1120 !important; 
+}
+
+/* This targets the dark navy text sections */
+.dark [class*="text-[#081B4B]"], 
+.dark .text-slate-900 { 
+    color: #F1F5F9 !important; 
+}
+
+/* This targets inputs */
+.dark input { 
+    background-color: #1F2937 !important; 
+    border-color: #374151 !important; 
+    color: white !important; 
+}
+
+/* Muted text colors */
+.dark .text-slate-400, 
+.dark .text-slate-500 { 
+    color: #94A3B8 !important; 
+}
     </style>
 </head>
 <body class="text-[#081B4B] antialiased text-sm">
@@ -41,6 +81,9 @@
                 <button onclick="toggleMenu()"><i data-lucide="menu" class="w-6 h-6"></i></button>
                 <span class="font-extrabold text-[#0052FF]">Profile Settings</span>
                 <i data-lucide="bell" class="w-6 h-6 text-slate-400"></i>
+                <button onclick="toggleTheme()" class="w-10 h-10 flex items-center justify-center bg-slate-50 dark:bg-slate-800 rounded-xl transition-all">
+                <i data-lucide="moon" class="w-5 h-5 text-slate-400 dark:hidden"></i>
+                <i data-lucide="sun" class="hidden dark:block w-5 h-5 text-yellow-400"></i></button>
             </header>
 
             <div class="p-6 lg:p-12 max-w-3xl mx-auto w-full pb-32">
@@ -80,7 +123,9 @@
         </main>
     </div>
 
+    <script src="theme.js"></script> <!-- Add this before your other scripts -->
     <script src="supabase-config.js"></script>
+    <script src="notifications.js"></script>
     <script>
         lucide.createIcons();
         async function loadData() {

@@ -20,6 +20,46 @@
 .animate-toast {
     animation: slideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
+/* Elite Dark Mode Colors - Corrected Syntax */
+.dark body { 
+    background-color: #0B1120 !important; 
+    color: #F1F5F9 !important; 
+}
+
+/* This targets the white cards and white backgrounds */
+.dark .bg-white, 
+.dark aside, 
+.dark nav, 
+.dark header { 
+    background-color: #111827 !important; 
+    border-color: #1F2937 !important; 
+    color: #F1F5F9 !important; 
+}
+
+/* This targets the light blue background sections */
+.dark [class*="bg-[#F8FAFF]"], 
+.dark .bg-slate-50 { 
+    background-color: #0B1120 !important; 
+}
+
+/* This targets the dark navy text sections */
+.dark [class*="text-[#081B4B]"], 
+.dark .text-slate-900 { 
+    color: #F1F5F9 !important; 
+}
+
+/* This targets inputs */
+.dark input { 
+    background-color: #1F2937 !important; 
+    border-color: #374151 !important; 
+    color: white !important; 
+}
+
+/* Muted text colors */
+.dark .text-slate-400, 
+.dark .text-slate-500 { 
+    color: #94A3B8 !important; 
+}
     </style>
     
 </head>
