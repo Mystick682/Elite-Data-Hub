@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electricity | Elite Data Services</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #F8FAFF; margin: 0; padding: 0; overflow-x: hidden; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .active-nav { background: #0052FF !important; color: white !important; }
+        .disco-card.active { border-color: #0052FF; background: #F0F5FF; border-width: 2px; }
+        .amount-btn.active { background: #0052FF; color: white; border-color: #0052FF; }
+        @keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+.animate-toast {
+    animation: slideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+    </style>
+</head>
+<body class="text-[#081B4B] antialiased text-sm">
+
+    <div id="overlay" class="fixed inset-0 bg-black/40 z-[80] hidden lg:hidden" onclick="toggleMenu()"></div>
+    
+    <div class="flex min-h-screen">
+        <!-- SIDEBAR -->
+        <aside id="sidebar" class="fixed lg:sticky top-0 left-0 h-screen w-72 bg-white border-r border-slate-100 z-[90] flex flex-col p-6 -translate-x-full lg:translate-x-0 transition-transform duration-300">
+            <div class="flex items-center gap-3 mb-10">
+                <div class="w-10 h-10 bg-[#0052FF] rounded-xl flex items-center justify-center text-white shadow-lg"><i data-lucide="zap" class="w-6 h-6 fill-current"></i></div>
+                <h1 class="text-lg font-extrabold tracking-tight">Elite Data</h1>
+            </div>
+            <nav class="flex-1 space-y-1 font-bold text-[13px]">
+                <a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="layout-grid" class="w-4 h-4"></i> Dashboard</a>
+                <a href="buy-data.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="wifi" class="w-4 h-4"></i> Buy Data</a>
+                <a href="buy-airtime.html" class="active-nav flex items-center gap-3 px-4 py-3 rounded-2xl"><i data-lucide="smartphone" class="w-4 h-4"></i> Airtime Top-up</a>
+                <a href="cable-tv.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="tv" class="w-4 h-4"></i> Cable TV</a>
+                <a href="electricity.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="zap" class="w-4 h-4"></i> Electricity</a>
+                <a href="history.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="history" class="w-4 h-4"></i> History</a>
+                <a href="fund-wallet.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="wallet" class="w-4 h-4"></i> Wallet</a>
+                <a href="referrals.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="users" class="w-4 h-4"></i> Referrals</a>
+                <a href="support.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="headset" class="w-4 h-4"></i> Support</a>
+                <a href="settimgs.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="settings" class="w-4 h-4"></i> Settings</a>
+            </nav>
+        </aside>
+
+        <!-- MAIN -->
+        <main class="flex-1 flex flex-col min-w-0 bg-[#F8FAFF]">
+            <header class="lg:hidden bg-white px-6 py-4 flex justify-between items-center border-b border-slate-50 sticky top-0 z-[60]">
+                <button onclick="toggleMenu()"><i data-lucide="menu" class="w-6 h-6"></i></button>
+                <span class="font-extrabold text-[#0052FF]">Pay Bills</span>
+                <i data-lucide="bell" class="w-6 h-6 text-slate-400"></i>
+            </header>
+
+            <header class="hidden lg:flex bg-white border-b border-slate-100 px-10 py-5 justify-between items-center sticky top-0 z-50">
+                <div class="font-bold">Welcome back, <span id="user-name-desktop" class="font-extrabold">Loading...</span></div>
+                <div class="flex items-center gap-4 bg-slate-50 px-4 py-2 rounded-xl border border-slate-100">
+                    <span class="text-[10px] font-bold text-slate-400 uppercase">Balance</span>
+                    <span class="text-sm font-black text-[#0052FF]">₦<span id="user-balance-desktop">0.00</span></span>
+                </div>
+            </header>
+
+            <div class="w-full pb-32">
+                <div class="lg:hidden bg-[#0052FF] p-6 pb-24 text-white flex justify-between items-start rounded-b-[40px]">
+                    <div><p class="text-blue-100 text-[10px] font-bold uppercase mb-1">Electricity Bill,</p><h2 class="text-xl font-bold">Utility Token ⚡️</h2></div>
+                    <img src="https://i.pravatar.cc/100" class="w-12 h-12 rounded-full border-2 border-white/20">
+                </div>
+
+                <div class="max-w-6xl mx-auto px-4 lg:px-10">
+                    <div class="lg:hidden relative z-20 bg-white p-8 rounded-[32px] -mt-16 shadow-2xl flex flex-col items-center border border-slate-50">
+                        <p class="text-slate-400 text-[10px] font-bold uppercase mb-2">Available Balance</p>
+                        <h3 class="text-3xl font-black text-[#081B4B]">₦<span id="user-balance-mobile">0.00</span></h3>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-12 lg:gap-10 mt-10">
+                        <div class="lg:col-span-8 space-y-10">
+                            
+                            <!-- 1. SELECT PROVIDER -->
+                            <section>
+                                <h4 class="font-extrabold text-sm mb-4 uppercase text-slate-400">1. Select Provider</h4>
+                                <div class="grid grid-cols-3 md:grid-cols-5 gap-3">
+                                    <button onclick="setProvider('IKEDC')" id="IKEDC" class="disco-card active bg-white p-4 rounded-2xl border-2 border-slate-100 flex flex-col items-center gap-2 transition-all">
+                                        <div class="w-10 h-10 rounded-lg bg-orange-100 flex items-center justify-center font-black text-[10px] text-orange-600">IKE</div>
+                                        <span class="text-[10px] font-bold">IKEDC</span>
+                                    </button>
+                                    <button onclick="setProvider('EKEDC')" id="EKEDC" class="disco-card bg-white p-4 rounded-2xl border-2 border-slate-100 flex flex-col items-center gap-2 transition-all">
+                                        <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center font-black text-[10px] text-blue-600">EKE</div>
+                                        <span class="text-[10px] font-bold">EKEDC</span>
+                                    </button>
+                                    <button onclick="setProvider('AEDC')" id="AEDC" class="disco-card bg-white p-4 rounded-2xl border-2 border-slate-100 flex flex-col items-center gap-2 transition-all">
+                                        <div class="w-10 h-10 rounded-lg bg-red-100 flex items-center justify-center font-black text-[10px] text-red-600">AED</div>
+                                        <span class="text-[10px] font-bold">AEDC</span>
+                                    </button>
+                                </div>
+                            </section>
+
+                            <!-- 2. METER DETAILS -->
+                            <section class="space-y-6">
+                                <h4 class="font-extrabold text-sm uppercase text-slate-400">2. Meter Details</h4>
+                                <div class="flex gap-4">
+                                    <label class="flex-1 bg-white p-4 rounded-2xl border border-slate-200 flex items-center gap-3 cursor-pointer">
+                                        <input type="radio" name="mType" value="Prepaid" checked class="w-4 h-4 text-[#0052FF]">
+                                        <span class="font-bold text-xs">Prepaid</span>
+                                    </label>
+                                    <label class="flex-1 bg-white p-4 rounded-2xl border border-slate-200 flex items-center gap-3 cursor-pointer">
+                                        <input type="radio" name="mType" value="Postpaid" class="w-4 h-4 text-[#0052FF]">
+                                        <span class="font-bold text-xs">Postpaid</span>
+                                    </label>
+                                </div>
+                                <div class="relative">
+                                    <i data-lucide="hash" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 w-5 h-5"></i>
+                                    <input type="number" id="meterNumber" oninput="updateSummary()" class="w-full pl-12 pr-4 py-4 bg-white border border-slate-200 rounded-2xl outline-none focus:border-[#0052FF] font-medium" placeholder="Enter Meter Number">
+                                </div>
+                            </section>
+
+                            <!-- 3. AMOUNT -->
+                            <section>
+                                <h4 class="font-extrabold text-sm mb-4 uppercase text-slate-400">3. Select Amount</h4>
+                                <div class="grid grid-cols-3 gap-3 mb-4">
+                                    <button onclick="setAmount(1000)" class="amount-btn border border-slate-200 bg-white py-3 rounded-xl font-bold text-xs">₦1,000</button>
+                                    <button onclick="setAmount(2000)" class="amount-btn border border-slate-200 bg-white py-3 rounded-xl font-bold text-xs">₦2,000</button>
+                                    <button onclick="setAmount(5000)" class="amount-btn border border-slate-200 bg-white py-3 rounded-xl font-bold text-xs">₦5,000</button>
+                                </div>
+                                <input type="number" id="customAmount" oninput="setAmount(this.value)" class="w-full p-4 bg-white border border-slate-200 rounded-2xl outline-none focus:border-[#0052FF] font-medium" placeholder="Other Amount">
+                            </section>
+
+                            <!-- SUMMARY -->
+                            <section class="bg-white p-8 rounded-[32px] border border-slate-100 shadow-sm">
+                                <h4 class="font-extrabold text-sm mb-6 uppercase tracking-wider text-slate-400">Payment Summary</h4>
+                                <div class="space-y-4">
+                                    <div class="flex justify-between text-xs font-bold"><span class="text-slate-400">Provider</span> <span id="sum-net">IKEDC</span></div>
+                                    <div class="flex justify-between text-xs font-bold"><span class="text-slate-400">Meter No.</span> <span id="sum-meter">---</span></div>
+                                    <div class="flex justify-between items-center pt-4 border-t border-slate-50 mt-4 font-black">
+                                        <span>Total Payable</span>
+                                        <span class="text-xl text-[#0052FF]">₦<span id="sum-total">0.00</span></span>
+                                    </div>
+                                </div>
+                                <button type="button" onclick="processBill()" id="payBtn" class="w-full bg-[#0052FF] text-white py-4.5 mt-8 rounded-2xl font-black text-sm shadow-xl shadow-blue-100 hover:bg-blue-700 transition-all active:scale-95">
+                                    Proceed to Payment
+                                </button>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="notifications.js"></script>
+    <script src="supabase-config.js"></script>
+    <script>
+        lucide.createIcons();
+        let provider = 'IKEDC';
+        let amount = 0;
+        let userId = "";
+
+        async function init() {
+            const { data: { session } } = await _supabase.auth.getSession();
+            if (!session) { window.location.href = "login.html"; return; }
+            userId = session.user.id;
+            const { data: prof } = await _supabase.from('profiles').select('full_name').eq('id', userId).single();
+            const { data: wall } = await _supabase.from('wallets').select('balance').eq('id', userId).single();
+            if(prof) document.getElementById('user-name-desktop').innerText = prof.full_name;
+            if(wall) {
+                const bal = parseFloat(wall.balance).toLocaleString();
+                document.getElementById('user-balance-desktop').innerText = bal;
+                document.getElementById('user-balance-mobile').innerText = bal;
+            }
+        }
+
+        function setProvider(name) {
+            provider = name;
+            document.querySelectorAll('.disco-card').forEach(c => c.classList.remove('active'));
+            document.getElementById(name).classList.add('active');
+            updateSummary();
+        }
+
+        function setAmount(val) {
+            amount = val;
+            updateSummary();
+        }
+
+        function updateSummary() {
+            document.getElementById('sum-net').innerText = provider;
+            document.getElementById('sum-meter').innerText = document.getElementById('meterNumber').value || '---';
+            document.getElementById('sum-total').innerText = parseFloat(amount).toLocaleString();
+        }
+
+        async function processBill() {
+            const meter = document.getElementById('meterNumber').value;
+            if (!meter) return alert("Enter Meter Number");
+            if (amount < 1000) return alert("Min payment is ₦1000");
+
+            const btn = document.getElementById('payBtn');
+            btn.innerText = "Processing...";
+            btn.disabled = true;
+
+            const { data: result, error } = await _supabase.rpc('process_purchase', {
+                uid: userId,
+                amt: parseFloat(amount),
+                p_type: 'Electricity Bill',
+                p_desc: `${provider} Meter: ${meter}`
+            });
+
+            if (error) alert(error.message);
+            else if (result === 'insufficient_balance') showToast("❌ Insufficient Balance. Please fund your wallet.", "error");
+            else { showToast("Transaction Successful! Your request is being processed.");
+            setTimeout(() => { window.location.href = "dashboard.html"; }, 2000); }
+            btn.disabled = false; btn.innerText = "Proceed to Payment";
+        }
+
+        function toggleMenu() {
+            document.getElementById('sidebar').classList.toggle('-translate-x-full');
+            document.getElementById('overlay').classList.toggle('hidden');
+        }
+        window.onload = init;
+    </script>
+</body>
+</html>
