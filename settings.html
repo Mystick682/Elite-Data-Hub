@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings | Elite Data Services</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #F8FAFF; margin: 0; padding: 0; overflow-x: hidden; }
+        .active-nav { background: #0052FF !important; color: white !important; }
+        /* Elite Dark Mode Colors - Corrected Syntax */
+.dark body { 
+    background-color: #0B1120 !important; 
+    color: #F1F5F9 !important; 
+}
+
+/* This targets the white cards and white backgrounds */
+.dark .bg-white, 
+.dark aside, 
+.dark nav, 
+.dark header { 
+    background-color: #111827 !important; 
+    border-color: #1F2937 !important; 
+    color: #F1F5F9 !important; 
+}
+
+/* This targets the light blue background sections */
+.dark [class*="bg-[#F8FAFF]"], 
+.dark .bg-slate-50 { 
+    background-color: #0B1120 !important; 
+}
+
+/* This targets the dark navy text sections */
+.dark [class*="text-[#081B4B]"], 
+.dark .text-slate-900 { 
+    color: #F1F5F9 !important; 
+}
+
+/* This targets inputs */
+.dark input { 
+    background-color: #1F2937 !important; 
+    border-color: #374151 !important; 
+    color: white !important; 
+}
+
+/* Muted text colors */
+.dark .text-slate-400, 
+.dark .text-slate-500 { 
+    color: #94A3B8 !important; 
+}
+    </style>
+</head>
+<body class="text-[#081B4B] antialiased text-sm">
+    <div id="overlay" class="fixed inset-0 bg-black/40 z-[80] hidden lg:hidden" onclick="toggleMenu()"></div>
+    <div class="flex min-h-screen">
+        <!-- SIDEBAR -->
+        <aside id="sidebar" class="fixed lg:sticky top-0 left-0 h-screen w-72 bg-white border-r border-slate-100 z-[90] flex flex-col p-6 -translate-x-full lg:translate-x-0 transition-transform duration-300">
+            <div class="flex items-center gap-3 mb-10">
+                <div class="w-10 h-10 bg-[#0052FF] rounded-xl flex items-center justify-center text-white shadow-lg"><i data-lucide="zap" class="w-6 h-6 fill-current"></i></div>
+                <h1 class="text-lg font-extrabold tracking-tight">Elite Data</h1>
+            </div>
+            <nav class="flex-1 space-y-1 font-bold text-[13px]">
+                <a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="layout-grid" class="w-4 h-4"></i> Dashboard</a>
+                <a href="buy-data.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="wifi" class="w-4 h-4"></i> Buy Data</a>
+                <a href="buy-airtime.html" class="active-nav flex items-center gap-3 px-4 py-3 rounded-2xl"><i data-lucide="smartphone" class="w-4 h-4"></i> Airtime Top-up</a>
+                <a href="cable-tv.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="tv" class="w-4 h-4"></i> Cable TV</a>
+                <a href="electricity.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="zap" class="w-4 h-4"></i> Electricity</a>
+                <a href="history.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="history" class="w-4 h-4"></i> History</a>
+                <a href="fund-wallet.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="wallet" class="w-4 h-4"></i> Wallet</a>
+                <a href="referrals.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="users" class="w-4 h-4"></i> Referrals</a>
+                <a href="support.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="headset" class="w-4 h-4"></i> Support</a>
+                <a href="settimgs.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="settings" class="w-4 h-4"></i> Settings</a>
+            </nav>
+        </aside>
+
+        <main class="flex-1 flex flex-col min-w-0 bg-[#F8FAFF]">
+            <header class="lg:hidden bg-white px-6 py-4 flex justify-between items-center border-b border-slate-100 sticky top-0 z-[60]">
+                <button onclick="toggleMenu()"><i data-lucide="menu" class="w-6 h-6"></i></button>
+                <span class="font-extrabold text-[#0052FF]">Profile Settings</span>
+                <i data-lucide="bell" class="w-6 h-6 text-slate-400"></i>
+                <button onclick="toggleTheme()" class="w-10 h-10 flex items-center justify-center bg-slate-50 dark:bg-slate-800 rounded-xl transition-all">
+                <i data-lucide="moon" class="w-5 h-5 text-slate-400 dark:hidden"></i>
+                <i data-lucide="sun" class="hidden dark:block w-5 h-5 text-yellow-400"></i></button>
+            </header>
+
+            <div class="p-6 lg:p-12 max-w-3xl mx-auto w-full pb-32">
+                <h2 class="text-2xl font-black mb-8">Settings</h2>
+                
+                <div class="space-y-6">
+                    <!-- PERSONAL INFO -->
+                    <div class="bg-white p-8 rounded-[32px] border border-slate-100 shadow-sm">
+                        <h4 class="font-extrabold text-sm mb-6 uppercase tracking-wider text-slate-400">Personal Information</h4>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="text-[10px] font-bold text-slate-400 uppercase ml-1">Full Name</label>
+                                <input type="text" id="set-name" class="w-full p-4 mt-1 bg-slate-50 border border-slate-100 rounded-2xl font-bold outline-none focus:border-[#0052FF]" readonly>
+                            </div>
+                            <div>
+                                <label class="text-[10px] font-bold text-slate-400 uppercase ml-1">Email Address</label>
+                                <input type="text" id="set-email" class="w-full p-4 mt-1 bg-slate-50 border border-slate-100 rounded-2xl font-bold outline-none" readonly>
+                            </div>
+                            <div>
+                                <label class="text-[10px] font-bold text-slate-400 uppercase ml-1">Phone Number</label>
+                                <input type="text" id="set-phone" class="w-full p-4 mt-1 bg-slate-50 border border-slate-100 rounded-2xl font-bold outline-none" readonly>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SECURITY -->
+                    <div class="bg-white p-8 rounded-[32px] border border-slate-100 shadow-sm">
+                        <h4 class="font-extrabold text-sm mb-6 uppercase tracking-wider text-slate-400">Security</h4>
+                        <button onclick="alert('Password reset link sent to email!')" class="w-full border-2 border-slate-50 p-4 rounded-2xl font-bold text-[#0052FF] hover:bg-blue-50 transition-all flex justify-between items-center">
+                            Change Password <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+
+                    <button onclick="handleLogout()" class="w-full p-4 rounded-2xl font-black text-red-500 bg-red-50 hover:bg-red-100">Log Out of Account</button>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Inside Settings.html -->
+<div class="bg-white dark:bg-[#111827] p-8 rounded-[32px] border border-slate-100 dark:border-slate-800 shadow-sm">
+    <h4 class="font-extrabold text-sm mb-6 uppercase tracking-wider text-slate-400">Set Transaction PIN</h4>
+    <div class="flex gap-4 mb-6">
+        <input type="password" id="newPin" maxlength="4" class="flex-1 p-4 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl font-black text-center text-xl" placeholder="****">
+    </div>
+    <button onclick="savePin()" class="w-full bg-[#0052FF] text-white py-4 rounded-2xl font-black text-sm shadow-lg shadow-blue-200">Update PIN</button>
+</div>
+
+<script>
+async function savePin() {
+    const pin = document.getElementById('newPin').value;
+    if (pin.length !== 4) return showToast("PIN must be 4 digits", "error");
+
+    const { error } = await _supabase
+        .from('profiles')
+        .update({ transaction_pin: pin })
+        .eq('id', (await _supabase.auth.getSession()).data.session.user.id);
+
+    if (error) showToast(error.message, "error");
+    else showToast("Transaction PIN updated successfully!");
+}
+</script>
+
+    <script src="theme.js"></script> <!-- Add this before your other scripts -->
+    <script src="supabase-config.js"></script>
+    <script src="notifications.js"></script>
+    <script>
+        lucide.createIcons();
+        async function loadData() {
+            const { data: { session } } = await _supabase.auth.getSession();
+            if (!session) { window.location.href = "login.html"; return; }
+            
+            document.getElementById('set-email').value = session.user.email;
+
+            const { data: profile } = await _supabase.from('profiles').select('*').eq('id', session.user.id).single();
+            if (profile) {
+                document.getElementById('set-name').value = profile.full_name;
+                document.getElementById('set-phone').value = profile.phone_number;
+            }
+        }
+        function handleLogout() { _supabase.auth.signOut(); window.location.href = "login.html"; }
+        function toggleMenu() {
+            document.getElementById('sidebar').classList.toggle('-translate-x-full');
+            document.getElementById('overlay').classList.toggle('hidden');
+        }
+        window.onload = loadData;
+    </script>
+</body>
+</html>
