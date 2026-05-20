@@ -21,7 +21,29 @@
         }
         .animate-toast { animation: slideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
 
-        /* Elite Dark Mode Colors */
+        /* --- 3D MOCKUP CSS --- */
+        .phone-container { position: relative; width: 85px; height: 100px; margin-right: -10px; }
+        .phone-handset { 
+            width: 48px; height: 90px; background: #081B4B; border: 2px solid rgba(255,255,255,0.2); 
+            border-radius: 10px; position: absolute; right: 10px; bottom: 0;
+            transform: rotate(-8deg); overflow: hidden;
+        }
+        .phone-display { position: absolute; inset: 2px; background: linear-gradient(180deg, #246BFD 0%, #0052FF 100%); border-radius: 8px; }
+        .tile { 
+            position: absolute; background: white; padding: 4px; border-radius: 6px; 
+            box-shadow: 0 8px 15px rgba(0,0,0,0.15); display: flex; flex-direction: column; 
+            align-items: center; justify-content: center; z-index: 20; animation: float 3s ease-in-out infinite; 
+        }
+        .tile i { width: 14px; height: 14px; }
+        .tile span { font-size: 5px; font-weight: 900; text-transform: uppercase; margin-top: 1px; }
+        
+        .tile-data { top: 5px; left: 0px; animation-delay: 0s; color: #0052FF; }
+        .tile-airtime { top: 35px; right: -5px; animation-delay: 1s; color: #10b981; }
+        .tile-tv { bottom: 10px; left: 10px; animation-delay: 0.5s; color: #a855f7; }
+        
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+
+        /* Elite Dark Mode Colors - Corrected Syntax */
         .dark body { background-color: #0B1120 !important; color: #F1F5F9 !important; }
         .dark .bg-white, .dark aside, .dark nav, .dark header { background-color: #111827 !important; border-color: #1F2937 !important; color: #F1F5F9 !important; }
         .dark [class*="bg-[#F8FAFF]"], .dark .bg-slate-50 { background-color: #0B1120 !important; }
@@ -35,20 +57,18 @@
 </head>
 <body class="text-[#081B4B] antialiased">
 
-    <!-- SIDEBAR OVERLAY -->
     <div id="overlay" class="fixed inset-0 bg-black/40 z-[80] hidden lg:hidden" onclick="toggleMenu()"></div>
     
     <div class="flex min-h-screen">
-        <!-- SIDEBAR -->
         <aside id="sidebar" class="fixed lg:sticky top-0 left-0 h-screen w-72 bg-white border-r border-slate-100 z-[90] flex flex-col p-6 -translate-x-full lg:translate-x-0 transition-transform duration-300">
             <div class="flex items-center gap-3 mb-10">
                 <div class="w-10 h-10 bg-[#0052FF] rounded-xl flex items-center justify-center text-white shadow-lg"><i data-lucide="zap" class="w-6 h-6 fill-current"></i></div>
                 <h1 class="text-lg font-extrabold tracking-tight">Elite Data</h1>
             </div>
             <nav class="flex-1 space-y-1 overflow-y-auto no-scrollbar font-bold text-[13px]">
-                <a href="dashboard.html" class="active-nav flex items-center gap-3 px-4 py-3 rounded-2xl"><i data-lucide="layout-grid" class="w-4 h-4"></i> Dashboard</a>
+               <a href="dashboard.html" class="active-nav flex items-center gap-3 px-4 py-3 rounded-2xl"><i data-lucide="layout-grid" class="w-4 h-4"></i> Dashboard</a>
                 <a href="buy-data.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="shopping-cart" class="w-4 h-4"></i> Buy Data</a>
-                <a href="buy-airtime.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="smartphone" class="w-4 h-4"></i> Airtime</a>
+                <a href="buy-airtime.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="smartphone" class="w-4 h-4"></i> Airtime Top-up</a>
                 <a href="cable-tv.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="tv" class="w-4 h-4"></i> Cable TV</a>
                 <a href="electricity.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="zap" class="w-4 h-4"></i> Electricity</a>
                 <a href="history.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="history" class="w-4 h-4"></i> History</a>
@@ -63,20 +83,18 @@
         </aside>
 
         <main class="flex-1 flex flex-col min-w-0 bg-[#F8FAFF]">
-            <!-- MOBILE HEADER -->
             <header class="lg:hidden bg-white px-6 py-4 flex justify-between items-center border-b border-slate-50 sticky top-0 z-[60]">
                 <button onclick="toggleMenu()"><i data-lucide="menu" class="w-6 h-6 text-slate-700"></i></button>
                 <span class="font-extrabold text-sm text-[#0052FF]">Elite Data Services</span>
                 <div class="flex items-center gap-3">
                     <i data-lucide="bell" class="w-6 h-6 text-slate-400"></i>
-                    <button onclick="toggleTheme()" class="w-8 h-8 flex items-center justify-center bg-slate-50 dark:bg-slate-800 rounded-lg">
+                    <button onclick="toggleTheme()" class="w-8 h-8 flex items-center justify-center bg-slate-50 dark:bg-slate-800 rounded-lg transition-all">
                         <i data-lucide="moon" class="w-4 h-4 text-slate-400 dark:hidden"></i>
                         <i data-lucide="sun" class="hidden dark:block w-4 h-4 text-yellow-400"></i>
                     </button>
                 </div>
             </header>
 
-            <!-- DESKTOP TOP NAV -->
             <header class="hidden lg:flex bg-white border-b border-slate-100 px-10 py-5 justify-between items-center sticky top-0 z-50">
                 <div class="font-bold text-sm">Welcome back, <span id="user-name-desktop" class="text-slate-900 font-extrabold text-lg">Loading...</span></div>
                 <div class="flex items-center gap-6">
@@ -94,16 +112,23 @@
             </header>
 
             <div class="w-full h-full pb-32 overflow-y-auto">
-                <!-- MOBILE BLUE SECTION -->
-                <div class="lg:hidden bg-[#0052FF] p-6 pb-24 text-white flex justify-between items-start rounded-b-[40px]">
-                    <div>
+                <!-- MOBILE BLUE SECTION (WITH 3D MOCKUP) -->
+                <div class="lg:hidden bg-[#0052FF] p-6 pb-24 text-white flex justify-between items-center rounded-b-[40px]">
+                    <div class="flex-1">
                         <p class="text-blue-100 text-[10px] font-bold uppercase tracking-widest mb-1">Welcome back,</p>
-                        <h2 class="text-xl font-bold" id="user-name-mobile">Loading...</h2>
+                        <h2 class="text-2xl font-bold" id="user-name-mobile">Loading...</h2>
                     </div>
-                    <img src="https://i.pravatar.cc/100" class="w-12 h-12 rounded-full border-2 border-white/20">
+                    
+                    <!-- THE 3D MOCKUP -->
+                    <div class="phone-container">
+                        <div class="phone-handset"><div class="phone-display"></div></div>
+                        <div class="tile tile-data"><i data-lucide="wifi"></i><span>Data</span></div>
+                        <div class="tile tile-airtime"><i data-lucide="wallet"></i><span>Airtime</span></div>
+                        <div class="tile tile-tv"><i data-lucide="tv"></i><span>TV</span></div>
+                    </div>
                 </div>
 
-                <!-- WALLET CARD (MOBILE) -->
+                <!-- WALLET CARD (MOBILE OVERLAP FIX) -->
                 <div class="max-w-5xl mx-auto px-6">
                     <div class="lg:hidden relative z-20 bg-white p-8 rounded-[32px] -mt-16 shadow-2xl flex flex-col items-center border border-slate-50">
                         <p class="text-slate-400 text-[10px] font-bold uppercase mb-2 tracking-widest">Available Balance</p>
@@ -112,18 +137,6 @@
                             <button onclick="toggleBalance()"><i id="eye-icon-mobile" data-lucide="eye-off" class="w-5 h-5 text-blue-200"></i></button>
                         </div>
                         <a href="fund-wallet.html" class="w-full bg-[#0052FF] text-white py-4 rounded-2xl font-extrabold text-sm text-center shadow-lg">+ Fund Wallet</a>
-                    </div>
-
-                    <!-- REFERRAL CARD (MOBILE) -->
-                    <div class="lg:hidden mt-8">
-                        <a href="referrals.html" class="block bg-[#F0F5FF] p-6 rounded-[32px] relative overflow-hidden group border border-blue-50">
-                            <div class="relative z-10">
-                                <h5 class="font-extrabold text-[11px] mb-1 uppercase tracking-tight text-[#0052FF]">Invite & Earn</h5>
-                                <p class="text-[15px] font-black text-[#081B4B]">Get ₦1,000 instantly!</p>
-                                <p class="text-[10px] text-slate-500 font-medium max-w-[200px] mt-1">Refer your friends to Elite Data and earn bonus when they fund their wallet.</p>
-                            </div>
-                            <i data-lucide="gift" class="w-20 h-20 absolute -right-4 -bottom-4 text-[#0052FF]/10 transition-transform group-hover:scale-110"></i>
-                        </a>
                     </div>
 
                     <div class="grid grid-cols-1 lg:grid-cols-12 lg:gap-10 mt-10">
@@ -145,7 +158,7 @@
                                 <div class="bg-white p-5 rounded-3xl border border-slate-50 flex items-center justify-between shadow-sm">
                                     <div class="flex items-center gap-4"><div class="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600"><i data-lucide="wifi" class="w-5 h-5"></i></div>
                                     <div><p class="font-bold text-sm uppercase">10GB</p><p class="text-[9px] text-slate-400 font-bold">Valid for 30 Days</p></div></div>
-                                    <div class="flex items-center gap-4"><span class="font-black text-sm text-[#081B4B]">₦1,500</span><button class="bg-blue-50 text-blue-600 px-4 py-1.5 rounded-lg text-[10px] font-black uppercase">Buy</button></div>
+                                    <div class="flex items-center gap-4"><span class="font-black text-sm text-[#081B4B]">₦1,500</span><a href="buy-data.html" class="bg-blue-50 text-blue-600 px-4 py-1.5 rounded-lg text-[10px] font-black uppercase">Buy</a></div>
                                 </div>
                             </section>
 
