@@ -122,6 +122,30 @@
             </div>
         </main>
     </div>
+    
+    <!-- Inside Settings.html -->
+<div class="bg-white dark:bg-[#111827] p-8 rounded-[32px] border border-slate-100 dark:border-slate-800 shadow-sm">
+    <h4 class="font-extrabold text-sm mb-6 uppercase tracking-wider text-slate-400">Set Transaction PIN</h4>
+    <div class="flex gap-4 mb-6">
+        <input type="password" id="newPin" maxlength="4" class="flex-1 p-4 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl font-black text-center text-xl" placeholder="****">
+    </div>
+    <button onclick="savePin()" class="w-full bg-[#0052FF] text-white py-4 rounded-2xl font-black text-sm shadow-lg shadow-blue-200">Update PIN</button>
+</div>
+
+<script>
+async function savePin() {
+    const pin = document.getElementById('newPin').value;
+    if (pin.length !== 4) return showToast("PIN must be 4 digits", "error");
+
+    const { error } = await _supabase
+        .from('profiles')
+        .update({ transaction_pin: pin })
+        .eq('id', (await _supabase.auth.getSession()).data.session.user.id);
+
+    if (error) showToast(error.message, "error");
+    else showToast("Transaction PIN updated successfully!");
+}
+</script>
 
     <script src="theme.js"></script> <!-- Add this before your other scripts -->
     <script src="supabase-config.js"></script>

@@ -15,61 +15,52 @@
         .network-card.active { border-color: #0052FF; background: #F0F5FF; border-width: 2px; }
         .amount-btn.active { background: #0052FF; color: white; border-color: #0052FF; }
         #sidebar { transition: transform 0.3s ease; }
-        @keyframes slideIn {
-    from { transform: translateX(100%); opacity: 0; }
-    to { transform: translateX(0); opacity: 1; }
-}
-.animate-toast {
-    animation: slideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-}
-/* Elite Dark Mode Colors - Corrected Syntax */
-.dark body { 
-    background-color: #0B1120 !important; 
-    color: #F1F5F9 !important; 
-}
 
-/* This targets the white cards and white backgrounds */
-.dark .bg-white, 
-.dark aside, 
-.dark nav, 
-.dark header { 
-    background-color: #111827 !important; 
-    border-color: #1F2937 !important; 
-    color: #F1F5F9 !important; 
-}
-
-/* This targets the light blue background sections */
-.dark [class*="bg-[#F8FAFF]"], 
-.dark .bg-slate-50 { 
-    background-color: #0B1120 !important; 
-}
-
-/* This targets the dark navy text sections */
-.dark [class*="text-[#081B4B]"], 
-.dark .text-slate-900 { 
-    color: #F1F5F9 !important; 
-}
-
-/* This targets inputs */
-.dark input { 
-    background-color: #1F2937 !important; 
-    border-color: #374151 !important; 
-    color: white !important; 
-}
-
-/* Muted text colors */
-.dark .text-slate-400, 
-.dark .text-slate-500 { 
-    color: #94A3B8 !important; 
-}
+        /* Elite Dark Mode Colors */
+        .dark body { background-color: #0B1120 !important; color: #F1F5F9 !important; }
+        .dark .bg-white, .dark aside, .dark nav, .dark header { 
+            background-color: #111827 !important; border-color: #1F2937 !important; color: #F1F5F9 !important; 
+        }
+        .dark [class*="bg-[#F8FAFF]"], .dark .bg-slate-50 { background-color: #0B1120 !important; }
+        .dark [class*="text-[#081B4B]"], .dark .text-slate-900 { color: #F1F5F9 !important; }
+        .dark input { background-color: #1F2937 !important; border-color: #374151 !important; color: white !important; }
+        .dark .text-slate-400, .dark .text-slate-500 { color: #94A3B8 !important; }
+        .dark .border-slate-100, .dark .border-slate-200 { border-color: #1F2937 !important; }
     </style>
+    <!-- Apply theme before page loads -->
+    <script src="theme.js"></script>
 </head>
-<body class="text-[#081B4B] antialiased text-sm">
+<body class="text-[#081B4B] antialiased">
 
+    <!-- SIDEBAR OVERLAY -->
     <div id="overlay" class="fixed inset-0 bg-black/40 z-[80] hidden lg:hidden" onclick="toggleMenu()"></div>
     
+    <!-- PIN MODAL -->
+    <div id="pinModal" class="fixed inset-0 z-[100] flex items-center justify-center p-6 hidden">
+        <div class="fixed inset-0 bg-[#081B4B]/60 backdrop-blur-sm"></div>
+        <div class="bg-white dark:bg-[#111827] rounded-[32px] p-8 relative z-10 shadow-2xl border border-slate-100 dark:border-slate-800 text-center max-w-sm w-full">
+            <div class="w-16 h-16 bg-blue-50 dark:bg-blue-900/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                <i data-lucide="lock" class="w-8 h-8 text-[#0052FF]"></i>
+            </div>
+            <h3 class="text-xl font-black mb-2 dark:text-white">Transaction PIN</h3>
+            <p class="text-slate-400 text-[10px] font-bold mb-8 uppercase tracking-widest">Enter your 4-digit secret PIN</p>
+            
+            <div class="flex justify-center gap-3 mb-8">
+                <input type="password" maxlength="1" class="pin-box w-12 h-14 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-center text-xl font-black focus:border-[#0052FF] outline-none">
+                <input type="password" maxlength="1" class="pin-box w-12 h-14 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-center text-xl font-black focus:border-[#0052FF] outline-none">
+                <input type="password" maxlength="1" class="pin-box w-12 h-14 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-center text-xl font-black focus:border-[#0052FF] outline-none">
+                <input type="password" maxlength="1" class="pin-box w-12 h-14 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-center text-xl font-black focus:border-[#0052FF] outline-none">
+            </div>
+
+            <div class="flex flex-col gap-3">
+                <button onclick="confirmPurchase()" id="confirmPinBtn" class="w-full bg-[#0052FF] text-white py-4 rounded-2xl font-black text-sm shadow-xl shadow-blue-200 active:scale-95 transition-all">Confirm Payment</button>
+                <button onclick="closePinModal()" class="w-full py-3 text-slate-400 font-bold text-[10px] uppercase tracking-widest">Cancel</button>
+            </div>
+        </div>
+    </div>
+
     <div class="flex min-h-screen">
-        <!-- SIDEBAR (10 Items) -->
+        <!-- SIDEBAR -->
         <aside id="sidebar" class="fixed lg:sticky top-0 left-0 h-screen w-72 bg-white border-r border-slate-100 z-[90] flex flex-col p-6 -translate-x-full lg:translate-x-0 transition-transform duration-300">
             <div class="flex items-center gap-3 mb-10">
                 <div class="w-10 h-10 bg-[#0052FF] rounded-xl flex items-center justify-center text-white shadow-lg"><i data-lucide="zap" class="w-6 h-6 fill-current"></i></div>
@@ -77,15 +68,12 @@
             </div>
             <nav class="flex-1 space-y-1 font-bold text-[13px] overflow-y-auto no-scrollbar">
                 <a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="layout-grid" class="w-4 h-4"></i> Dashboard</a>
-                <a href="buy-data.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="wifi" class="w-4 h-4"></i> Buy Data</a>
-                <a href="buy-airtime.html" class="active-nav flex items-center gap-3 px-4 py-3 rounded-2xl"><i data-lucide="smartphone" class="w-4 h-4"></i> Airtime Top-up</a>
+                <a href="buy-data.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="shopping-cart" class="w-4 h-4"></i> Buy Data</a>
+                <a href="buy-airtime.html" class="active-nav flex items-center gap-3 px-4 py-3 rounded-2xl"><i data-lucide="smartphone" class="w-4 h-4"></i> Airtime</a>
                 <a href="cable-tv.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="tv" class="w-4 h-4"></i> Cable TV</a>
                 <a href="electricity.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="zap" class="w-4 h-4"></i> Electricity</a>
                 <a href="history.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="history" class="w-4 h-4"></i> History</a>
                 <a href="fund-wallet.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="wallet" class="w-4 h-4"></i> Wallet</a>
-                <a href="referrals.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="users" class="w-4 h-4"></i> Referrals</a>
-                <a href="support.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="headset" class="w-4 h-4"></i> Support</a>
-                <a href="settimgs.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="settings" class="w-4 h-4"></i> Settings</a>
             </nav>
         </aside>
 
@@ -95,22 +83,27 @@
             <header class="lg:hidden bg-white px-6 py-4 flex justify-between items-center border-b border-slate-50 sticky top-0 z-[60]">
                 <button onclick="toggleMenu()"><i data-lucide="menu" class="w-6 h-6 text-slate-700"></i></button>
                 <span class="font-extrabold text-sm text-[#0052FF]">Buy Airtime</span>
-                <i data-lucide="bell" class="w-6 h-6 text-slate-400"></i>
-                <button onclick="toggleTheme()" class="w-10 h-10 flex items-center justify-center bg-slate-50 dark:bg-slate-800 rounded-xl transition-all">
-    <i data-lucide="moon" class="w-5 h-5 text-slate-400 dark:hidden"></i>
-    <i data-lucide="sun" class="hidden dark:block w-5 h-5 text-yellow-400"></i>
-</button>
+                <div class="flex items-center gap-3">
+                    <i data-lucide="bell" class="w-6 h-6 text-slate-400"></i>
+                    <button onclick="toggleTheme()" class="w-8 h-8 flex items-center justify-center bg-slate-50 dark:bg-slate-800 rounded-lg">
+                        <i data-lucide="moon" class="w-4 h-4 text-slate-400 dark:hidden"></i>
+                        <i data-lucide="sun" class="hidden dark:block w-4 h-4 text-yellow-400"></i>
+                    </button>
+                </div>
             </header>
 
             <!-- DESKTOP TOP NAV -->
             <header class="hidden lg:flex bg-white border-b border-slate-100 px-10 py-5 justify-between items-center sticky top-0 z-50">
                 <div class="font-bold text-sm">Welcome back, <span id="user-name-desktop" class="font-extrabold">Loading...</span></div>
                 <div class="flex items-center gap-6">
+                    <button onclick="toggleTheme()" class="w-10 h-10 flex items-center justify-center bg-slate-50 dark:bg-slate-800 rounded-xl transition-all">
+                        <i data-lucide="moon" class="w-5 h-5 text-slate-400 dark:hidden"></i>
+                        <i data-lucide="sun" class="hidden dark:block w-5 h-5 text-yellow-400"></i>
+                    </button>
                     <div class="flex items-center gap-4 bg-slate-50 px-4 py-2 rounded-xl border border-slate-100">
                         <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Balance</span>
                         <span class="text-sm font-black text-[#0052FF]">₦<span id="user-balance-desktop">0.00</span></span>
                     </div>
-                    <img src="https://i.pravatar.cc/100" class="w-9 h-9 rounded-full border border-slate-200">
                 </div>
             </header>
 
@@ -126,39 +119,37 @@
                     <div class="lg:hidden relative z-20 bg-white p-8 rounded-[32px] -mt-16 shadow-2xl flex flex-col items-center border border-slate-50">
                         <p class="text-slate-400 text-[10px] font-bold uppercase mb-2 tracking-widest">Available Balance</p>
                         <h3 class="text-3xl font-black text-[#081B4B]">₦<span id="user-balance-mobile">0.00</span></h3>
-                        <a href="fund-wallet.html" class="w-full bg-[#0052FF] text-white py-3 rounded-2xl font-bold text-xs text-center mt-4">+ Fund Wallet</a>
                     </div>
 
                     <div class="grid grid-cols-1 lg:grid-cols-12 lg:gap-10 mt-10">
                         <div class="lg:col-span-8 space-y-10">
-                            
                             <!-- 1. SELECT NETWORK -->
                             <section>
-                                <h4 class="font-extrabold text-sm mb-4 uppercase text-slate-400">1. Select Network</h4>
+                                <h4 class="font-extrabold text-sm mb-4 uppercase text-slate-400 px-2">1. Select Network</h4>
                                 <div class="grid grid-cols-4 gap-3">
                                     <button onclick="setNetwork('MTN')" id="net-MTN" class="network-card active bg-white p-4 rounded-2xl border-2 border-slate-100 flex flex-col items-center gap-2 transition-all">
                                         <div class="w-10 h-10 rounded-full bg-yellow-400 flex items-center justify-center font-black text-[10px]">MTN</div>
-                                        <span class="text-[10px] font-bold">MTN</span>
+                                        <span class="text-[10px] font-bold uppercase">MTN</span>
                                     </button>
                                     <button onclick="setNetwork('Airtel')" id="net-Airtel" class="network-card bg-white p-4 rounded-2xl border-2 border-slate-100 flex flex-col items-center gap-2 transition-all">
                                         <div class="w-10 h-10 rounded-full bg-red-600 text-white flex items-center justify-center font-black text-[10px]">Airtel</div>
-                                        <span class="text-[10px] font-bold">Airtel</span>
+                                        <span class="text-[10px] font-bold uppercase">Airtel</span>
                                     </button>
                                     <button onclick="setNetwork('Glo')" id="net-Glo" class="network-card bg-white p-4 rounded-2xl border-2 border-slate-100 flex flex-col items-center gap-2 transition-all">
                                         <div class="w-10 h-10 rounded-full bg-green-600 text-white flex items-center justify-center font-black text-[10px]">Glo</div>
-                                        <span class="text-[10px] font-bold">Glo</span>
+                                        <span class="text-[10px] font-bold uppercase">Glo</span>
                                     </button>
                                     <button onclick="setNetwork('9mobile')" id="net-9mobile" class="network-card bg-white p-4 rounded-2xl border-2 border-slate-100 flex flex-col items-center gap-2 transition-all">
                                         <div class="w-10 h-10 rounded-lg bg-green-950 text-white flex items-center justify-center font-black text-[10px]">9mob</div>
-                                        <span class="text-[10px] font-bold">9mobile</span>
+                                        <span class="text-[10px] font-bold uppercase">9mobile</span>
                                     </button>
                                 </div>
                             </section>
 
                             <!-- 2. PHONE NUMBER -->
                             <section>
-                                <h4 class="font-extrabold text-sm mb-4 uppercase text-slate-400">2. Phone Number</h4>
-                                <div class="relative">
+                                <h4 class="font-extrabold text-sm mb-4 uppercase text-slate-400 px-2">2. Phone Number</h4>
+                                <div class="relative group">
                                     <i data-lucide="smartphone" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 w-5 h-5"></i>
                                     <input type="tel" id="phoneInput" oninput="updateSummary()" class="w-full pl-12 pr-4 py-4 bg-white border border-slate-200 rounded-2xl outline-none focus:border-[#0052FF] font-medium" placeholder="0801 234 5678">
                                 </div>
@@ -166,7 +157,7 @@
 
                             <!-- 3. SELECT AMOUNT -->
                             <section>
-                                <h4 class="font-extrabold text-sm mb-4 uppercase text-slate-400">3. Select Amount</h4>
+                                <h4 class="font-extrabold text-sm mb-4 uppercase text-slate-400 px-2">3. Select Amount</h4>
                                 <div class="grid grid-cols-4 gap-3 mb-4">
                                     <button onclick="setAmount(100)" class="amount-btn border border-slate-200 bg-white py-3 rounded-xl font-bold text-xs transition-all active:scale-95">₦100</button>
                                     <button onclick="setAmount(200)" class="amount-btn border border-slate-200 bg-white py-3 rounded-xl font-bold text-xs transition-all active:scale-95">₦200</button>
@@ -180,14 +171,14 @@
                             <section class="bg-white p-8 rounded-[32px] border border-slate-100 shadow-sm">
                                 <h4 class="font-extrabold text-sm mb-6 uppercase tracking-wider text-slate-400">Review Summary</h4>
                                 <div class="space-y-4 font-bold text-xs">
-                                    <div class="flex justify-between text-slate-400"><span>Network</span> <span id="sum-net" class="text-[#081B4B]">MTN</span></div>
+                                    <div class="flex justify-between text-slate-400"><span>Network</span> <span id="sum-net" class="text-[#081B4B] uppercase">MTN</span></div>
                                     <div class="flex justify-between text-slate-400"><span>Phone Number</span> <span id="sum-phone" class="text-[#081B4B]">---</span></div>
                                     <div class="flex justify-between items-center pt-4 border-t border-slate-50 mt-4 font-black">
                                         <span>Total Payable</span>
                                         <span class="text-xl text-[#0052FF]">₦<span id="sum-total">0.00</span></span>
                                     </div>
                                 </div>
-                                <button type="button" onclick="processAirtime()" id="payBtn" class="w-full bg-[#0052FF] text-white py-4.5 mt-8 rounded-2xl font-black text-sm shadow-xl shadow-blue-100 hover:bg-blue-700 transition-all active:scale-95">
+                                <button type="button" onclick="openPinModal()" id="payBtn" class="w-full bg-[#0052FF] text-white py-4.5 mt-8 rounded-2xl font-black text-sm shadow-xl shadow-blue-100 hover:bg-blue-700 transition-all active:scale-95">
                                     Proceed to Payment
                                 </button>
                             </section>
@@ -198,32 +189,45 @@
                             <div class="bg-white p-8 rounded-[32px] border border-slate-50 shadow-sm flex flex-col items-center">
                                 <p class="text-[10px] font-bold text-slate-400 uppercase mb-1">Wallet Balance</p>
                                 <h3 class="text-3xl font-black mb-6">₦<span id="user-balance-desktop-side">0.00</span></h3>
-                                <a href="fund-wallet.html" class="w-full bg-[#0052FF] text-white py-3 rounded-xl font-bold text-xs text-center shadow-lg">+ Fund Wallet</a>
+                                <a href="fund-wallet.html" class="w-full bg-[#0052FF] text-white py-4 rounded-xl font-bold text-xs text-center shadow-lg">+ Fund Wallet</a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <!-- MOBILE BOTTOM NAV -->
+            <nav class="lg:hidden fixed bottom-0 left-0 w-full bg-white border-t border-slate-100 flex justify-around p-4 z-50 shadow-lg">
+                <a href="dashboard.html" class="flex flex-col items-center gap-1 text-slate-300"><i data-lucide="home" class="w-5 h-5"></i><span class="text-[8px] font-black uppercase">Home</span></a>
+                <a href="buy-airtime.html" class="flex flex-col items-center gap-1 text-[#0052FF]"><i data-lucide="smartphone" class="w-5 h-5"></i><span class="text-[8px] font-black uppercase">Airtime</span></a>
+                <a href="fund-wallet.html" class="flex flex-col items-center gap-1 text-slate-300"><i data-lucide="wallet" class="w-5 h-5"></i><span class="text-[8px] font-black uppercase">Wallet</span></a>
+                <a href="settings.html" class="flex flex-col items-center gap-1 text-slate-300"><i data-lucide="settings" class="w-5 h-5"></i><span class="text-[8px] font-black uppercase">Settings</span></a>
+            </nav>
         </main>
     </div>
 
-    <script src="theme.js"></script> <!-- Add this before your other scripts -->
-<script src="supabase-config.js"></script>
-<script src="notifications.js"></script>
+    <script src="supabase-config.js"></script>
+    <script src="notifications.js"></script>
     <script>
         lucide.createIcons();
         let network = 'MTN';
         let amount = 0;
         let userId = "";
 
+        const pinInputs = document.querySelectorAll('.pin-box');
+        pinInputs.forEach((input, index) => {
+            input.addEventListener('keyup', (e) => {
+                if (e.target.value.length === 1 && index < 3) pinInputs[index + 1].focus();
+                if (e.key === 'Backspace' && index > 0) pinInputs[index - 1].focus();
+            });
+        });
+
         async function init() {
             const { data: { session } } = await _supabase.auth.getSession();
             if (!session) { window.location.href = "login.html"; return; }
             userId = session.user.id;
-            
             const { data: prof } = await _supabase.from('profiles').select('full_name').eq('id', userId).single();
             const { data: wall } = await _supabase.from('wallets').select('balance').eq('id', userId).single();
-            
             if(prof) document.getElementById('user-name-desktop').innerText = prof.full_name;
             if(wall) {
                 const b = parseFloat(wall.balance).toLocaleString();
@@ -254,26 +258,49 @@
             document.getElementById('sum-total').innerText = parseFloat(amount || 0).toLocaleString();
         }
 
-        async function processAirtime() {
+        function openPinModal() {
             const phone = document.getElementById('phoneInput').value;
-            if (!phone || phone.length < 10) return showToast("Please enter a valid phone number and select a plan", "error");
-            if (amount < 50) return alert("Min ₦50");
+            if (!phone || phone.length < 10) return showToast("Enter valid number", "error");
+            if (amount < 50) return showToast("Min ₦50", "error");
+            document.getElementById('pinModal').classList.remove('hidden');
+            pinInputs[0].focus();
+        }
 
-            const btn = document.getElementById('payBtn');
-            btn.innerText = "Processing..."; btn.disabled = true;
+        function closePinModal() {
+            document.getElementById('pinModal').classList.add('hidden');
+            pinInputs.forEach(i => i.value = '');
+        }
 
-            const { data: result, error } = await _supabase.rpc('process_purchase', {
+        async function confirmPurchase() {
+            let pin = "";
+            pinInputs.forEach(i => pin += i.value);
+            if (pin.length < 4) return showToast("Enter 4-digit PIN", "error");
+
+            const btn = document.getElementById('confirmPinBtn');
+            btn.innerText = "Verifying..."; btn.disabled = true;
+
+            const { data: result, error } = await _supabase.rpc('process_purchase_secure', {
                 uid: userId,
                 amt: parseFloat(amount),
                 p_type: 'Airtime Purchase',
-                p_desc: `${network} Airtime to ${phone}`
+                p_desc: `${network} Airtime to ${document.getElementById('phoneInput').value}`,
+                input_pin: pin
             });
 
-            if (error) alert(error.message);
-            else if (result === 'insufficient_balance') showToast("❌ Insufficient Balance. Please fund your wallet.", "error");
-            else { showToast("Transaction Successful! Your request is being processed.");
-            setTimeout(() => { window.location.href = "dashboard.html"; }, 2000); }
-            btn.disabled = false; btn.innerText = "Proceed to Payment";
+            if (error) {
+                showToast(error.message, "error");
+            } else if (result === 'invalid_pin') {
+                showToast("Incorrect PIN", "error");
+                pinInputs.forEach(i => i.value = ''); pinInputs[0].focus();
+            } else if (result === 'pin_not_set') {
+                showToast("Set PIN in Settings", "error");
+            } else if (result === 'insufficient_balance') {
+                showToast("Low Balance", "error");
+            } else {
+                showToast("✅ Airtime Sent!");
+                setTimeout(() => window.location.href = "dashboard.html", 1500);
+            }
+            btn.innerText = "Confirm Payment"; btn.disabled = false;
         }
 
         function toggleMenu() {
