@@ -22,28 +22,28 @@
         .animate-toast { animation: slideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
 
         /* --- 3D MOCKUP CSS --- */
-        .phone-container { position: relative; width: 85px; height: 100px; margin-right: -10px; }
+        .phone-container { position: relative; width: 85px; height: 90px; margin-right: -5px; }
         .phone-handset { 
-            width: 48px; height: 90px; background: #081B4B; border: 2px solid rgba(255,255,255,0.2); 
-            border-radius: 10px; position: absolute; right: 10px; bottom: 0;
+            width: 44px; height: 82px; background: #081B4B; border: 2px solid rgba(255,255,255,0.2); 
+            border-radius: 8px; position: absolute; right: 10px; bottom: 0;
             transform: rotate(-8deg); overflow: hidden;
         }
-        .phone-display { position: absolute; inset: 2px; background: linear-gradient(180deg, #246BFD 0%, #0052FF 100%); border-radius: 8px; }
+        .phone-display { position: absolute; inset: 2px; background: linear-gradient(180deg, #246BFD 0%, #0052FF 100%); border-radius: 6px; }
         .tile { 
             position: absolute; background: white; padding: 4px; border-radius: 6px; 
             box-shadow: 0 8px 15px rgba(0,0,0,0.15); display: flex; flex-direction: column; 
             align-items: center; justify-content: center; z-index: 20; animation: float 3s ease-in-out infinite; 
         }
-        .tile i { width: 14px; height: 14px; }
+        .tile i { width: 12px; height: 12px; }
         .tile span { font-size: 5px; font-weight: 900; text-transform: uppercase; margin-top: 1px; }
         
         .tile-data { top: 5px; left: 0px; animation-delay: 0s; color: #0052FF; }
-        .tile-airtime { top: 35px; right: -5px; animation-delay: 1s; color: #10b981; }
+        .tile-airtime { top: 32px; right: -5px; animation-delay: 1s; color: #10b981; }
         .tile-tv { bottom: 10px; left: 10px; animation-delay: 0.5s; color: #a855f7; }
         
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
 
-        /* Elite Dark Mode Colors - Corrected Syntax */
+        /* Elite Dark Mode Colors */
         .dark body { background-color: #0B1120 !important; color: #F1F5F9 !important; }
         .dark .bg-white, .dark aside, .dark nav, .dark header { background-color: #111827 !important; border-color: #1F2937 !important; color: #F1F5F9 !important; }
         .dark [class*="bg-[#F8FAFF]"], .dark .bg-slate-50 { background-color: #0B1120 !important; }
@@ -78,7 +78,7 @@
                 <a href="settings.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="settings" class="w-4 h-4"></i> Settings</a>
             </nav>
             <div class="pt-6 border-t border-slate-50 mt-auto">
-                <button onclick="handleLogout()" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-red-500 hover:bg-red-50 transition-all"><i data-lucide="log-out" class="w-4 h-4"></i> Logout</button>
+                <button onclick="handleLogout()" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-red-500 hover:bg-red-100 transition-all"><i data-lucide="log-out" class="w-4 h-4"></i> Logout</button>
             </div>
         </aside>
 
@@ -116,9 +116,9 @@
                 <div class="lg:hidden bg-[#0052FF] p-6 pb-24 text-white flex justify-between items-center rounded-b-[40px]">
                     <div class="flex-1">
                         <p class="text-blue-100 text-[10px] font-bold uppercase tracking-widest mb-1">Welcome back,</p>
-                        <h2 class="text-2xl font-bold" id="user-name-mobile">Loading...</h2>
+                        <h2 class="text-xl font-bold leading-tight" id="user-name-mobile">Loading...</h2>
                     </div>
-                    
+
                     <!-- THE 3D MOCKUP -->
                     <div class="phone-container">
                         <div class="phone-handset"><div class="phone-display"></div></div>
@@ -137,6 +137,18 @@
                             <button onclick="toggleBalance()"><i id="eye-icon-mobile" data-lucide="eye-off" class="w-5 h-5 text-blue-200"></i></button>
                         </div>
                         <a href="fund-wallet.html" class="w-full bg-[#0052FF] text-white py-4 rounded-2xl font-extrabold text-sm text-center shadow-lg">+ Fund Wallet</a>
+                    </div>
+
+                    <!-- REFERRAL CARD (MOBILE) -->
+                    <div class="lg:hidden mt-8">
+                        <a href="referrals.html" class="block bg-[#F0F5FF] p-6 rounded-[32px] relative overflow-hidden group border border-blue-50">
+                            <div class="relative z-10">
+                                <h5 class="font-extrabold text-[11px] mb-1 uppercase tracking-tight text-[#0052FF]">Invite & Earn</h5>
+                                <p class="text-[15px] font-black text-[#081B4B]">Get ₦1,000 instantly!</p>
+                                <p class="text-[10px] text-slate-500 font-medium max-w-[200px] mt-1">Refer your friends to Elite Data and earn bonus when they fund their wallet.</p>
+                            </div>
+                            <i data-lucide="gift" class="w-20 h-20 absolute -right-4 -bottom-4 text-[#0052FF]/10 transition-transform group-hover:scale-110"></i>
+                        </a>
                     </div>
 
                     <div class="grid grid-cols-1 lg:grid-cols-12 lg:gap-10 mt-10">
