@@ -14,6 +14,31 @@
     </style>
 </head>
 <body class="text-[#081B4B] antialiased">
+
+    <!-- TRANSACTION PIN MODAL -->
+    <div id="pinModal" class="fixed inset-0 z-[100] flex items-center justify-center p-6 hidden">
+        <div class="fixed inset-0 bg-[#081B4B]/60 backdrop-blur-sm"></div>
+        <div class="bg-white rounded-[32px] p-8 relative z-10 shadow-2xl border border-slate-100 text-center max-w-sm w-full">
+            <div class="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                <i data-lucide="lock" class="w-8 h-8 text-[#0052FF]"></i>
+            </div>
+            <h3 class="text-xl font-black mb-2">Confirm Withdrawal</h3>
+            <p class="text-slate-400 text-[10px] font-bold mb-8 uppercase tracking-widest">Enter your 4-digit PIN to proceed</p>
+            
+            <div class="flex justify-center gap-3 mb-8">
+                <input type="password" maxlength="1" class="pin-box w-12 h-14 bg-slate-50 border border-slate-200 rounded-xl text-center text-xl font-black focus:border-[#0052FF] outline-none">
+                <input type="password" maxlength="1" class="pin-box w-12 h-14 bg-slate-50 border border-slate-200 rounded-xl text-center text-xl font-black focus:border-[#0052FF] outline-none">
+                <input type="password" maxlength="1" class="pin-box w-12 h-14 bg-slate-50 border border-slate-200 rounded-xl text-center text-xl font-black focus:border-[#0052FF] outline-none">
+                <input type="password" maxlength="1" class="pin-box w-12 h-14 bg-slate-50 border border-slate-200 rounded-xl text-center text-xl font-black focus:border-[#0052FF] outline-none">
+            </div>
+
+            <div class="flex flex-col gap-3">
+                <button onclick="confirmWithdrawal()" id="confirmPinBtn" class="w-full bg-[#0052FF] text-white py-4 rounded-2xl font-black text-sm shadow-xl active:scale-95 transition-all">Verify & Withdraw</button>
+                <button onclick="closePinModal()" class="w-full py-3 text-slate-400 font-bold text-[10px] uppercase tracking-widest">Cancel</button>
+            </div>
+        </div>
+    </div>
+
     <div class="min-h-screen flex flex-col items-center justify-center p-6 bg-slate-50">
         <div class="w-full max-w-md bg-white p-8 rounded-[40px] shadow-2xl border border-slate-100">
             <header class="text-center mb-10">
@@ -27,23 +52,25 @@
             <form class="space-y-6">
                 <div>
                     <label class="text-[10px] font-black uppercase text-slate-400 tracking-widest ml-1">Bank Name</label>
-                    <select class="w-full p-4 mt-1 bg-slate-50 border border-slate-100 rounded-2xl font-bold outline-none">
+                    <select id="bankName" class="w-full p-4 mt-1 bg-slate-50 border border-slate-100 rounded-2xl font-bold outline-none focus:border-[#0052FF]">
                         <option>OPay / Palmpay</option>
                         <option>GTBank</option>
                         <option>Zenith Bank</option>
                         <option>Kuda Bank</option>
+                        <option>Moniepoint</option>
                     </select>
                 </div>
                 <div>
                     <label class="text-[10px] font-black uppercase text-slate-400 tracking-widest ml-1">Account Number</label>
-                    <input type="number" class="w-full p-4 mt-1 bg-slate-50 border border-slate-100 rounded-2xl font-bold outline-none" placeholder="0123456789">
+                    <input type="number" id="accountNumber" class="w-full p-4 mt-1 bg-slate-50 border border-slate-100 rounded-2xl font-bold outline-none focus:border-[#0052FF]" placeholder="0123456789">
                 </div>
                 <div>
                     <label class="text-[10px] font-black uppercase text-slate-400 tracking-widest ml-1">Amount to Withdraw</label>
-                    <input type="number" class="w-full p-4 mt-1 bg-slate-50 border border-slate-100 rounded-2xl font-bold outline-none" placeholder="Min ₦2,000">
+                    <!-- Added id="withdrawAmount" -->
+                    <input type="number" id="withdrawAmount" class="w-full p-4 mt-1 bg-slate-50 border border-slate-100 rounded-2xl font-bold outline-none focus:border-[#0052FF]" placeholder="Min ₦7,000">
                 </div>
 
-                <button type="button" onclick="showToast('Withdrawal request submitted!', 'success'); setTimeout(()=>window.location.href='referrals.html', 2000)" class="w-full bg-[#0052FF] text-white py-5 rounded-2xl font-black shadow-xl shadow-blue-100 active:scale-95 transition-all">
+                <button type="button" onclick="startWithdrawal()" class="w-full bg-[#0052FF] text-white py-5 rounded-2xl font-black shadow-xl shadow-blue-100 active:scale-95 transition-all">
                     Submit Request
                 </button>
             </form>
@@ -51,8 +78,104 @@
             <a href="referrals.html" class="block text-center mt-8 text-xs font-bold text-slate-400 uppercase tracking-widest">Cancel & Go Back</a>
         </div>
     </div>
+
     <script src="supabase-config.js"></script>
     <script src="notifications.js"></script>
-    <script>lucide.createIcons();</script>
+    <script>
+        lucide.createIcons();
+        let userId = "";
+
+        // PIN logic
+        const pinInputs = document.querySelectorAll('.pin-box');
+        pinInputs.forEach((input, index) => {
+            input.addEventListener('keyup', (e) => {
+                if (e.target.value.length === 1 && index < 3) pinInputs[index + 1].focus();
+                if (e.key === 'Backspace' && index > 0) pinInputs[index - 1].focus();
+            });
+        });
+
+        async function init() {
+            const { data: { session } } = await _supabase.auth.getSession();
+            if (!session) { window.location.href = "login.html"; return; }
+            userId = session.user.id;
+        }
+
+        function startWithdrawal() {
+            const amount = document.getElementById('withdrawAmount').value;
+            const accNum = document.getElementById('accountNumber').value;
+
+            // 1. Check Minimum
+            if (!amount || amount < 7000) {
+                return showToast("Minimum withdrawal is 7,000", "error");
+            }
+
+            if (!accNum || accNum.length < 10) {
+                return showToast("Please enter a valid account number", "error");
+            }
+
+            // 2. Open PIN Modal if amount is okay
+            document.getElementById('pinModal').classList.remove('hidden');
+            pinInputs[0].focus();
+        }
+
+        function closePinModal() {
+            document.getElementById('pinModal').classList.add('hidden');
+            pinInputs.forEach(i => i.value = '');
+        }
+
+        async function confirmWithdrawal() {
+    let pin = "";
+    pinInputs.forEach(i => pin += i.value);
+    if (pin.length < 4) return showToast("Enter 4-digit PIN", "error");
+
+    const btn = document.getElementById('confirmPinBtn');
+    const amount = document.getElementById('withdrawAmount').value;
+    const bank = document.getElementById('bankName').value;
+    const acc = document.getElementById('accountNumber').value;
+    
+    btn.innerText = "Processing...";
+    btn.disabled = true;
+
+    // 1. Verify PIN and check Referral Earnings Balance
+    const { data: profile, error: fetchError } = await _supabase
+        .from('profiles')
+        .select('transaction_pin, referral_earnings')
+        .eq('id', userId)
+        .single();
+
+    if (fetchError || profile.transaction_pin !== pin) {
+        showToast("Incorrect PIN", "error");
+        pinInputs.forEach(i => i.value = ''); pinInputs[0].focus();
+        btn.innerText = "Verify & Withdraw"; btn.disabled = false;
+        return;
+    }
+
+    if (parseFloat(profile.referral_earnings) < parseFloat(amount)) {
+        showToast("Insufficient Referral Balance", "error");
+        closePinModal();
+        btn.innerText = "Verify & Withdraw"; btn.disabled = false;
+        return;
+    }
+
+    // 2. CALL THE REAL WITHDRAWAL FUNCTION
+    const { error: withdrawError } = await _supabase.rpc('process_referral_withdrawal', {
+        uid: userId,
+        amt: parseFloat(amount)
+    });
+
+    if (withdrawError) {
+        showToast("Error: " + withdrawError.message, "error");
+        btn.innerText = "Verify & Withdraw"; btn.disabled = false;
+    } else {
+        // 3. SUCCESS
+        showToast("Withdrawal of ₦" + amount + " to " + bank + " was successful!", "success");
+        setTimeout(() => { 
+            window.location.href = 'referrals.html'; 
+        }, 2500);
+    }
+}
+
+        window.onload = init;
+    </script>
 </body>
 </html>

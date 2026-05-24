@@ -38,10 +38,16 @@
                 <h1 class="text-lg font-extrabold tracking-tight text-[#081B4B]">Elite Data</h1>
             </div>
             <nav class="flex-1 space-y-1 font-bold text-[13px]">
-                <a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="layout-grid" class="w-4 h-4"></i> Dashboard</a>
-                <a href="buy-data.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="wifi" class="w-4 h-4"></i> Buy Data</a>
+                <a href="dashboard.html" class="active-nav flex items-center gap-3 px-4 py-3 rounded-2xl"><i data-lucide="layout-grid" class="w-4 h-4"></i> Dashboard</a>
+                <a href="buy-data.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="shopping-cart" class="w-4 h-4"></i> Buy Data</a>
                 <a href="buy-airtime.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="smartphone" class="w-4 h-4"></i> Airtime</a>
-                <a href="fund-wallet.html" class="active-nav flex items-center gap-3 px-4 py-3 rounded-2xl"><i data-lucide="wallet" class="w-4 h-4"></i> Wallet</a>
+                <a href="cable-tv.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="tv" class="w-4 h-4"></i> Cable TV</a>
+                <a href="electricity.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="zap" class="w-4 h-4"></i> Electricity</a>
+                <a href="history.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="history" class="w-4 h-4"></i> History</a>
+                <a href="fund-wallet.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="wallet" class="w-4 h-4"></i> Wallet</a>
+                <a href="referrals.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="users" class="w-4 h-4"></i> Referrals</a>
+                <a href="support.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="headset" class="w-4 h-4"></i> Support</a>
+                <a href="settings.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="settings" class="w-4 h-4"></i> Settings</a>
             </nav>
         </aside>
 
@@ -88,35 +94,36 @@
         </main>
     </div>
 
+    
     <script src="theme.js"></script>
-    <script src="supabase-config.js"></script>
-    <script src="notifications.js"></script>
-   <script src="theme.js"></script>
     <script src="supabase-config.js"></script>
     <script src="notifications.js"></script>
     <script>
         lucide.createIcons();
         let userId = "";
-        let userEmail = "";
+        let userEmail = ""; // This starts empty
 
         async function loadData() {
             try {
                 const { data: { session } } = await _supabase.auth.getSession();
-                if (!session) { window.location.href = "login.html"; return; }
+                if (!session) { 
+                    window.location.href = "login.html"; 
+                    return; 
+                }
                 
                 userId = session.user.id;
-                userEmail = session.user.email;
+                userEmail = session.user.email; // Now email is grabbed from Supabase
+                console.log("Supabase User Loaded:", userEmail);
 
                 const { data: wallet } = await _supabase.from('wallets').select('balance').eq('id', userId).single();
                 if (wallet) {
                     document.getElementById('user-balance-mobile').innerText = parseFloat(wallet.balance).toLocaleString();
                 }
             } catch (err) {
-                console.error("Error loading profile:", err);
+                console.error("Profile Load Error:", err);
             }
         }
 
-        // Separate function to handle database update after successful payment
         async function updateDatabase(amount) {
             const { error } = await _supabase.rpc('fund_wallet_v2', {
                 uid: userId,
@@ -124,10 +131,7 @@
             });
 
             if (error) {
-                showToast("Error updating wallet: " + error.message, "error");
-                const btn = document.getElementById('payBtn');
-                btn.disabled = false;
-                btn.innerText = "Pay Now";
+                showToast("Database error: " + error.message, "error");
             } else {
                 showToast("Wallet Funded Successfully!", "success");
                 setTimeout(() => { window.location.href = "dashboard.html"; }, 2000);
@@ -135,47 +139,55 @@
         }
 
         function payWithPaystack() {
-            const amount = document.getElementById('fundAmount').value;
-            const btn = document.getElementById('payBtn');
-            
-            if (!amount || amount < 1000) {
-                return showToast("Minimum funding amount is ₦1,000", "error");
-            }
+    // 1. Get and Sanitize Amount (Remove commas or spaces)
+    let rawAmount = document.getElementById('fundAmount').value;
+    let cleanAmount = rawAmount.replace(/,/g, ''); 
+    let amountNum = parseFloat(cleanAmount);
+    
+    const btn = document.getElementById('payBtn');
+    
+    // 2. Validations
+    if (!amountNum || amountNum < 1000) {
+        return showToast("Minimum funding is ₦1,000", "error");
+    }
 
-            if (!userEmail) {
-                return showToast("User data not loaded. Please refresh.", "error");
-            }
+    if (!userEmail) {
+        return showToast("User data loading... please wait.", "error");
+    }
 
-            btn.innerText = "Initializing...";
-            btn.disabled = true;
+    btn.innerText = "Initializing...";
+    btn.disabled = true;
 
-            try {
-                const handler = PaystackPop.setup({
-                    key: 'pk_test_17c0f997be5b20fcca58572cd2c07ce7383dee99', // <--- PASTE YOUR REAL KEY HERE
-                    email: userEmail,
-                    amount: Math.round(Number(amount) * 100), // Ensure it's a clean integer
-                    currency: 'NGN',
-                    ref: 'ELITE-' + Date.now(),
-                    callback: function(response) {
-                        // Standard function here to satisfy Paystack's validator
-                        console.log("Payment Successful:", response.reference);
-                        updateDatabase(amount); 
-                    },
-                    onClose: function() {
-                        showToast("Transaction closed", "error");
-                        btn.innerText = "Pay Now";
-                        btn.disabled = false;
-                    }
-                });
+    // 3. Generate a SUPER UNIQUE reference to avoid the 400 error
+    const uniqueRef = 'ELITE-' + Math.floor(Math.random() * 1000000000) + '-' + Date.now();
 
-                handler.openIframe();
-            } catch (err) {
-                console.error("Paystack Launch Error:", err);
-                showToast("Could not launch Paystack", "error");
-                btn.disabled = false;
+    try {
+        const handler = PaystackPop.setup({
+            // .trim() removes any accidental spaces in your key
+            key: 'pk_test_17c0f997be5b20fcca58572cd2c07ce7383dee99'.trim(), 
+            email: userEmail.trim(),
+            amount: Math.floor(amountNum * 100), // Convert to Kobo correctly
+            currency: 'NGN',
+            ref: uniqueRef,
+            callback: function(response) {
+                console.log("Paystack Success:", response);
+                updateDatabase(amountNum); 
+            },
+            onClose: function() {
+                showToast("Transaction cancelled", "error");
                 btn.innerText = "Pay Now";
+                btn.disabled = false;
             }
-        }
+        });
+
+        handler.openIframe();
+    } catch (err) {
+        console.error("Paystack Error:", err);
+        showToast("Gateway error. Check your Public Key.", "error");
+        btn.disabled = false;
+        btn.innerText = "Pay Now";
+    }
+}
 
         function toggleMenu() {
             const sb = document.getElementById('sidebar');
