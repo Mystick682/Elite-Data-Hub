@@ -104,30 +104,31 @@
         function openForgotModal() { document.getElementById('forgotModal').classList.remove('hidden'); }
         function closeForgotModal() { document.getElementById('forgotModal').classList.add('hidden'); }
 
-        async function handleResetRequest() {
-            const email = document.getElementById('resetEmail').value;
-            const btn = document.getElementById('resetBtn');
-            if (!email) return showToast("Enter your email address", "error");
+       async function handleResetRequest() {
+    const email = document.getElementById('resetEmail').value;
+    const btn = document.getElementById('resetBtn');
+    if (!email) return showToast("Enter your email address", "error");
 
-            btn.innerText = "Sending...";
-            btn.disabled = true;
+    btn.innerText = "Sending...";
+    btn.disabled = true;
 
-            // Use current page URL to build the redirect link
-            const redirectUrl = window.location.origin + window.location.pathname.replace('login.html', 'reset-password.html');
+    // Use your REAL live GitHub URL here
+    // Change 'your-username' and 'your-repo-name' to match your GitHub
+    const redirectUrl = "https://mystick682.github.io/Elite-Data-Hub/reset-password.html";
 
-            const { error } = await _supabase.auth.resetPasswordForEmail(email, {
-                redirectTo: redirectUrl,
-            });
+    const { error } = await _supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: redirectUrl,
+    });
 
-            if (error) {
-                showToast(error.message, "error");
-            } else {
-                showToast("Reset link sent! Check your email.");
-                closeForgotModal();
-            }
-            btn.innerText = "Send Link";
-            btn.disabled = false;
-        }
+    if (error) {
+        showToast(error.message, "error");
+    } else {
+        showToast("Reset link sent! Please check your email.");
+        closeForgotModal();
+    }
+    btn.innerText = "Send Link";
+    btn.disabled = false;
+}
 
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
