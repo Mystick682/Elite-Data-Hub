@@ -10,29 +10,20 @@ serve(async (req: Request) => {
 
   try {
     const bodyReq = await req.json()
-    const { actionType, networkId, phoneNumber, planId, amount, meterNumber, discoId, meterType, smartCardNumber, cableId } = bodyReq
+    console.log("Incoming Request Body:", bodyReq); // This will show in logs
+
+    const { actionType, networkId, phoneNumber, planId, amount } = bodyReq
     const VTU_KEY = Deno.env.get('VTU_API_KEY')
 
-    let endpoint = '';
-    let apiBody = {};
+    let endpoint = (actionType === 'data') 
+      ? 'https://gladtidingsdata.com/api/data/' 
+      : 'https://gladtidingsdata.com/api/topup/';
+    
+    let apiBody = (actionType === 'data')
+      ? { network: networkId, mobile_number: phoneNumber, plan: planId, Ported_number: true }
+      : { network: networkId, mobile_number: phoneNumber, plan: planId, amount: amount, airtime_type: "VTU" };
 
-    // 1. SELECT ENDPOINT BASED ON SERVICE
-    if (actionType === 'data') {
-      endpoint = 'https://gladtidingsdata.com/api/data/';
-      apiBody = { network: networkId, mobile_number: phoneNumber, plan: planId, Ported_number: true };
-    } 
-    else if (actionType === 'airtime') {
-      endpoint = 'https://gladtidingsdata.com/api/topup/';
-      apiBody = { network: networkId, mobile_number: phoneNumber, plan: planId, amount: amount, airtime_type: "VTU" };
-    }
-    else if (actionType === 'electricity') {
-      endpoint = 'https://gladtidingsdata.com/api/billpayment/';
-      apiBody = { disco_name: discoId, meter_number: meterNumber, Meter_Type: meterType, amount: amount };
-    }
-    else if (actionType === 'cable') {
-      endpoint = 'https://gladtidingsdata.com/api/cablesub/';
-      apiBody = { cablename: cableId, smart_card_number: smartCardNumber, cableplan: planId };
-    }
+    console.log("Sending to Glad Tidings:", apiBody);
 
     const response = await fetch(endpoint, {
       method: 'POST',
@@ -41,8 +32,8 @@ serve(async (req: Request) => {
     })
 
     const data = await response.json()
+    console.log("Glad Tidings Response:", data); // THIS IS THE IMPORTANT ONE
 
-    // 2. CHECK IF PROVIDER FAILED (e.g. 0 Balance)
     if (data.Status !== 'successful' && data.status !== 'success') {
        return new Response(JSON.stringify({ error: "API_REJECTED", details: data }), { 
          headers: { ...corsHeaders, 'Content-Type': 'application/json' }, 
@@ -56,6 +47,7 @@ serve(async (req: Request) => {
     })
 
   } catch (error) {
+    console.error("Critical Edge Function Error:", error.message);
     return new Response(JSON.stringify({ error: error.message }), { 
       headers: { ...corsHeaders, 'Content-Type': 'application/json' }, 
       status: 500 
