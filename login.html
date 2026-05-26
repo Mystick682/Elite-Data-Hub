@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login | Elite Data Services</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Supabase CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -13,57 +12,32 @@
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #fcfdfe; }
         .tab-active { color: #0052FF; border-bottom: 3px solid #0052FF; }
         .input-group:focus-within { border-color: #0052FF; background: white; box-shadow: 0 0 0 4px rgba(0, 82, 255, 0.05); }
-        @keyframes slideIn {
-    from { transform: translateX(100%); opacity: 0; }
-    to { transform: translateX(0); opacity: 1; }
-}
-.animate-toast {
-    animation: slideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-}
-/* Elite Dark Mode Colors - Corrected Syntax */
-.dark body { 
-    background-color: #0B1120 !important; 
-    color: #F1F5F9 !important; 
-}
-
-/* This targets the white cards and white backgrounds */
-.dark .bg-white, 
-.dark aside, 
-.dark nav, 
-.dark header { 
-    background-color: #111827 !important; 
-    border-color: #1F2937 !important; 
-    color: #F1F5F9 !important; 
-}
-
-/* This targets the light blue background sections */
-.dark [class*="bg-[#F8FAFF]"], 
-.dark .bg-slate-50 { 
-    background-color: #0B1120 !important; 
-}
-
-/* This targets the dark navy text sections */
-.dark [class*="text-[#081B4B]"], 
-.dark .text-slate-900 { 
-    color: #F1F5F9 !important; 
-}
-
-/* This targets inputs */
-.dark input { 
-    background-color: #1F2937 !important; 
-    border-color: #374151 !important; 
-    color: white !important; 
-}
-
-/* Muted text colors */
-.dark .text-slate-400, 
-.dark .text-slate-500 { 
-    color: #94A3B8 !important; 
-}
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .animate-toast { animation: slideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        .dark body { background-color: #0B1120 !important; color: #F1F5F9 !important; }
+        .dark .bg-white, .dark aside, .dark nav, .dark header { background-color: #111827 !important; border-color: #1F2937 !important; color: #F1F5F9 !important; }
     </style>
-    
 </head>
 <body class="text-[#081B4B] antialiased">
+
+    <!-- FORGOT PASSWORD MODAL -->
+    <div id="forgotModal" class="fixed inset-0 z-[100] flex items-center justify-center p-6 hidden">
+        <div class="fixed inset-0 bg-[#081B4B]/60 backdrop-blur-sm"></div>
+        <div class="bg-white dark:bg-[#111827] w-full max-w-sm rounded-[32px] p-8 relative z-10 shadow-2xl border border-slate-100 dark:border-slate-800 text-center">
+            <div class="w-16 h-16 bg-blue-50 dark:bg-blue-900/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                <i data-lucide="help-circle" class="w-8 h-8 text-[#0052FF]"></i>
+            </div>
+            <h3 class="text-xl font-black mb-2 dark:text-white">Reset Password</h3>
+            <p class="text-slate-400 text-xs font-medium mb-8">Enter your email to receive a password reset link.</p>
+            
+            <input type="email" id="resetEmail" class="w-full p-4 mb-6 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl outline-none focus:border-[#0052FF]" placeholder="Enter your email">
+
+            <div class="flex flex-col gap-3">
+                <button onclick="handleResetRequest()" id="resetBtn" class="w-full bg-[#0052FF] text-white py-4 rounded-2xl font-black text-sm shadow-xl active:scale-95 transition-all">Send Link</button>
+                <button onclick="closeForgotModal()" class="w-full py-3 text-slate-400 font-bold text-xs uppercase tracking-widest">Back to Login</button>
+            </div>
+        </div>
+    </div>
 
     <div class="min-h-screen flex items-center justify-center p-6 lg:p-12">
         <div class="w-full max-w-[440px]">
@@ -77,7 +51,6 @@
                     <p class="text-slate-400 text-sm font-medium">Enter your credentials to continue</p>
                 </div>
 
-                <!-- TABS -->
                 <div class="flex border-b border-slate-100 mb-8 text-center">
                     <div class="flex-1 pb-3 text-sm font-bold tab-active cursor-pointer">Login</div>
                     <a href="register.html" class="flex-1 pb-3 text-sm font-bold text-slate-300">Register</a>
@@ -95,14 +68,12 @@
                     <div class="space-y-2">
                         <div class="flex justify-between px-1">
                             <label class="text-[11px] font-bold text-slate-500 uppercase tracking-[0.15em]">Password</label>
-                            <a href="#" class="text-[11px] font-bold text-[#0052FF] uppercase tracking-wider">Forgot?</a>
+                            <!-- Click calls openForgotModal() -->
+                            <button type="button" onclick="openForgotModal()" class="text-[11px] font-bold text-[#0052FF] uppercase tracking-wider">Forgot?</button>
                         </div>
                         <div class="input-group flex items-center border border-slate-200 rounded-2xl bg-slate-50/50 px-4 transition-all relative">
                             <i data-lucide="lock" class="w-5 h-5 text-slate-300"></i>
-                            <!-- Password Input -->
                             <input type="password" id="password" required class="w-full p-4 bg-transparent outline-none text-sm font-medium" placeholder="••••••••">
-                            
-                            <!-- Toggle Button -->
                             <button type="button" onclick="togglePasswordVisibility()" class="focus:outline-none">
                                 <i id="eyeIcon" data-lucide="eye-off" class="w-5 h-5 text-slate-300 hover:text-[#0052FF] transition-colors"></i>
                             </button>
@@ -117,56 +88,62 @@
         </div>
     </div>
 
-    <!-- LOGIC SCRIPTS -->
-     <script src="notifications.js"></script>
+    <script src="notifications.js"></script>
     <script src="supabase-config.js"></script>
     <script>
         lucide.createIcons();
 
-        // --- PASSWORD TOGGLE LOGIC ---
         function togglePasswordVisibility() {
-            const passwordInput = document.getElementById('password');
-            const eyeIcon = document.getElementById('eyeIcon');
-
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                eyeIcon.setAttribute('data-lucide', 'eye'); // Show open eye
-            } else {
-                passwordInput.type = 'password';
-                eyeIcon.setAttribute('data-lucide', 'eye-off'); // Show slashed eye
-            }
-            
-            // Re-render Lucide icons so the change is visible
+            const pass = document.getElementById('password');
+            const icon = document.getElementById('eyeIcon');
+            pass.type = pass.type === 'password' ? 'text' : 'password';
+            icon.setAttribute('data-lucide', pass.type === 'password' ? 'eye-off' : 'eye');
             lucide.createIcons();
         }
 
-        const loginForm = document.getElementById('loginForm');
-        const loginBtn = document.getElementById('loginBtn');
+        function openForgotModal() { document.getElementById('forgotModal').classList.remove('hidden'); }
+        function closeForgotModal() { document.getElementById('forgotModal').classList.add('hidden'); }
 
-        loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            // Show loading state
-            loginBtn.innerText = "Logging in...";
-            loginBtn.disabled = true;
+        async function handleResetRequest() {
+            const email = document.getElementById('resetEmail').value;
+            const btn = document.getElementById('resetBtn');
+            if (!email) return showToast("Enter your email address", "error");
 
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+            btn.innerText = "Sending...";
+            btn.disabled = true;
 
-            // 1. Log in with Supabase
-            const { data, error } = await _supabase.auth.signInWithPassword({
-                email: email,
-                password: password,
+            // Use current page URL to build the redirect link
+            const redirectUrl = window.location.origin + window.location.pathname.replace('login.html', 'reset-password.html');
+
+            const { error } = await _supabase.auth.resetPasswordForEmail(email, {
+                redirectTo: redirectUrl,
             });
 
             if (error) {
-    showToast(error.message, "error"); // NEW STYLISH WAY
-} else {
-    showToast("Welcome back! Redirecting..."); // DEFAULT SUCCESS
-    setTimeout(() => {
-        window.location.href = "dashboard.html";
-    }, 1500); // Give them a second to see the toast before moving
-}
+                showToast(error.message, "error");
+            } else {
+                showToast("Reset link sent! Check your email.");
+                closeForgotModal();
+            }
+            btn.innerText = "Send Link";
+            btn.disabled = false;
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('loginBtn');
+            btn.innerText = "Logging in...";
+            const { data, error } = await _supabase.auth.signInWithPassword({
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value,
+            });
+            if (error) {
+                showToast(error.message, "error");
+                btn.innerText = "Login";
+            } else {
+                showToast("Welcome back!");
+                setTimeout(() => window.location.href = "dashboard.html", 1000);
+            }
         });
     </script>
 </body>
