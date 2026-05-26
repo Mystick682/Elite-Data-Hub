@@ -13,15 +13,29 @@
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .active-nav { background: #0052FF !important; color: white !important; }
         .network-card.active { border-color: #0052FF; background: #F0F5FF; border-width: 2px; }
-        .plan-card.active { border-color: #0052FF; background: #F0F5FF; box-shadow: 0 4px 15px rgba(0, 82, 255, 0.1); border-width: 2px; }
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+        .plan-card.active { border-color: #0052FF !background: #F0F5FF; box-shadow: 0 4px 15px rgba(0, 82, 255, 0.1); border-width: 2px; }
+        
+        /* 3D MOCKUP CSS */
+        .phone-container { position: relative; width: 85px; height: 90px; margin-right: -5px; }
+        .phone-handset { 
+            width: 44px; height: 82px; background: #081B4B; border: 2px solid rgba(255,255,255,0.2); 
+            border-radius: 8px; position: absolute; right: 10px; bottom: 0;
+            transform: rotate(-8deg); overflow: hidden;
         }
-        .animate-toast {
-            animation: slideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        .phone-display { position: absolute; inset: 2px; background: linear-gradient(180deg, #246BFD 0%, #0052FF 100%); border-radius: 6px; }
+        .tile { 
+            position: absolute; background: white; padding: 4px; border-radius: 6px; 
+            box-shadow: 0 8px 15px rgba(0,0,0,0.15); display: flex; flex-direction: column; 
+            align-items: center; justify-content: center; z-index: 20; animation: float 3s ease-in-out infinite; 
         }
-        /* Elite Dark Mode Colors - Corrected Syntax */
+        .tile i { width: 12px; height: 12px; }
+        .tile span { font-size: 5px; font-weight: 900; text-transform: uppercase; margin-top: 1px; }
+        .tile-data { top: 5px; left: 0px; animation-delay: 0s; color: #0052FF; }
+        .tile-airtime { top: 32px; right: -5px; animation-delay: 1s; color: #10b981; }
+        .tile-tv { bottom: 10px; left: 10px; animation-delay: 0.5s; color: #a855f7; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+
+        /* Dark Mode Styles */
         .dark body { background-color: #0B1120 !important; color: #F1F5F9 !important; }
         .dark .bg-white, .dark aside, .dark nav, .dark header { background-color: #111827 !important; border-color: #1F2937 !important; color: #F1F5F9 !important; }
         .dark [class*="bg-[#F8FAFF]"], .dark .bg-slate-50 { background-color: #0B1120 !important; }
@@ -32,7 +46,6 @@
 </head>
 <body class="text-[#081B4B] antialiased">
 
-    <!-- SIDEBAR OVERLAY -->
     <div id="overlay" class="fixed inset-0 bg-black/40 z-[80] hidden lg:hidden" onclick="toggleMenu()"></div>
     
     <!-- TRANSACTION PIN MODAL -->
@@ -44,32 +57,29 @@
             </div>
             <h3 class="text-xl font-black mb-2 dark:text-white">Transaction PIN</h3>
             <p class="text-slate-400 text-[10px] font-bold mb-8 uppercase tracking-widest">Enter your 4-digit secret PIN</p>
-            
             <div class="flex justify-center gap-3 mb-8">
                 <input type="password" maxlength="1" class="pin-box w-12 h-14 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-center text-xl font-black focus:border-[#0052FF] outline-none">
                 <input type="password" maxlength="1" class="pin-box w-12 h-14 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-center text-xl font-black focus:border-[#0052FF] outline-none">
                 <input type="password" maxlength="1" class="pin-box w-12 h-14 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-center text-xl font-black focus:border-[#0052FF] outline-none">
                 <input type="password" maxlength="1" class="pin-box w-12 h-14 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-center text-xl font-black focus:border-[#0052FF] outline-none">
             </div>
-
             <div class="flex flex-col gap-3">
-                <button onclick="confirmPurchase()" id="confirmPinBtn" class="w-full bg-[#0052FF] text-white py-4 rounded-2xl font-black text-sm shadow-xl shadow-blue-200 active:scale-95 transition-all">Confirm Payment</button>
+                <button onclick="confirmPurchase()" id="confirmPinBtn" class="w-full bg-[#0052FF] text-white py-4 rounded-2xl font-black text-sm shadow-xl active:scale-95 transition-all">Confirm Payment</button>
                 <button onclick="closePinModal()" class="w-full py-3 text-slate-400 font-bold text-[10px] uppercase tracking-widest">Cancel</button>
             </div>
         </div>
     </div>
 
     <div class="flex min-h-screen">
-        <!-- SIDEBAR -->
         <aside id="sidebar" class="fixed lg:sticky top-0 left-0 h-screen w-72 bg-white border-r border-slate-100 z-[90] flex flex-col p-6 -translate-x-full lg:translate-x-0 transition-transform duration-300">
             <div class="flex items-center gap-3 mb-10">
                 <div class="w-10 h-10 bg-[#0052FF] rounded-xl flex items-center justify-center text-white shadow-lg"><i data-lucide="zap" class="w-6 h-6 fill-current"></i></div>
-                <h1 class="text-lg font-extrabold tracking-tight text-[#081B4B]">Elite Data</h1>
+                <h1 class="text-lg font-extrabold tracking-tight">Elite Data</h1>
             </div>
             <nav class="flex-1 space-y-1 font-bold text-[13px]">
-                <a href="dashboard.html" class="active-nav flex items-center gap-3 px-4 py-3 rounded-2xl"><i data-lucide="layout-grid" class="w-4 h-4"></i> Dashboard</a>
-                <a href="buy-data.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="shopping-cart" class="w-4 h-4"></i> Buy Data</a>
-                <a href="buy-airtime.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="smartphone" class="w-4 h-4"></i> Airtime</a>
+                <a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="layout-grid" class="w-4 h-4"></i> Dashboard</a>
+                <a href="buy-data.html" class="active-nav flex items-center gap-3 px-4 py-3 rounded-2xl"><i data-lucide="shopping-cart" class="w-4 h-4"></i> Buy Data</a>
+                <a href="buy-airtime.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="smartphone" class="w-4 h-4"></i> Airtime Top-up</a>
                 <a href="cable-tv.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="tv" class="w-4 h-4"></i> Cable TV</a>
                 <a href="electricity.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="zap" class="w-4 h-4"></i> Electricity</a>
                 <a href="history.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="history" class="w-4 h-4"></i> History</a>
@@ -80,17 +90,15 @@
             </nav>
         </aside>
 
-        <!-- MAIN CONTENT -->
         <main class="flex-1 flex flex-col min-w-0 bg-[#F8FAFF]">
-            
             <header class="lg:hidden bg-white px-6 py-4 flex justify-between items-center border-b border-slate-50 sticky top-0 z-[60]">
                 <button onclick="toggleMenu()"><i data-lucide="menu" class="w-6 h-6 text-slate-700"></i></button>
                 <span class="font-extrabold text-sm text-[#0052FF]">Buy Data</span>
                 <div class="flex items-center gap-3">
                     <i data-lucide="bell" class="w-6 h-6 text-slate-400"></i>
-                    <button onclick="toggleTheme()" class="w-10 h-10 flex items-center justify-center bg-slate-50 dark:bg-slate-800 rounded-xl">
-                        <i data-lucide="moon" class="w-5 h-5 text-slate-400 dark:hidden"></i>
-                        <i data-lucide="sun" class="hidden dark:block w-5 h-5 text-yellow-400"></i>
+                    <button onclick="toggleTheme()" class="w-8 h-8 flex items-center justify-center bg-slate-50 dark:bg-slate-800 rounded-lg">
+                        <i data-lucide="moon" class="w-4 h-4 text-slate-400 dark:hidden"></i>
+                        <i data-lucide="sun" class="hidden dark:block w-4 h-4 text-yellow-400"></i>
                     </button>
                 </div>
             </header>
@@ -98,84 +106,78 @@
             <header class="hidden lg:flex bg-white border-b border-slate-100 px-10 py-5 justify-between items-center sticky top-0 z-50">
                 <div class="font-bold text-sm">Welcome back, <span id="user-name-desktop" class="font-extrabold">Loading...</span></div>
                 <div class="flex items-center gap-6">
-                    <button onclick="toggleTheme()" class="w-10 h-10 flex items-center justify-center bg-slate-50 dark:bg-slate-800 rounded-xl transition-all">
+                    <button onclick="toggleTheme()" class="w-10 h-10 flex items-center justify-center bg-slate-50 dark:bg-slate-800 rounded-xl">
                         <i data-lucide="moon" class="w-5 h-5 text-slate-400 dark:hidden"></i>
                         <i data-lucide="sun" class="hidden dark:block w-5 h-5 text-yellow-400"></i>
                     </button>
                     <div class="flex items-center gap-4 bg-slate-50 px-4 py-2 rounded-xl border border-slate-100">
-                        <span class="text-[10px] font-bold text-slate-400 uppercase">Balance</span>
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Balance</span>
                         <span class="text-sm font-black text-[#0052FF]">₦<span id="user-balance-desktop">0.00</span></span>
                     </div>
                 </div>
             </header>
 
             <div class="w-full pb-32">
-                <div class="lg:hidden bg-[#0052FF] p-6 pb-24 text-white flex justify-between items-start rounded-b-[40px]">
-                    <div><p class="text-blue-100 text-[10px] font-bold uppercase tracking-widest mb-1">Get Connected,</p><h2 class="text-xl font-bold">Buy Data 🌐</h2></div>
-                    <img src="https://i.pravatar.cc/100" class="w-12 h-12 rounded-full border-2 border-white/20">
+                <div class="lg:hidden bg-[#0052FF] p-6 pb-24 text-white flex justify-between items-center rounded-b-[40px]">
+                    <div class="flex-1">
+                        <p class="text-blue-100 text-[10px] font-bold uppercase tracking-widest mb-1">Get Connected,</p>
+                        <h2 class="text-xl font-bold leading-tight">Buy Data 🌐</h2>
+                    </div>
+                    <!-- RE-ADDED 3D MOCKUP -->
+                    <div class="phone-container">
+                        <div class="phone-handset"><div class="phone-display"></div></div>
+                        <div class="tile tile-data"><i data-lucide="wifi"></i><span>Data</span></div>
+                        <div class="tile tile-airtime"><i data-lucide="wallet"></i><span>Airtime</span></div>
+                        <div class="tile tile-tv"><i data-lucide="tv"></i><span>TV</span></div>
+                    </div>
                 </div>
 
                 <div class="max-w-6xl mx-auto px-4 lg:px-10">
                     <div class="lg:hidden relative z-20 bg-white p-8 rounded-[32px] -mt-16 shadow-2xl flex flex-col items-center border border-slate-50">
-                        <p class="text-slate-400 text-[10px] font-bold uppercase mb-2 tracking-widest">Available Balance</p>
+                        <p class="text-slate-400 text-[10px] font-bold uppercase mb-2">Available Balance</p>
                         <h3 class="text-3xl font-black text-[#081B4B]">₦<span id="user-balance-mobile">0.00</span></h3>
-                        <a href="fund-wallet.html" class="w-full bg-[#0052FF] text-white py-3 rounded-2xl font-bold text-xs text-center mt-4">+ Fund Wallet</a>
                     </div>
 
                     <div class="grid grid-cols-1 lg:grid-cols-12 lg:gap-10 mt-10">
                         <div class="lg:col-span-8 space-y-10">
                             <!-- 1. SELECT NETWORK -->
                             <section>
-                                <h4 class="font-extrabold text-sm mb-4 uppercase">1. Select Provider</h4>
-                               <div class="grid grid-cols-4 gap-3">
-    <!-- MTN: ID 1 -->
-                                <button onclick="setProvider('MTN', 1)" id="net-MTN" class="network-card active bg-white p-4 rounded-2xl border border-slate-100 flex flex-col items-center gap-2 transition-all">
-                                    <div class="w-10 h-10 rounded-full bg-yellow-400 flex items-center justify-center font-black text-[10px]">MTN</div>
-                                    <span class="text-[10px] font-bold uppercase">MTN</span>
-                                </button>
-                                
-                                <!-- Airtel: ID 3 -->
-                                <button onclick="setProvider('Airtel', 3)" id="net-Airtel" class="network-card bg-white p-4 rounded-2xl border border-slate-100 flex flex-col items-center gap-2 transition-all">
-                                    <div class="w-10 h-10 rounded-full bg-red-600 text-white flex items-center justify-center font-black text-[10px]">Airtel</div>
-                                    <span class="text-[10px] font-bold uppercase">Airtel</span>
-                                </button>
-                                
-                                <!-- Glo: ID 2 -->
-                                <button onclick="setProvider('Glo', 2)" id="net-Glo" class="network-card bg-white p-4 rounded-2xl border border-slate-100 flex flex-col items-center gap-2 transition-all">
-                                    <div class="w-10 h-10 rounded-full bg-green-600 text-white flex items-center justify-center font-black text-[10px]">Glo</div>
-                                    <span class="text-[10px] font-bold uppercase">Glo</span>
-                                </button>
-                                
-                                <!-- 9mobile: ID 4 -->
-                                <button onclick="setProvider('9mobile', 4)" id="net-9mobile" class="network-card bg-white p-4 rounded-2xl border border-slate-100 flex flex-col items-center gap-2 transition-all">
-                                    <div class="w-10 h-10 rounded-full bg-green-900 text-white flex items-center justify-center font-black text-[10px]">9mob</div>
-                                    <span class="text-[10px] font-bold uppercase">9mobile</span>
-                                </button>
-                            </div>
+                                <h4 class="font-extrabold text-sm mb-4 uppercase text-slate-400 px-2">1. Select Provider</h4>
+                                <div class="grid grid-cols-4 gap-3">
+                                    <button onclick="setProvider('MTN', 1)" id="net-MTN" class="network-card active bg-white p-4 rounded-2xl border border-slate-100 flex flex-col items-center gap-2 transition-all">
+                                        <div class="w-10 h-10 rounded-full bg-yellow-400 flex items-center justify-center font-black text-[10px]">MTN</div>
+                                        <span class="text-[10px] font-bold">MTN</span>
+                                    </button>
+                                    <button onclick="setProvider('Airtel', 3)" id="net-Airtel" class="network-card bg-white p-4 rounded-2xl border border-slate-100 flex flex-col items-center gap-2 transition-all">
+                                        <div class="w-10 h-10 rounded-full bg-red-600 text-white flex items-center justify-center font-black text-[10px]">Airtel</div>
+                                        <span class="text-[10px] font-bold">Airtel</span>
+                                    </button>
+                                    <button onclick="setProvider('Glo', 2)" id="net-Glo" class="network-card bg-white p-4 rounded-2xl border border-slate-100 flex flex-col items-center gap-2 transition-all">
+                                        <div class="w-10 h-10 rounded-full bg-green-600 text-white flex items-center justify-center font-black text-[10px]">Glo</div>
+                                        <span class="text-[10px] font-bold">Glo</span>
+                                    </button>
+                                    <button onclick="setProvider('9mobile', 4)" id="net-9mobile" class="network-card bg-white p-4 rounded-2xl border border-slate-100 flex flex-col items-center gap-2 transition-all">
+                                        <div class="w-10 h-10 rounded-full bg-green-900 text-white flex items-center justify-center font-black text-[10px]">9mob</div>
+                                        <span class="text-[10px] font-bold">9mobile</span>
+                                    </button>
+                                </div>
                             </section>
 
-                            <!-- 2. PHONE NUMBER -->
                             <section>
-                                <h4 class="font-extrabold text-sm mb-4 uppercase text-slate-400">2. Phone Number</h4>
+                                <h4 class="font-extrabold text-sm mb-4 uppercase text-slate-400 px-2">2. Phone Number</h4>
                                 <div class="relative">
                                     <i data-lucide="phone" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 w-5 h-5"></i>
                                     <input type="tel" id="phoneInput" oninput="updateSummary()" class="w-full pl-12 pr-4 py-4 bg-white border border-slate-200 rounded-2xl outline-none focus:border-[#0052FF] font-medium" placeholder="0801 234 5678">
                                 </div>
                             </section>
 
-                            <!-- 3. SELECT PLAN -->
-                            <!-- 3. SELECT DATA PLAN -->
                             <section>
-                                <div class="flex justify-between items-center mb-4 px-2">
-                                    <h4 class="font-extrabold text-sm uppercase text-slate-400">3. Select Data Plan</h4>
-                                </div>
-                                <!-- This container will be filled automatically by JavaScript -->
+                                <h4 class="font-extrabold text-sm mb-4 uppercase text-slate-400 px-2">3. Select Data Plan</h4>
                                 <div class="grid grid-cols-2 md:grid-cols-3 gap-4" id="plan-list">
-                                    <p class="text-xs text-slate-400 p-4">Please select a network provider first...</p>
+                                    <!-- Dynamic content loads here -->
                                 </div>
                             </section>
 
-                            <!-- 4. REVIEW SUMMARY -->
                             <section class="bg-white p-6 lg:p-8 rounded-[32px] border border-slate-100 shadow-sm">
                                 <h4 class="font-extrabold text-sm mb-6 uppercase tracking-wider text-slate-400">Summary</h4>
                                 <div class="space-y-4">
@@ -187,7 +189,7 @@
                                         <span class="text-xl text-[#0052FF]">₦<span id="sum-total">0.00</span></span>
                                     </div>
                                 </div>
-                                <button type="button" onclick="openPinModal()" id="payBtn" class="w-full bg-[#0052FF] text-white py-4.5 mt-8 rounded-2xl font-black text-sm shadow-xl shadow-blue-100 hover:bg-blue-700 transition-all active:scale-95">
+                                <button type="button" onclick="openPinModal()" id="payBtn" class="w-full bg-[#0052FF] text-white py-4.5 mt-8 rounded-2xl font-black text-sm shadow-xl hover:bg-blue-700 active:scale-95 transition-all">
                                     Proceed to Payment
                                 </button>
                             </section>
@@ -195,203 +197,166 @@
                     </div>
                 </div>
             </div>
-
-            <!-- BOTTOM NAV -->
-            <nav class="lg:hidden fixed bottom-0 left-0 w-full bg-white border-t border-slate-100 flex justify-around p-4 z-50">
-                <a href="dashboard.html" class="flex flex-col items-center gap-1 text-slate-300"><i data-lucide="home" class="w-5 h-5"></i><span class="text-[8px] font-black uppercase">Home</span></a>
-                <a href="buy-data.html" class="flex flex-col items-center gap-1 text-[#0052FF]"><i data-lucide="wifi" class="w-5 h-5"></i><span class="text-[8px] font-black uppercase">Data</span></a>
-                <a href="fund-wallet.html" class="flex flex-col items-center gap-1 text-slate-300"><i data-lucide="wallet" class="w-5 h-5"></i><span class="text-[8px] font-black uppercase">Wallet</span></a>
-                <a href="settings.html" class="flex flex-col items-center gap-1 text-slate-300"><i data-lucide="settings" class="w-5 h-5"></i><span class="text-[8px] font-black uppercase">Settings</span></a>
-            </nav>
         </main>
     </div>
 
-   <script src="theme.js"></script>
-<script src="supabase-config.js"></script>
-<script src="notifications.js"></script>
-<script>
-    lucide.createIcons();
+    <script src="theme.js"></script>
+    <script src="supabase-config.js"></script>
+    <script src="notifications.js"></script>
+    <script>
+        lucide.createIcons();
 
-    // 1. DATA MAPPING (Using your Glad Tidings IDs and Prices)
-    const allNetworkPlans = {
-        1: [ // MTN
-            { id: 233, size: "1GB", valid: "7 Days", price: 772 },
-            { id: 355, size: "3GB", valid: "30 Days", price: 1740 },
-            { id: 356, size: "5GB", valid: "30 Days", price: 1790 },
-            { id: 357, size: "10GB", valid: "30 Days", price: 8050 },
-            { id: 513, size: "12.5GB", valid: "30 Days", price: 5307.50 }
-        ],
-        3: [ // AIRTEL
-            { id: 426, size: "1.5GB", valid: "1 Day", price: 485 },
-            { id: 564, size: "2GB", valid: "30 Days", price: 1450 },
-            { id: 527, size: "3GB", valid: "30 Days", price: 1920 },
-            { id: 483, size: "10GB", valid: "30 Days", price: 3007 }
-        ],
-        2: [ // GLO
-            { id: 632, size: "1GB", valid: "3 Days", price: 250 },
-            { id: 633, size: "3GB", valid: "3 Days", price: 750 },
-            { id: 634, size: "5GB", valid: "3 Days", price: 1250 },
-            { id: 335, size: "10GB", valid: "30 Days", price: 4000 }
-        ],
-        4: [ // 9MOBILE
-            { id: 298, size: "1GB", valid: "30 Days", price: 475 },
-            { id: 299, size: "2GB", valid: "30 Days", price: 950 },
-            { id: 303, size: "3GB", valid: "30 Days", price: 1425 },
-            { id: 304, size: "5GB", valid: "30 Days", price: 2375 },
-            { id: 305, size: "10GB", valid: "30 Days", price: 4750 }
-        ]
-    };
+        const allNetworkPlans = {
+            1: [ // MTN
+                { id: 233, size: "1GB", valid: "7 Days", price: 772 },
+                { id: 355, size: "3GB", valid: "30 Days", price: 1740 },
+                { id: 356, size: "5GB", valid: "30 Days", price: 1790 },
+                { id: 357, size: "10GB", valid: "30 Days", price: 8050 },
+                { id: 513, size: "12.5GB", valid: "30 Days", price: 5307.50 }
+            ],
+            3: [ // AIRTEL
+                { id: 426, size: "1.5GB", valid: "1 Day", price: 485 },
+                { id: 564, size: "2GB", valid: "30 Days", price: 1450 },
+                { id: 527, size: "3GB", valid: "30 Days", price: 1920 },
+                { id: 483, size: "10GB", valid: "30 Days", price: 3007 }
+            ],
+            2: [ // GLO
+                { id: 632, size: "1GB", valid: "3 Days", price: 250 },
+                { id: 633, size: "3GB", valid: "3 Days", price: 750 },
+                { id: 634, size: "5GB", valid: "3 Days", price: 1250 },
+                { id: 335, size: "10GB", valid: "30 Days", price: 4000 }
+            ],
+            4: [ // 9MOBILE
+                { id: 298, size: "1GB", valid: "30 Days", price: 475 },
+                { id: 299, size: "2GB", valid: "30 Days", price: 950 },
+                { id: 303, size: "3GB", valid: "30 Days", price: 1425 },
+                { id: 304, size: "5GB", valid: "30 Days", price: 2375 },
+                { id: 305, size: "10GB", valid: "30 Days", price: 4750 }
+            ]
+        };
 
-    // Global state
-    let networkName = 'MTN';
-    let selectedNetworkId = 1; 
-    let planName = '';
-    let selectedPlanId = 0;   
-    let amount = 0;
-    let userId = "";
+        let networkName = 'MTN';
+        let selectedNetworkId = 1; 
+        let planName = '';
+        let selectedPlanId = 0;   
+        let amount = 0;
+        let userId = "";
 
-    // 2. PIN INPUT AUTO-FOCUS
-    const pinInputs = document.querySelectorAll('.pin-box');
-    pinInputs.forEach((input, index) => {
-        input.addEventListener('keyup', (e) => {
-            if (e.target.value.length === 1 && index < 3) pinInputs[index + 1].focus();
-            if (e.key === 'Backspace' && index > 0) pinInputs[index - 1].focus();
+        const pinInputs = document.querySelectorAll('.pin-box');
+        pinInputs.forEach((input, index) => {
+            input.addEventListener('keyup', (e) => {
+                if (e.target.value.length === 1 && index < 3) pinInputs[index + 1].focus();
+                if (e.key === 'Backspace' && index > 0) pinInputs[index - 1].focus();
+            });
         });
-    });
 
-    // 3. INITIALIZE DATA
-    async function init() {
-        const { data: { session } } = await _supabase.auth.getSession();
-        if (!session) { window.location.href = "login.html"; return; }
-        userId = session.user.id;
-        
-        const { data: prof } = await _supabase.from('profiles').select('full_name').eq('id', userId).single();
-        if(prof) document.getElementById('user-name-desktop').innerText = prof.full_name;
+        async function init() {
+            const { data: { session } } = await _supabase.auth.getSession();
+            if (!session) { window.location.href = "login.html"; return; }
+            userId = session.user.id;
+            
+            const { data: prof } = await _supabase.from('profiles').select('full_name').eq('id', userId).single();
+            if(prof) document.getElementById('user-name-desktop').innerText = prof.full_name;
 
-        const { data: wall } = await _supabase.from('wallets').select('balance').eq('id', userId).single();
-        if (wall) {
-            const bal = parseFloat(wall.balance).toLocaleString(undefined, {minimumFractionDigits: 2});
-            document.getElementById('user-balance-desktop').innerText = bal;
-            if(document.getElementById('user-balance-mobile')) document.getElementById('user-balance-mobile').innerText = bal;
+            const { data: wall } = await _supabase.from('wallets').select('balance').eq('id', userId).single();
+            if (wall) {
+                const bal = parseFloat(wall.balance).toLocaleString(undefined, {minimumFractionDigits: 2});
+                document.getElementById('user-balance-desktop').innerText = bal;
+                if(document.getElementById('user-balance-mobile')) document.getElementById('user-balance-mobile').innerText = bal;
+            }
+            renderPlans(1);
         }
 
-        // Load initial MTN plans
-        renderPlans(1);
-    }
+        function setProvider(name, id) {
+            networkName = name;
+            selectedNetworkId = id;
+            document.querySelectorAll('.network-card').forEach(c => c.classList.remove('active'));
+            const activeCard = document.getElementById('net-' + name);
+            if(activeCard) activeCard.classList.add('active');
+            planName = ''; selectedPlanId = 0; amount = 0;
+            renderPlans(id);
+            updateSummary();
+        }
 
-    // 4. PROVIDER & PLAN SELECTION
-    function setProvider(name, id) {
-        networkName = name;
-        selectedNetworkId = id;
-        document.querySelectorAll('.network-card').forEach(c => c.classList.remove('active'));
-        const activeCard = document.getElementById('net-' + name);
-        if(activeCard) activeCard.classList.add('active');
+        function renderPlans(netId) {
+            const container = document.getElementById('plan-list');
+            const plans = allNetworkPlans[netId] || [];
+            container.innerHTML = plans.map(p => `
+                <button onclick="setPlan('${p.size}', ${p.price}, ${p.id})" class="plan-card bg-white border border-slate-100 p-5 rounded-2xl text-left transition-all hover:border-[#0052FF]">
+                    <p class="font-black text-sm uppercase">${p.size}</p>
+                    <p class="text-[9px] text-slate-400 font-bold mb-3 uppercase">${p.valid}</p>
+                    <p class="text-[#0052FF] font-black text-sm">₦${p.price.toLocaleString()}</p>
+                </button>
+            `).join('');
+        }
 
-        // Reset plan choice when network changes
-        planName = ''; selectedPlanId = 0; amount = 0;
-        renderPlans(id);
-        updateSummary();
-    }
-
-    function renderPlans(netId) {
-        const container = document.getElementById('plan-container');
-        const plans = allNetworkPlans[netId] || [];
-        
-        container.innerHTML = plans.map(p => `
-            <button onclick="setPlan('${p.size}', ${p.price}, ${p.id})" class="plan-card bg-white border border-slate-100 p-5 rounded-2xl text-left transition-all hover:border-[#0052FF]">
-                <p class="font-black text-sm uppercase">${p.size}</p>
-                <p class="text-[9px] text-slate-400 font-bold mb-3 uppercase">${p.valid}</p>
-                <p class="text-[#0052FF] font-black text-sm">₦${p.price.toLocaleString()}</p>
-            </button>
-        `).join('');
-    }
-
-    function setPlan(pSize, pPrice, pId) {
-        planName = pSize;
-        amount = pPrice;
-        selectedPlanId = pId;
-        
-        document.querySelectorAll('.plan-card').forEach(c => {
-            const title = c.querySelector('p').innerText;
-            c.classList.toggle('active', title === pSize);
-        });
-        updateSummary();
-    }
-
-    function updateSummary() {
-        document.getElementById('sum-net').innerText = networkName;
-        document.getElementById('sum-phone').innerText = document.getElementById('phoneInput').value || '---';
-        document.getElementById('sum-plan').innerText = planName || '---';
-        document.getElementById('sum-total').innerText = parseFloat(amount).toLocaleString();
-    }
-
-    // 5. MODAL & PURCHASE
-    function openPinModal() {
-        const phone = document.getElementById('phoneInput').value;
-        if (!phone || phone.length < 10) return showToast("Enter a valid phone number", "error");
-        if (amount === 0) return showToast("Please select a data plan", "error");
-        document.getElementById('pinModal').classList.remove('hidden');
-        pinInputs[0].focus();
-    }
-
-    function closePinModal() {
-        document.getElementById('pinModal').classList.add('hidden');
-        pinInputs.forEach(i => i.value = '');
-    }
-
-    async function confirmPurchase() {
-        let pin = "";
-        pinInputs.forEach(i => pin += i.value);
-        if (pin.length < 4) return showToast("Enter 4-digit PIN", "error");
-
-        const btn = document.getElementById('confirmPinBtn');
-        const phone = document.getElementById('phoneInput').value;
-        btn.innerText = "Processing...";
-        btn.disabled = true;
-
-        try {
-            // A. Deduct Money
-            const { data: res, error: rpcErr } = await _supabase.rpc('process_purchase_secure', {
-                uid: userId,
-                amt: parseFloat(amount),
-                p_type: 'Data Purchase',
-                p_desc: `${networkName} ${planName} to ${phone}`,
-                input_pin: pin
+        function setPlan(pSize, pPrice, pId) {
+            planName = pSize; amount = pPrice; selectedPlanId = pId;
+            document.querySelectorAll('.plan-card').forEach(c => {
+                const title = c.querySelector('p').innerText;
+                c.classList.toggle('active', title === pSize);
             });
+            updateSummary();
+        }
 
-            if (rpcErr) throw rpcErr;
+        function updateSummary() {
+            document.getElementById('sum-net').innerText = networkName;
+            document.getElementById('sum-phone').innerText = document.getElementById('phoneInput').value || '---';
+            document.getElementById('sum-plan').innerText = planName || '---';
+            document.getElementById('sum-total').innerText = parseFloat(amount).toLocaleString();
+        }
 
-            if (res === 'success') {
-                showToast("Payment verified. Delivering...", "success");
-                
-                // B. Call VTU API
-                const { data: vtu, error: fErr } = await _supabase.functions.invoke('buy-vtu', {
-                    body: { networkId: selectedNetworkId, planId: selectedPlanId, phoneNumber: phone }
+        function openPinModal() {
+            const phone = document.getElementById('phoneInput').value;
+            if (!phone || phone.length < 10) return showToast("Enter a valid phone number", "error");
+            if (amount === 0) return showToast("Please select a plan", "error");
+            document.getElementById('pinModal').classList.remove('hidden');
+            pinInputs[0].focus();
+        }
+
+        function closePinModal() {
+            document.getElementById('pinModal').classList.add('hidden');
+            pinInputs.forEach(i => i.value = '');
+        }
+
+        async function confirmPurchase() {
+            let pin = "";
+            pinInputs.forEach(i => pin += i.value);
+            if (pin.length < 4) return showToast("Enter 4-digit PIN", "error");
+
+            const btn = document.getElementById('confirmPinBtn');
+            const phone = document.getElementById('phoneInput').value;
+            btn.innerText = "Processing..."; btn.disabled = true;
+
+            try {
+                const { data: res, error: rpcErr } = await _supabase.rpc('process_purchase_secure', {
+                    uid: userId, amt: parseFloat(amount), p_type: 'Data Purchase',
+                    p_desc: `${networkName} ${planName} to ${phone}`, input_pin: pin
                 });
 
-                if (fErr) {
-                    showToast("Wallet deducted, but delivery failed. Contact Support.", "error");
+                if (rpcErr) throw rpcErr;
+
+                if (res === 'success') {
+                    showToast("Verified. Delivering data...", "success");
+                    const { data: vtu, error: fErr } = await _supabase.functions.invoke('buy-vtu', {
+                        body: { networkId: selectedNetworkId, planId: selectedPlanId, phoneNumber: phone }
+                    });
+                    if (fErr) showToast("Deducted, but delivery failed. Contact Support.", "error");
+                    else { showToast("✅ " + planName + " Sent!", "success"); setTimeout(() => window.location.href = "dashboard.html", 2000); }
                 } else {
-                    showToast("✅ Data Sent Successfully!", "success");
-                    setTimeout(() => window.location.href = "dashboard.html", 2000);
+                    showToast(res.replace('_', ' '), "error");
+                    if (res === 'invalid_pin') { pinInputs.forEach(i => i.value = ''); pinInputs[0].focus(); }
                 }
-            } else {
-                showToast(res.replace('_', ' '), "error");
-                if (res === 'invalid_pin') { pinInputs.forEach(i => i.value = ''); pinInputs[0].focus(); }
-            }
-        } catch (err) {
-            showToast("System Error: " + err.message, "error");
-        } finally {
-            btn.innerText = "Confirm Payment"; btn.disabled = false;
+            } catch (err) { showToast("System Error: " + err.message, "error"); }
+            finally { btn.innerText = "Confirm Payment"; btn.disabled = false; }
         }
-    }
 
-    function toggleMenu() {
-        document.getElementById('sidebar').classList.toggle('-translate-x-full');
-        document.getElementById('overlay').classList.toggle('hidden');
-    }
+        function toggleMenu() {
+            document.getElementById('sidebar').classList.toggle('-translate-x-full');
+            document.getElementById('overlay').classList.toggle('hidden');
+        }
 
-    window.onload = init;
-</script>
+        window.onload = init;
+    </script>
 </body>
 </html>
