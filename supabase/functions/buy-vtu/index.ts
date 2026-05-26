@@ -9,46 +9,48 @@ serve(async (req: Request) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders })
 
   try {
-    const { actionType, networkId, phoneNumber, planId, amount, meterNumber, discoId, meterType, smartCardNumber, cableId } = await req.json()
+    const bodyReq = await req.json()
+    const { actionType, networkId, phoneNumber, planId, amount, meterNumber, discoId, meterType, smartCardNumber, cableId } = bodyReq
     const VTU_KEY = Deno.env.get('VTU_API_KEY')
 
     let endpoint = '';
-    let body = {};
+    let apiBody = {};
 
+    // 1. SELECT ENDPOINT BASED ON SERVICE
     if (actionType === 'data') {
       endpoint = 'https://gladtidingsdata.com/api/data/';
-      body = { network: networkId, mobile_number: phoneNumber, plan: planId, Ported_number: true };
+      apiBody = { network: networkId, mobile_number: phoneNumber, plan: planId, Ported_number: true };
     } 
     else if (actionType === 'airtime') {
       endpoint = 'https://gladtidingsdata.com/api/topup/';
-      body = { network: networkId, mobile_number: phoneNumber, plan: planId, amount: amount, airtime_type: "VTU" };
+      apiBody = { network: networkId, mobile_number: phoneNumber, plan: planId, amount: amount, airtime_type: "VTU" };
     }
     else if (actionType === 'electricity') {
       endpoint = 'https://gladtidingsdata.com/api/billpayment/';
-      body = { disco_name: discoId, meter_number: meterNumber, Meter_Type: meterType, amount: amount };
+      apiBody = { disco_name: discoId, meter_number: meterNumber, Meter_Type: meterType, amount: amount };
     }
     else if (actionType === 'cable') {
       endpoint = 'https://gladtidingsdata.com/api/cablesub/';
-      body = { cablename: cableId, smart_card_number: smartCardNumber, cableplan: planId };
+      apiBody = { cablename: cableId, smart_card_number: smartCardNumber, cableplan: planId };
     }
 
     const response = await fetch(endpoint, {
       method: 'POST',
       headers: { 'Authorization': `Token ${VTU_KEY}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify(body)
+      body: JSON.stringify(apiBody)
     })
 
     const data = await response.json()
 
-    // If provider rejects (e.g., your API balance is empty)
-    if (data.status === 'fail' || data.Status === 'failed') {
-       return new Response(JSON.stringify({ error: "Provider Error", detail: data }), { 
+    // 2. CHECK IF PROVIDER FAILED (e.g. 0 Balance)
+    if (data.Status !== 'successful' && data.status !== 'success') {
+       return new Response(JSON.stringify({ error: "API_REJECTED", details: data }), { 
          headers: { ...corsHeaders, 'Content-Type': 'application/json' }, 
          status: 400 
        })
     }
 
-    return new Response(JSON.stringify(data), { 
+    return new Response(JSON.stringify({ status: "success", provider_resp: data }), { 
       headers: { ...corsHeaders, 'Content-Type': 'application/json' }, 
       status: 200 
     })
@@ -56,7 +58,7 @@ serve(async (req: Request) => {
   } catch (error) {
     return new Response(JSON.stringify({ error: error.message }), { 
       headers: { ...corsHeaders, 'Content-Type': 'application/json' }, 
-      status: 400 
+      status: 500 
     })
   }
 })
