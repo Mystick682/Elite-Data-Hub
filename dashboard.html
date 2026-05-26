@@ -36,12 +36,37 @@
         }
         .tile i { width: 12px; height: 12px; }
         .tile span { font-size: 5px; font-weight: 900; text-transform: uppercase; margin-top: 1px; }
-        
         .tile-data { top: 5px; left: 0px; animation-delay: 0s; color: #0052FF; }
         .tile-airtime { top: 32px; right: -5px; animation-delay: 1s; color: #10b981; }
         .tile-tv { bottom: 10px; left: 10px; animation-delay: 0.5s; color: #a855f7; }
-        
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+
+        /* --- ADVERT ANIMATION --- */
+        @keyframes shine {
+            0% { left: -100%; }
+            20% { left: 100%; }
+            100% { left: 100%; }
+        }
+        .premium-ad-card {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+        .premium-ad-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.4), transparent);
+            transform: skewX(-25deg);
+            animation: shine 5s infinite;
+        }
+        .premium-ad-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 82, 255, 0.15);
+        }
 
         /* Elite Dark Mode Colors */
         .dark body { background-color: #0B1120 !important; color: #F1F5F9 !important; }
@@ -77,7 +102,6 @@
                 <a href="support.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="headset" class="w-4 h-4"></i> Support</a>
                 <a href="settings.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="settings" class="w-4 h-4"></i> Settings</a>
 
-                <!-- Admin Link -->
                 <div id="admin-link-container" class="hidden pt-4 border-t border-slate-50 mt-4">
                     <a href="admin.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-[13px] font-black text-purple-600 bg-purple-50">
                         <i data-lucide="shield-check" class="w-4 h-4"></i> Admin Panel
@@ -124,7 +148,6 @@
                         <p class="text-blue-100 text-[10px] font-bold uppercase tracking-widest mb-1">Welcome back,</p>
                         <h2 class="text-xl font-bold leading-tight" id="user-name-mobile">Loading...</h2>
                     </div>
-
                     <div class="phone-container">
                         <div class="phone-handset"><div class="phone-display"></div></div>
                         <div class="tile tile-data"><i data-lucide="wifi"></i><span>Data</span></div>
@@ -141,17 +164,6 @@
                             <button onclick="toggleBalance()"><i id="eye-icon-mobile" data-lucide="eye-off" class="w-5 h-5 text-blue-200"></i></button>
                         </div>
                         <a href="fund-wallet.html" class="w-full bg-[#0052FF] text-white py-4 rounded-2xl font-extrabold text-sm text-center shadow-lg">+ Fund Wallet</a>
-                    </div>
-
-                    <div class="lg:hidden mt-8">
-                        <a href="referrals.html" class="block bg-[#F0F5FF] p-6 rounded-[32px] relative overflow-hidden group border border-blue-50">
-                            <div class="relative z-10">
-                                <h5 class="font-extrabold text-[11px] mb-1 uppercase tracking-tight text-[#0052FF]">Invite & Earn</h5>
-                                <p class="text-[15px] font-black text-[#081B4B]">Get ₦1,000 instantly!</p>
-                                <p class="text-[10px] text-slate-500 font-medium max-w-[200px] mt-1">Refer your friends to Elite Data and earn bonus when they fund their wallet.</p>
-                            </div>
-                            <i data-lucide="gift" class="w-20 h-20 absolute -right-4 -bottom-4 text-[#0052FF]/10 transition-transform group-hover:scale-110"></i>
-                        </a>
                     </div>
 
                     <div class="grid grid-cols-1 lg:grid-cols-12 lg:gap-10 mt-10">
@@ -172,6 +184,32 @@
                                     <div class="flex items-center gap-4"><div class="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600"><i data-lucide="wifi" class="w-5 h-5"></i></div>
                                     <div><p class="font-bold text-sm uppercase">10GB</p><p class="text-[9px] text-slate-400 font-bold">Valid for 30 Days</p></div></div>
                                     <div class="flex items-center gap-4"><span class="font-black text-sm text-[#081B4B]">₦1,500</span><a href="buy-data.html" class="bg-blue-50 text-blue-600 px-4 py-1.5 rounded-lg text-[10px] font-black uppercase">Buy</a></div>
+                                </div>
+                            </section>
+
+                            <!-- --- STYLISH PREMIUM ADVERT SECTION --- -->
+                            <section class="mt-10 px-2 lg:px-0">
+                                <h4 class="font-extrabold text-sm uppercase tracking-wider mb-4 opacity-40">Featured Partner</h4>
+                                <div class="premium-ad-card relative rounded-[40px] overflow-hidden bg-[#081B4B] shadow-2xl flex flex-col md:flex-row h-auto md:h-64 border border-white/5">
+                                    <!-- Image Part -->
+                                    <div class="w-full md:w-1/2 h-48 md:h-full relative overflow-hidden">
+                                        <!-- Replace YOUR_IMAGE_URL_HERE with your uploaded photo link -->
+                                        <img src="https://i.ibb.co/Xz91g2F/business-card.jpg" class="w-full h-full object-cover transform transition-transform duration-700 hover:scale-110" alt="Toyeen Travels">
+                                        <div class="absolute inset-0 bg-gradient-to-r from-transparent to-[#081B4B]"></div>
+                                    </div>
+                                    <!-- Content Part -->
+                                    <div class="p-8 flex flex-col justify-center flex-1">
+                                        <h3 class="text-white text-2xl font-black mb-2 tracking-tight leading-none">Toyeen Travels & Shortlets</h3>
+                                        <p class="text-blue-200 text-xs font-bold uppercase tracking-widest mb-4">Your Journey, Your Stay, Our Priority!</p>
+                                        <p class="text-slate-400 text-[11px] leading-relaxed mb-6">Expert Flight Bookings, Visa Consultations, and Luxury Shortlet Apartments globally.</p>
+                                        <div class="flex gap-3">
+                                            <a href="https://wa.me/2347011234567" class="bg-[#0052FF] text-white px-6 py-2.5 rounded-xl font-black text-xs shadow-xl active:scale-95 transition-all">Book Now</a>
+                                            <div class="flex -space-x-2">
+                                                <div class="w-8 h-8 rounded-full border-2 border-[#081B4B] bg-slate-200 overflow-hidden"><img src="https://i.pravatar.cc/100?u=a"></div>
+                                                <div class="w-8 h-8 rounded-full border-2 border-[#081B4B] bg-slate-300 overflow-hidden"><img src="https://i.pravatar.cc/100?u=b"></div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </section>
 
@@ -226,18 +264,15 @@
                 if (!session) { window.location.href = "login.html"; return; }
                 const uid = session.user.id;
 
-                // FIX: We need to include 'is_admin' in the selection!
                 const { data: profile } = await _supabase.from('profiles').select('full_name, is_admin').eq('id', uid).single();
                 if (profile) {
                     const n = (profile.full_name || "Elite Member") + " 👋";
                     document.getElementById('user-name-mobile').innerText = n;
                     document.getElementById('user-name-desktop').innerText = n;
-
-                    // FIX: Move the Admin Link logic INSIDE this block
                     if (profile.is_admin === true) {
                         const adminContainer = document.getElementById('admin-link-container');
                         if (adminContainer) adminContainer.classList.remove('hidden');
-                        lucide.createIcons(); // Refresh icons for the new link
+                        lucide.createIcons();
                     }
                 }
 
