@@ -9,6 +9,34 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
+        
+    @keyframes sweep {
+        0% { transform: translateX(-100%) skewX(-25deg); opacity: 0; }
+        20% { opacity: 0.5; }
+        50% { transform: translateX(200%) skewX(-25deg); opacity: 0; }
+        100% { transform: translateX(200%) skewX(-25deg); opacity: 0; }
+    }
+
+    .elite-shine-sweep {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 40%;
+        height: 100%;
+        background: linear-gradient(to right, transparent, rgba(255,255,255,0.2), transparent);
+        z-index: 20;
+        pointer-events: none;
+        animation: sweep 6s infinite;
+    }
+
+    .premium-ad-card {
+        transition: all 0.5s cubic-bezier(0.2, 1, 0.3, 1);
+    }
+
+    .premium-ad-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 40px 80px -15px rgba(0, 82, 255, 0.3);
+    }
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #F8FAFF; margin: 0; padding: 0; overflow-x: hidden; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .active-nav { background: #0052FF !important; color: white !important; }
@@ -78,6 +106,42 @@
         .dark .border-slate-50, .dark .border-slate-100 { border-color: #1F2937 !important; }
         .dark .shadow-blue-500\/40, .dark .shadow-2xl { box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5) !important; }
         .dark [class*="bg-[#F0F5FF]"] { background-color: rgba(0, 82, 255, 0.1) !important; }
+
+        /* Premium Glass Shine Animation */
+@keyframes eliteShine {
+    0% { left: -100%; opacity: 0; }
+    20% { opacity: 0.5; }
+    40% { left: 100%; opacity: 0; }
+    100% { left: 100%; opacity: 0; }
+}
+
+.premium-ad-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(
+        120deg, 
+        transparent, 
+        rgba(255, 255, 255, 0.3), 
+        transparent
+    );
+    z-index: 30;
+    animation: eliteShine 4s infinite;
+}
+
+/* Make it look like a floating card */
+.premium-ad-card {
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+}
+
+.premium-ad-card:hover {
+    transform: translateY(-10px) scale(1.01);
+    box-shadow: 0 30px 60px -12px rgba(0, 82, 255, 0.25);
+}
     </style>
 </head>
 <body class="text-[#081B4B] antialiased">
@@ -187,31 +251,56 @@
                                 </div>
                             </section>
 
-                            <!-- --- STYLISH PREMIUM ADVERT SECTION --- -->
-                            <section class="mt-10 px-2 lg:px-0">
-                                <h4 class="font-extrabold text-sm uppercase tracking-wider mb-4 opacity-40">Featured Partner</h4>
-                                <div class="premium-ad-card relative rounded-[40px] overflow-hidden bg-[#081B4B] shadow-2xl flex flex-col md:flex-row h-auto md:h-64 border border-white/5">
-                                    <!-- Image Part -->
-                                    <div class="w-full md:w-1/2 h-48 md:h-full relative overflow-hidden">
-                                        <!-- Replace YOUR_IMAGE_URL_HERE with your uploaded photo link -->
-                                        <img src="https://i.ibb.co/Xz91g2F/business-card.jpg" class="w-full h-full object-cover transform transition-transform duration-700 hover:scale-110" alt="Toyeen Travels">
-                                        <div class="absolute inset-0 bg-gradient-to-r from-transparent to-[#081B4B]"></div>
-                                    </div>
-                                    <!-- Content Part -->
-                                    <div class="p-8 flex flex-col justify-center flex-1">
-                                        <h3 class="text-white text-2xl font-black mb-2 tracking-tight leading-none">Toyeen Travels & Shortlets</h3>
-                                        <p class="text-blue-200 text-xs font-bold uppercase tracking-widest mb-4">Your Journey, Your Stay, Our Priority!</p>
-                                        <p class="text-slate-400 text-[11px] leading-relaxed mb-6">Expert Flight Bookings, Visa Consultations, and Luxury Shortlet Apartments globally.</p>
-                                        <div class="flex gap-3">
-                                            <a href="https://wa.me/2347011234567" class="bg-[#0052FF] text-white px-6 py-2.5 rounded-xl font-black text-xs shadow-xl active:scale-95 transition-all">Book Now</a>
-                                            <div class="flex -space-x-2">
-                                                <div class="w-8 h-8 rounded-full border-2 border-[#081B4B] bg-slate-200 overflow-hidden"><img src="https://i.pravatar.cc/100?u=a"></div>
-                                                <div class="w-8 h-8 rounded-full border-2 border-[#081B4B] bg-slate-300 overflow-hidden"><img src="https://i.pravatar.cc/100?u=b"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </section>
+                            <!-- --- PREMIUM ANIMATED ADVERT SECTION --- -->
+<section class="mt-12 px-2 lg:px-0">
+    <div class="flex justify-between items-center mb-4">
+        <h4 class="font-extrabold text-xs uppercase tracking-[0.2em] text-slate-400">Featured Partner</h4>
+        <span class="bg-blue-50 text-[#0052FF] text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-tighter">Sponsored</span>
+    </div>
+    
+    <div class="premium-ad-card relative rounded-[40px] overflow-hidden bg-[#081B4B] shadow-2xl flex flex-col md:flex-row h-auto md:h-64 border border-white/5 group">
+        
+        <!-- Image Container -->
+        <div class="w-full md:w-1/2 h-52 md:h-full relative overflow-hidden">
+            <!-- This looks for the file 'promo.jpg' in your GitHub folder -->
+            <!-- Replace this specific line in your dashboard.html -->
+        <img src="https://github.com/Mystick682/Elite-Data-Hub/blob/main/promo.jpg?raw=true" 
+            class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" 
+            alt="Toyeen Travels">
+            
+            <!-- Elite Gradient Overlay -->
+            <div class="absolute inset-0 bg-gradient-to-r from-transparent via-[#081B4B]/20 to-[#081B4B]"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-[#081B4B] md:from-transparent to-transparent"></div>
+        </div>
+
+        <!-- Content Area -->
+        <div class="p-8 md:p-10 flex flex-col justify-center flex-1 relative z-10">
+            <div class="mb-4">
+                <h3 class="text-white text-2xl lg:text-3xl font-black tracking-tighter leading-none mb-2">Toyeen Travels & Shortlets</h3>
+                <div class="h-1 w-12 bg-[#0052FF] rounded-full"></div>
+            </div>
+            
+            <p class="text-blue-200 text-[10px] font-bold uppercase tracking-[0.2em] mb-4">Your Journey, Your Stay, Our Priority!</p>
+            <p class="text-slate-400 text-xs leading-relaxed mb-8 max-w-xs font-medium">Global Flight Bookings, Expert Visa Consultations, and Luxury Shortlet Apartments.</p>
+            
+            <div class="flex items-center gap-4">
+                <a href="https://wa.me/2347011234567" target="_blank" class="bg-[#0052FF] text-white px-8 py-3 rounded-2xl font-black text-xs shadow-xl shadow-blue-500/20 hover:bg-blue-600 active:scale-95 transition-all">
+                    Book Now
+                </a>
+                <div class="flex items-center gap-2">
+                    <div class="flex -space-x-2">
+                        <img src="https://i.pravatar.cc/100?u=1" class="w-7 h-7 rounded-full border-2 border-[#081B4B]">
+                        <img src="https://i.pravatar.cc/100?u=2" class="w-7 h-7 rounded-full border-2 border-[#081B4B]">
+                    </div>
+                    <span class="text-[10px] text-slate-500 font-bold">50+ Booked Today</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- The "Elite Shine" Element -->
+        <div class="elite-shine-sweep"></div>
+    </div>
+</section>
 
                             <section>
                                 <div class="flex justify-between items-center mb-4 px-2"><h4 class="font-extrabold text-sm uppercase tracking-wider">Recent Transactions</h4><a href="history.html" class="text-[10px] font-bold text-[#0052FF]">View all</a></div>
