@@ -294,41 +294,70 @@
         function closePinModal() { document.getElementById('pinModal').classList.add('hidden'); pinInputs.forEach(i => i.value = ''); }
 
         async function confirmPurchase() {
-            let pin = "";
-            pinInputs.forEach(i => pin += i.value);
-            if (pin.length < 4) return showToast("Enter 4-digit PIN", "error");
-            const phone = document.getElementById('phoneInput').value;
+    let pin = "";
+    pinInputs.forEach(i => pin += i.value);
+    if (pin.length < 4) return showToast("Enter 4-digit PIN", "error");
 
-            const btn = document.getElementById('confirmPinBtn');
-            btn.innerText = "Processing..."; btn.disabled = true;
+    const phone = document.getElementById('phoneInput').value;
+    const btn = document.getElementById('confirmPinBtn');
+    btn.innerText = "Processing...";
+    btn.disabled = true;
 
-            try {
-                const { data: res, error: rpcErr } = await _supabase.rpc('process_purchase_secure', {
-                    uid: userId, amt: parseFloat(amount), p_type: 'Data Purchase',
-                    p_desc: `${networkName} ${planName} to ${phone}`, input_pin: pin
-                });
+    try {
+        // STEP 1: Verify PIN and Balance (No money taken yet)
+        const { data: verifyRes } = await _supabase.rpc('verify_before_purchase', {
+            uid: userId,
+            amt: parseFloat(amount),
+            input_pin: pin
+        });
 
-                if (res === 'success') {
-                    showToast("Verified. Delivering data...", "success");
-                    const { data: vtu, error: fErr } = await _supabase.functions.invoke('buy-vtu', {
-                        body: { networkId: selectedNetworkId, planId: selectedPlanId, phoneNumber: phone }
-                    });
-
-                    if (fErr || vtu.status === 'fail' || vtu.Status === 'failed') {
-                        await _supabase.rpc('fund_wallet_v2', { uid: userId, amt: parseFloat(amount) });
-                        await _supabase.from('transactions').insert([{ user_id: userId, amount: parseFloat(amount), type: 'Refund', status: 'Successful' }]);
-                        showToast("Provider error. Money refunded.", "error");
-                    } else {
-                        showToast("✅ Data Sent Successfully!", "success");
-                        setTimeout(() => window.location.href = "dashboard.html", 2000);
-                    }
-                } else {
-                    showToast(res.replace('_', ' '), "error");
-                    if (res === 'invalid_pin') { pinInputs.forEach(i => i.value = ''); pinInputs[0].focus(); }
-                }
-            } catch (err) { showToast("System Error: " + err.message, "error"); }
-            finally { btn.innerText = "Confirm Payment"; btn.disabled = false; }
+        if (verifyRes !== 'verified') {
+            btn.disabled = false; btn.innerText = "Confirm Payment";
+            return showToast(verifyRes.replace('_', ' '), "error");
         }
+
+        // STEP 2: Call VTU API (Real Delivery)
+        showToast("PIN Verified. Delivering Data...", "success");
+        
+        const { data: vtu, error: fErr } = await _supabase.functions.invoke('buy-vtu', {
+            body: { 
+                actionType: 'data', // or 'airtime' for airtime page
+                networkId: selectedNetworkId, 
+                planId: selectedPlanId, 
+                phoneNumber: phone,
+                amount: amount 
+            }
+        });
+
+        // STEP 3: Check if Provider actually sent the data
+        if (fErr || !vtu || vtu.error) {
+            console.error("VTU Error:", vtu);
+            btn.disabled = false; btn.innerText = "Confirm Payment";
+            return showToast("Provider Error: " + (vtu?.error || "Low API Balance"), "error");
+        }
+
+        // STEP 4: ONLY DEDUCT MONEY IF PROVIDER SUCCEEDED
+        const { error: deductErr } = await _supabase.rpc('execute_deduction', {
+            uid: userId,
+            amt: parseFloat(amount),
+            p_type: 'Data Purchase',
+            p_desc: `${networkName} ${planName} to ${phone}`
+        });
+
+        if (deductErr) {
+            // This is rare: Data sent but wallet failed. You should log this.
+            showToast("✅ Data sent, but please refresh your balance.", "success");
+        } else {
+            showToast("✅ Transaction Successful!", "success");
+        }
+
+        setTimeout(() => window.location.href = "dashboard.html", 2000);
+
+    } catch (err) {
+        showToast("System Error. Please try later.", "error");
+        btn.disabled = false; btn.innerText = "Confirm Payment";
+    }
+}
 
         function toggleMenu() { document.getElementById('sidebar').classList.toggle('-translate-x-full'); document.getElementById('overlay').classList.toggle('hidden'); }
         window.onload = init;
