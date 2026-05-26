@@ -112,9 +112,9 @@
     btn.innerText = "Sending...";
     btn.disabled = true;
 
-    // Use your REAL live GitHub URL here
-    // Change 'your-username' and 'your-repo-name' to match your GitHub
-    const redirectUrl = "https://mystick682.github.io/Elite-Data-Hub/reset-password.html";
+    // THIS LINE AUTOMATICALLY DETECTS VERCEL OR LOCALHOST
+    const redirectUrl = window.location.origin + "/reset-password.html";
+    console.log("Supabase will redirect to:", redirectUrl);
 
     const { error } = await _supabase.auth.resetPasswordForEmail(email, {
         redirectTo: redirectUrl,
@@ -123,13 +123,12 @@
     if (error) {
         showToast(error.message, "error");
     } else {
-        showToast("Reset link sent! Please check your email.");
+        showToast("Reset link sent to " + email);
         closeForgotModal();
     }
     btn.innerText = "Send Link";
     btn.disabled = false;
 }
-
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('loginBtn');
