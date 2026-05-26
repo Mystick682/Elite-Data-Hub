@@ -209,125 +209,169 @@
         </main>
     </div>
 
-    <script src="theme.js"></script>
-    <script src="supabase-config.js"></script>
-    <script src="notifications.js"></script>
-    <script>
-        lucide.createIcons();
+   <script src="theme.js"></script>
+<script src="supabase-config.js"></script>
+<script src="notifications.js"></script>
+<script>
+    lucide.createIcons();
 
-        let network = 'MTN';
-        let plan = '';
-        let amount = 0;
-        let userId = "";
+    // Global state
+    let networkName = 'MTN';
+    let selectedNetworkId = 1; // Default MTN ID
+    let planName = '';
+    let selectedPlanId = 0;    // The ID from Glad Tidings
+    let amount = 0;
+    let userId = "";
 
-        // PIN INPUT LOGIC
-        const pinInputs = document.querySelectorAll('.pin-box');
-        pinInputs.forEach((input, index) => {
-            input.addEventListener('keyup', (e) => {
-                if (e.target.value.length === 1 && index < 3) pinInputs[index + 1].focus();
-                if (e.key === 'Backspace' && index > 0) pinInputs[index - 1].focus();
-            });
+    // 1. PIN INPUT AUTO-FOCUS LOGIC
+    const pinInputs = document.querySelectorAll('.pin-box');
+    pinInputs.forEach((input, index) => {
+        input.addEventListener('keyup', (e) => {
+            if (e.target.value.length === 1 && index < 3) pinInputs[index + 1].focus();
+            if (e.key === 'Backspace' && index > 0) pinInputs[index - 1].focus();
         });
+    });
 
-        async function init() {
-            const { data: { session } } = await _supabase.auth.getSession();
-            if (!session) { window.location.href = "login.html"; return; }
-            userId = session.user.id;
-            
-            const { data: prof } = await _supabase.from('profiles').select('full_name').eq('id', userId).single();
-            if(prof) document.getElementById('user-name-desktop').innerText = prof.full_name;
+    // 2. INITIALIZE PAGE DATA
+    async function init() {
+        const { data: { session } } = await _supabase.auth.getSession();
+        if (!session) { 
+            window.location.href = "login.html"; 
+            return; 
+        }
+        userId = session.user.id;
+        
+        // Fetch Profile Name
+        const { data: prof } = await _supabase.from('profiles').select('full_name').eq('id', userId).single();
+        if(prof) document.getElementById('user-name-desktop').innerText = prof.full_name;
 
-            const { data: wall } = await _supabase.from('wallets').select('balance').eq('id', userId).single();
-            if (wall) {
-                const bal = parseFloat(wall.balance).toLocaleString();
-                document.getElementById('user-balance-desktop').innerText = bal;
+        // Fetch Wallet Balance
+        const { data: wall } = await _supabase.from('wallets').select('balance').eq('id', userId).single();
+        if (wall) {
+            const bal = parseFloat(wall.balance).toLocaleString(undefined, {minimumFractionDigits: 2});
+            document.getElementById('user-balance-desktop').innerText = bal;
+            if(document.getElementById('user-balance-mobile')) {
                 document.getElementById('user-balance-mobile').innerText = bal;
             }
         }
+    }
 
-        function setProvider(name) {
-            network = name;
-            document.querySelectorAll('.network-card').forEach(c => c.classList.remove('active'));
-            document.getElementById('net-'+name).classList.add('active');
-            updateSummary();
-        }
+    // 3. SELECTION LOGIC
+    function setProvider(name, id) {
+        networkName = name;
+        selectedNetworkId = id;
+        document.querySelectorAll('.network-card').forEach(c => c.classList.remove('active'));
+        // Correcting ID lookup (ensure your HTML IDs match net-MTN, net-Airtel, etc)
+        const activeCard = document.getElementById('net-' + name);
+        if(activeCard) activeCard.classList.add('active');
+        updateSummary();
+    }
 
-        function setPlan(pName, price) {
-            plan = pName;
-            amount = price;
-            const cards = document.querySelectorAll('.plan-card');
-            cards.forEach(c => {
-                const title = c.querySelector('p').innerText;
-                c.classList.toggle('active', title === pName);
-            });
-            updateSummary();
-        }
+    function setPlan(pName, price, planId) {
+        planName = pName;
+        amount = price;
+        selectedPlanId = planId;
+        
+        // Visual active state for plan cards
+        document.querySelectorAll('.plan-card').forEach(c => {
+            const title = c.querySelector('p').innerText;
+            c.classList.toggle('active', title === pName);
+        });
+        updateSummary();
+    }
 
-        function updateSummary() {
-            document.getElementById('sum-net').innerText = network;
-            document.getElementById('sum-phone').innerText = document.getElementById('phoneInput').value || '---';
-            document.getElementById('sum-plan').innerText = plan || '---';
-            document.getElementById('sum-total').innerText = parseFloat(amount).toLocaleString();
-        }
+    function updateSummary() {
+        document.getElementById('sum-net').innerText = networkName;
+        document.getElementById('sum-phone').innerText = document.getElementById('phoneInput').value || '---';
+        document.getElementById('sum-plan').innerText = planName || '---';
+        document.getElementById('sum-total').innerText = parseFloat(amount).toLocaleString();
+    }
 
-        function openPinModal() {
-            const phone = document.getElementById('phoneInput').value;
-            if (!phone || phone.length < 10) return showToast("Please enter a valid phone number", "error");
-            if (amount === 0) return showToast("Please select a data plan", "error");
-            
-            document.getElementById('pinModal').classList.remove('hidden');
-            pinInputs[0].focus();
-        }
+    // 4. MODAL CONTROL
+    function openPinModal() {
+        const phone = document.getElementById('phoneInput').value;
+        if (!phone || phone.length < 10) return showToast("Enter a valid phone number", "error");
+        if (amount === 0 || selectedPlanId === 0) return showToast("Please select a data plan", "error");
+        
+        document.getElementById('pinModal').classList.remove('hidden');
+        pinInputs[0].focus();
+    }
 
-        function closePinModal() {
-            document.getElementById('pinModal').classList.add('hidden');
-            pinInputs.forEach(i => i.value = '');
-        }
+    function closePinModal() {
+        document.getElementById('pinModal').classList.add('hidden');
+        pinInputs.forEach(i => i.value = '');
+    }
 
-        async function confirmPurchase() {
-            let pin = "";
-            pinInputs.forEach(i => pin += i.value);
-            if (pin.length < 4) return showToast("Enter 4-digit PIN", "error");
+    // 5. THE FINAL PURCHASE LOGIC
+    async function confirmPurchase() {
+        let pin = "";
+        pinInputs.forEach(i => pin += i.value);
+        if (pin.length < 4) return showToast("Enter 4-digit PIN", "error");
 
-            const btn = document.getElementById('confirmPinBtn');
-            btn.innerText = "Verifying...";
-            btn.disabled = true;
+        const btn = document.getElementById('confirmPinBtn');
+        const phone = document.getElementById('phoneInput').value;
 
-            const { data: result, error } = await _supabase.rpc('process_purchase_secure', {
+        btn.innerText = "Processing...";
+        btn.disabled = true;
+
+        try {
+            // STEP A: Deduct money from Supabase Wallet securely
+            const { data: res, error: rpcErr } = await _supabase.rpc('process_purchase_secure', {
                 uid: userId,
                 amt: parseFloat(amount),
                 p_type: 'Data Purchase',
-                p_desc: `${network} ${plan} to ${document.getElementById('phoneInput').value}`,
+                p_desc: `${networkName} ${planName} to ${phone}`,
                 input_pin: pin
             });
 
-            if (error) {
-                showToast(error.message, "error");
-            } else if (result === 'invalid_pin') {
-                showToast("Incorrect PIN. Please try again.", "error");
+            if (rpcErr) throw new Error(rpcErr.message);
+
+            if (res === 'invalid_pin') {
+                showToast("Incorrect PIN. Try again.", "error");
                 pinInputs.forEach(i => i.value = '');
                 pinInputs[0].focus();
-            } else if (result === 'pin_not_set') {
-                showToast("Please set a transaction PIN in Settings first", "error");
-                setTimeout(() => window.location.href = "settings.html", 2000);
-            } else if (result === 'insufficient_balance') {
-                showToast("❌ Insufficient Balance. Please fund your wallet.", "error");
-                setTimeout(() => window.location.href = "fund-wallet.html", 2000);
-            } else {
-                showToast("✅ Transaction Successful!");
-                setTimeout(() => window.location.href = "dashboard.html", 2000);
+            } else if (res === 'pin_not_set') {
+                showToast("Please set a PIN in Settings first", "error");
+            } else if (res === 'insufficient_balance') {
+                showToast("Insufficient Wallet Balance", "error");
+            } else if (res === 'success') {
+                
+                // STEP B: Trigger Real Delivery via Edge Function
+                showToast("Payment confirmed. Delivering data...", "success");
+                
+                const { data: vtuData, error: funcErr } = await _supabase.functions.invoke('buy-vtu', {
+                    body: { 
+                        networkId: selectedNetworkId,
+                        planId: selectedPlanId,
+                        phoneNumber: phone
+                    }
+                });
+
+                if (funcErr) {
+                    // Note: Money was deducted, but API failed. Admin should check dashboard.
+                    showToast("Wallet deducted, but delivery delayed. Contact Support.", "error");
+                } else {
+                    showToast("✅ " + planName + " Sent Successfully!", "success");
+                    setTimeout(() => window.location.href = "dashboard.html", 2000);
+                }
             }
-            
+        } catch (err) {
+            console.error(err);
+            showToast("System Error: " + err.message, "error");
+        } finally {
             btn.innerText = "Confirm Payment";
             btn.disabled = false;
         }
+    }
 
-        function toggleMenu() {
-            document.getElementById('sidebar').classList.toggle('-translate-x-full');
-            document.getElementById('overlay').classList.toggle('hidden');
-        }
+    function toggleMenu() {
+        const sb = document.getElementById('sidebar');
+        const ov = document.getElementById('overlay');
+        sb.classList.toggle('-translate-x-full');
+        ov.classList.toggle('hidden');
+    }
 
-        window.onload = init;
-    </script>
+    window.onload = init;
+</script>
 </body>
 </html>

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elite Admin Command | Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #F8FAFF; color: #081B4B; }
+        .tab-btn.active { background: #0052FF; color: white; }
+        .glass-card { background: white; border-radius: 32px; border: 1px solid #f1f5f9; padding: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.02); }
+    </style>
+</head>
+<body class="antialiased min-h-screen">
+
+    <div class="max-w-7xl mx-auto p-6 lg:p-12">
+        <!-- HEADER -->
+        <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6">
+            <div>
+                <h1 class="text-3xl font-black tracking-tight">Elite Command Center 👑</h1>
+                <p class="text-slate-400 font-bold uppercase text-[10px] tracking-[0.3em] mt-1">Real-time Platform Management</p>
+            </div>
+            <div class="flex gap-3">
+                <button onclick="location.reload()" class="bg-white p-3 rounded-2xl border border-slate-100 shadow-sm"><i data-lucide="refresh-cw" class="w-5 h-5"></i></button>
+                <a href="dashboard.html" class="bg-[#081B4B] text-white px-8 py-3 rounded-2xl font-black text-sm shadow-xl">Exit Admin</a>
+            </div>
+        </header>
+
+        <!-- TOP STATS -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+            <div class="glass-card">
+                <p class="text-slate-400 text-[10px] font-black uppercase mb-1">Total Users</p>
+                <h3 id="stat-users" class="text-3xl font-black">...</h3>
+            </div>
+            <div class="glass-card">
+                <p class="text-slate-400 text-[10px] font-black uppercase mb-1">System Liability</p>
+                <h3 id="stat-liability" class="text-3xl font-black text-blue-600">₦...</h3>
+            </div>
+            <div class="glass-card border-green-100 bg-green-50/30">
+                <p class="text-green-600/60 text-[10px] font-black uppercase mb-1">Total Revenue</p>
+                <h3 id="stat-revenue" class="text-3xl font-black text-green-600">₦...</h3>
+            </div>
+            <div class="glass-card border-orange-100 bg-orange-50/30">
+                <p class="text-orange-600/60 text-[10px] font-black uppercase mb-1">Today's Sales</p>
+                <h3 id="stat-sales" class="text-3xl font-black text-orange-600">...</h3>
+            </div>
+        </div>
+
+        <!-- TABS -->
+        <div class="flex gap-2 mb-8 bg-white p-2 rounded-2xl border border-slate-100 w-fit shadow-sm">
+            <button onclick="switchTab('users')" class="tab-btn active px-6 py-2.5 rounded-xl font-black text-xs uppercase tracking-widest">User Directory</button>
+            <button onclick="switchTab('transactions')" class="tab-btn px-6 py-2.5 rounded-xl font-black text-xs uppercase tracking-widest text-slate-400">All Transactions</button>
+        </div>
+
+        <!-- USERS SECTION -->
+        <div id="section-users" class="glass-card overflow-hidden">
+            <div class="flex justify-between items-center mb-8">
+                <h4 class="font-black text-lg uppercase tracking-tighter">User Management</h4>
+                <input type="text" id="userSearch" onkeyup="searchUsers()" placeholder="Search name or phone..." class="bg-slate-50 border border-slate-100 px-5 py-3 rounded-2xl text-sm outline-none focus:border-blue-500 w-72">
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead>
+                        <tr class="text-slate-400 text-[10px] font-black uppercase tracking-widest border-b border-slate-50">
+                            <th class="pb-4 px-2">User Details</th>
+                            <th class="pb-4 px-2 text-center">Wallet Balance</th>
+                            <th class="pb-4 px-2 text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="user-table-body" class="text-sm">
+                        <!-- Loaded via JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- TRANSACTIONS SECTION (Hidden by default) -->
+        <div id="section-transactions" class="glass-card hidden">
+            <h4 class="font-black text-lg uppercase tracking-tighter mb-8">Global Transaction Log</h4>
+            <div id="global-trans-list" class="space-y-4">
+                <!-- Loaded via JS -->
+            </div>
+        </div>
+    </div>
+
+    <script src="supabase-config.js"></script>
+    <script src="notifications.js"></script>
+    <script>
+        lucide.createIcons();
+        let allUsers = [];
+        let allTrans = [];
+
+        async function initAdmin() {
+            const { data: { session } } = await _supabase.auth.getSession();
+            if (!session) { window.location.href = "login.html"; return; }
+
+            const { data: adminProfile } = await _supabase.from('profiles').select('is_admin').eq('id', session.user.id).single();
+            if (!adminProfile || !adminProfile.is_admin) {
+                alert("Restricted Area");
+                window.location.href = "dashboard.html";
+                return;
+            }
+
+            // 1. Load Profiles & Wallets
+            const { data: profiles } = await _supabase.from('profiles').select('*').order('created_at', {ascending: false});
+            const { data: wallets } = await _supabase.from('wallets').select('*');
+            
+            // 2. Load Transactions (Simplified Select)
+            const { data: transactions, error: transError } = await _supabase
+                .from('transactions')
+                .select('*')
+                .order('created_at', {ascending: false});
+
+            if (transError) {
+                console.error("Error fetching transactions:", transError);
+            }
+
+            allUsers = profiles.map(p => ({
+                ...p,
+                balance: wallets.find(w => w.id === p.id)?.balance || 0
+            }));
+            
+            // Map transactions to names manually for safety
+            allTrans = transactions.map(t => ({
+                ...t,
+                user_name: allUsers.find(u => u.id === t.user_id)?.full_name || 'Unknown User'
+            }));
+
+            updateStats();
+            renderUsers(allUsers);
+            renderTransactions(allTrans);
+        }
+
+        function updateStats() {
+            document.getElementById('stat-users').innerText = allUsers.length;
+            const liability = allUsers.reduce((sum, u) => sum + parseFloat(u.balance), 0);
+            document.getElementById('stat-liability').innerText = "₦" + liability.toLocaleString();
+            
+            const revenue = allTrans.reduce((sum, t) => sum + parseFloat(t.amount), 0);
+            document.getElementById('stat-revenue').innerText = "₦" + revenue.toLocaleString();
+            
+            document.getElementById('stat-sales').innerText = allTrans.length;
+        }
+
+        function renderUsers(data) {
+            const tbody = document.getElementById('user-table-body');
+            tbody.innerHTML = data.map(u => `
+                <tr class="border-b border-slate-50 last:border-0 hover:bg-slate-50/50 transition-colors">
+                    <td class="py-5 px-2">
+                        <p class="font-black text-[#081B4B]">${u.full_name}</p>
+                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-tighter">${u.phone_number || 'No Phone'}</p>
+                    </td>
+                    <td class="py-5 px-2 text-center font-black text-blue-600">₦${parseFloat(u.balance).toLocaleString()}</td>
+                    <td class="py-5 px-2 text-right">
+                        <button onclick="manualFund('${u.id}', '${u.full_name}')" class="bg-blue-600 text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase shadow-lg shadow-blue-200 active:scale-95 transition-all">Add Fund</button>
+                    </td>
+                </tr>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        function renderTransactions(data) {
+    const container = document.getElementById('global-trans-list');
+    
+    if (!data || data.length === 0) {
+        container.innerHTML = `<p class="text-center py-10 text-slate-400 font-bold uppercase tracking-widest text-[10px]">No system transactions yet</p>`;
+        return;
+    }
+
+    container.innerHTML = data.map(t => `
+        <div class="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-800">
+            <div class="flex items-center gap-4">
+                <div class="w-10 h-10 bg-white dark:bg-slate-700 rounded-xl flex items-center justify-center border border-slate-100 dark:border-slate-600 shadow-sm">
+                    <i data-lucide="activity" class="w-5 h-5 text-blue-500"></i>
+                </div>
+                <div>
+                    <p class="font-black text-xs uppercase dark:text-white">${t.type}</p>
+                    <p class="text-[9px] text-slate-400 font-bold uppercase">${t.user_name} • ${new Date(t.created_at).toLocaleString()}</p>
+                </div>
+            </div>
+            <div class="text-right">
+                <p class="font-black text-sm dark:text-white">₦${parseFloat(t.amount).toLocaleString()}</p>
+                <p class="text-[8px] font-black text-green-500 uppercase">${t.status}</p>
+            </div>
+        </div>
+    `).join('');
+    lucide.createIcons();
+}
+
+        async function manualFund(uid, name) {
+            const amt = prompt(`How much ₦ do you want to add to ${name}'s wallet?`);
+            if (!amt || isNaN(amt)) return;
+
+            const { error } = await _supabase.rpc('admin_fund_wallet', { target_uid: uid, amt: parseFloat(amt) });
+            if (error) showToast(error.message, "error");
+            else { showToast(`₦${amt} added to ${name}`, "success"); initAdmin(); }
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active', 'text-slate-400'));
+            event.target.classList.add('active');
+            
+            document.getElementById('section-users').classList.add('hidden');
+            document.getElementById('section-transactions').classList.add('hidden');
+            document.getElementById(`section-${tab}`).classList.remove('hidden');
+        }
+
+        function searchUsers() {
+            const query = document.getElementById('userSearch').value.toLowerCase();
+            const filtered = allUsers.filter(u => u.full_name.toLowerCase().includes(query) || (u.phone_number && u.phone_number.includes(query)));
+            renderUsers(filtered);
+        }
+
+        window.onload = initAdmin;
+    </script>
+</body>
+</html>
