@@ -127,24 +127,31 @@
                             <!-- 1. SELECT NETWORK -->
                             <section>
                                 <h4 class="font-extrabold text-sm mb-4 uppercase">1. Select Provider</h4>
-                                <div class="grid grid-cols-4 gap-3">
-                                    <button onclick="setProvider('MTN')" id="net-MTN" class="network-card active bg-white p-4 rounded-2xl border border-slate-100 flex flex-col items-center gap-2 transition-all">
-                                        <div class="w-10 h-10 rounded-full bg-yellow-400 flex items-center justify-center font-black text-[10px]">MTN</div>
-                                        <span class="text-[10px] font-bold">MTN</span>
-                                    </button>
-                                    <button onclick="setProvider('Airtel')" id="net-Airtel" class="network-card bg-white p-4 rounded-2xl border border-slate-100 flex flex-col items-center gap-2 transition-all">
-                                        <div class="w-10 h-10 rounded-full bg-red-600 text-white flex items-center justify-center font-black text-[10px]">Airtel</div>
-                                        <span class="text-[10px] font-bold">Airtel</span>
-                                    </button>
-                                    <button onclick="setProvider('Glo')" id="net-Glo" class="network-card bg-white p-4 rounded-2xl border border-slate-100 flex flex-col items-center gap-2 transition-all">
-                                        <div class="w-10 h-10 rounded-full bg-green-600 text-white flex items-center justify-center font-black text-[10px]">Glo</div>
-                                        <span class="text-[10px] font-bold">Glo</span>
-                                    </button>
-                                    <button onclick="setProvider('9mobile')" id="net-9mobile" class="network-card bg-white p-4 rounded-2xl border border-slate-100 flex flex-col items-center gap-2 transition-all">
-                                        <div class="w-10 h-10 rounded-full bg-green-900 text-white flex items-center justify-center font-black text-[10px]">9mob</div>
-                                        <span class="text-[10px] font-bold">9mobile</span>
-                                    </button>
-                                </div>
+                               <div class="grid grid-cols-4 gap-3">
+    <!-- MTN: ID 1 -->
+                                <button onclick="setProvider('MTN', 1)" id="net-MTN" class="network-card active bg-white p-4 rounded-2xl border border-slate-100 flex flex-col items-center gap-2 transition-all">
+                                    <div class="w-10 h-10 rounded-full bg-yellow-400 flex items-center justify-center font-black text-[10px]">MTN</div>
+                                    <span class="text-[10px] font-bold uppercase">MTN</span>
+                                </button>
+                                
+                                <!-- Airtel: ID 3 -->
+                                <button onclick="setProvider('Airtel', 3)" id="net-Airtel" class="network-card bg-white p-4 rounded-2xl border border-slate-100 flex flex-col items-center gap-2 transition-all">
+                                    <div class="w-10 h-10 rounded-full bg-red-600 text-white flex items-center justify-center font-black text-[10px]">Airtel</div>
+                                    <span class="text-[10px] font-bold uppercase">Airtel</span>
+                                </button>
+                                
+                                <!-- Glo: ID 2 -->
+                                <button onclick="setProvider('Glo', 2)" id="net-Glo" class="network-card bg-white p-4 rounded-2xl border border-slate-100 flex flex-col items-center gap-2 transition-all">
+                                    <div class="w-10 h-10 rounded-full bg-green-600 text-white flex items-center justify-center font-black text-[10px]">Glo</div>
+                                    <span class="text-[10px] font-bold uppercase">Glo</span>
+                                </button>
+                                
+                                <!-- 9mobile: ID 4 -->
+                                <button onclick="setProvider('9mobile', 4)" id="net-9mobile" class="network-card bg-white p-4 rounded-2xl border border-slate-100 flex flex-col items-center gap-2 transition-all">
+                                    <div class="w-10 h-10 rounded-full bg-green-900 text-white flex items-center justify-center font-black text-[10px]">9mob</div>
+                                    <span class="text-[10px] font-bold uppercase">9mobile</span>
+                                </button>
+                            </div>
                             </section>
 
                             <!-- 2. PHONE NUMBER -->
@@ -157,24 +164,14 @@
                             </section>
 
                             <!-- 3. SELECT PLAN -->
+                            <!-- 3. SELECT DATA PLAN -->
                             <section>
-                                <h4 class="font-extrabold text-sm mb-4 uppercase text-slate-400">3. Select Data Plan</h4>
-                                <div class="grid grid-cols-2 md:grid-cols-3 gap-4" id="plan-container">
-                                    <button onclick="setPlan('1.5GB', 200)" class="plan-card bg-white border border-slate-100 p-5 rounded-2xl text-left transition-all">
-                                        <p class="font-black text-sm uppercase">1.5GB</p>
-                                        <p class="text-[9px] text-slate-400 font-bold mb-3 uppercase">1 Day</p>
-                                        <p class="text-[#0052FF] font-black text-sm">₦200</p>
-                                    </button>
-                                    <button onclick="setPlan('3GB', 500)" class="plan-card bg-white border border-slate-100 p-5 rounded-2xl text-left transition-all">
-                                        <p class="font-black text-sm uppercase">3GB</p>
-                                        <p class="text-[9px] text-slate-400 font-bold mb-3 uppercase">7 Days</p>
-                                        <p class="text-[#0052FF] font-black text-sm">₦500</p>
-                                    </button>
-                                    <button onclick="setPlan('5GB', 1000)" class="plan-card bg-white border border-slate-100 p-5 rounded-2xl text-left transition-all">
-                                        <p class="font-black text-sm uppercase">5GB</p>
-                                        <p class="text-[9px] text-slate-400 font-bold mb-3 uppercase">30 Days</p>
-                                        <p class="text-[#0052FF] font-black text-sm">₦1,000</p>
-                                    </button>
+                                <div class="flex justify-between items-center mb-4 px-2">
+                                    <h4 class="font-extrabold text-sm uppercase text-slate-400">3. Select Data Plan</h4>
+                                </div>
+                                <!-- This container will be filled automatically by JavaScript -->
+                                <div class="grid grid-cols-2 md:grid-cols-3 gap-4" id="plan-list">
+                                    <p class="text-xs text-slate-400 p-4">Please select a network provider first...</p>
                                 </div>
                             </section>
 
@@ -215,15 +212,45 @@
 <script>
     lucide.createIcons();
 
+    // 1. DATA MAPPING (Using your Glad Tidings IDs and Prices)
+    const allNetworkPlans = {
+        1: [ // MTN
+            { id: 233, size: "1GB", valid: "7 Days", price: 772 },
+            { id: 355, size: "3GB", valid: "30 Days", price: 1740 },
+            { id: 356, size: "5GB", valid: "30 Days", price: 1790 },
+            { id: 357, size: "10GB", valid: "30 Days", price: 8050 },
+            { id: 513, size: "12.5GB", valid: "30 Days", price: 5307.50 }
+        ],
+        3: [ // AIRTEL
+            { id: 426, size: "1.5GB", valid: "1 Day", price: 485 },
+            { id: 564, size: "2GB", valid: "30 Days", price: 1450 },
+            { id: 527, size: "3GB", valid: "30 Days", price: 1920 },
+            { id: 483, size: "10GB", valid: "30 Days", price: 3007 }
+        ],
+        2: [ // GLO
+            { id: 632, size: "1GB", valid: "3 Days", price: 250 },
+            { id: 633, size: "3GB", valid: "3 Days", price: 750 },
+            { id: 634, size: "5GB", valid: "3 Days", price: 1250 },
+            { id: 335, size: "10GB", valid: "30 Days", price: 4000 }
+        ],
+        4: [ // 9MOBILE
+            { id: 298, size: "1GB", valid: "30 Days", price: 475 },
+            { id: 299, size: "2GB", valid: "30 Days", price: 950 },
+            { id: 303, size: "3GB", valid: "30 Days", price: 1425 },
+            { id: 304, size: "5GB", valid: "30 Days", price: 2375 },
+            { id: 305, size: "10GB", valid: "30 Days", price: 4750 }
+        ]
+    };
+
     // Global state
     let networkName = 'MTN';
-    let selectedNetworkId = 1; // Default MTN ID
+    let selectedNetworkId = 1; 
     let planName = '';
-    let selectedPlanId = 0;    // The ID from Glad Tidings
+    let selectedPlanId = 0;   
     let amount = 0;
     let userId = "";
 
-    // 1. PIN INPUT AUTO-FOCUS LOGIC
+    // 2. PIN INPUT AUTO-FOCUS
     const pinInputs = document.querySelectorAll('.pin-box');
     pinInputs.forEach((input, index) => {
         input.addEventListener('keyup', (e) => {
@@ -232,50 +259,61 @@
         });
     });
 
-    // 2. INITIALIZE PAGE DATA
+    // 3. INITIALIZE DATA
     async function init() {
         const { data: { session } } = await _supabase.auth.getSession();
-        if (!session) { 
-            window.location.href = "login.html"; 
-            return; 
-        }
+        if (!session) { window.location.href = "login.html"; return; }
         userId = session.user.id;
         
-        // Fetch Profile Name
         const { data: prof } = await _supabase.from('profiles').select('full_name').eq('id', userId).single();
         if(prof) document.getElementById('user-name-desktop').innerText = prof.full_name;
 
-        // Fetch Wallet Balance
         const { data: wall } = await _supabase.from('wallets').select('balance').eq('id', userId).single();
         if (wall) {
             const bal = parseFloat(wall.balance).toLocaleString(undefined, {minimumFractionDigits: 2});
             document.getElementById('user-balance-desktop').innerText = bal;
-            if(document.getElementById('user-balance-mobile')) {
-                document.getElementById('user-balance-mobile').innerText = bal;
-            }
+            if(document.getElementById('user-balance-mobile')) document.getElementById('user-balance-mobile').innerText = bal;
         }
+
+        // Load initial MTN plans
+        renderPlans(1);
     }
 
-    // 3. SELECTION LOGIC
+    // 4. PROVIDER & PLAN SELECTION
     function setProvider(name, id) {
         networkName = name;
         selectedNetworkId = id;
         document.querySelectorAll('.network-card').forEach(c => c.classList.remove('active'));
-        // Correcting ID lookup (ensure your HTML IDs match net-MTN, net-Airtel, etc)
         const activeCard = document.getElementById('net-' + name);
         if(activeCard) activeCard.classList.add('active');
+
+        // Reset plan choice when network changes
+        planName = ''; selectedPlanId = 0; amount = 0;
+        renderPlans(id);
         updateSummary();
     }
 
-    function setPlan(pName, price, planId) {
-        planName = pName;
-        amount = price;
-        selectedPlanId = planId;
+    function renderPlans(netId) {
+        const container = document.getElementById('plan-container');
+        const plans = allNetworkPlans[netId] || [];
         
-        // Visual active state for plan cards
+        container.innerHTML = plans.map(p => `
+            <button onclick="setPlan('${p.size}', ${p.price}, ${p.id})" class="plan-card bg-white border border-slate-100 p-5 rounded-2xl text-left transition-all hover:border-[#0052FF]">
+                <p class="font-black text-sm uppercase">${p.size}</p>
+                <p class="text-[9px] text-slate-400 font-bold mb-3 uppercase">${p.valid}</p>
+                <p class="text-[#0052FF] font-black text-sm">₦${p.price.toLocaleString()}</p>
+            </button>
+        `).join('');
+    }
+
+    function setPlan(pSize, pPrice, pId) {
+        planName = pSize;
+        amount = pPrice;
+        selectedPlanId = pId;
+        
         document.querySelectorAll('.plan-card').forEach(c => {
             const title = c.querySelector('p').innerText;
-            c.classList.toggle('active', title === pName);
+            c.classList.toggle('active', title === pSize);
         });
         updateSummary();
     }
@@ -287,12 +325,11 @@
         document.getElementById('sum-total').innerText = parseFloat(amount).toLocaleString();
     }
 
-    // 4. MODAL CONTROL
+    // 5. MODAL & PURCHASE
     function openPinModal() {
         const phone = document.getElementById('phoneInput').value;
         if (!phone || phone.length < 10) return showToast("Enter a valid phone number", "error");
-        if (amount === 0 || selectedPlanId === 0) return showToast("Please select a data plan", "error");
-        
+        if (amount === 0) return showToast("Please select a data plan", "error");
         document.getElementById('pinModal').classList.remove('hidden');
         pinInputs[0].focus();
     }
@@ -302,7 +339,6 @@
         pinInputs.forEach(i => i.value = '');
     }
 
-    // 5. THE FINAL PURCHASE LOGIC
     async function confirmPurchase() {
         let pin = "";
         pinInputs.forEach(i => pin += i.value);
@@ -310,12 +346,11 @@
 
         const btn = document.getElementById('confirmPinBtn');
         const phone = document.getElementById('phoneInput').value;
-
         btn.innerText = "Processing...";
         btn.disabled = true;
 
         try {
-            // STEP A: Deduct money from Supabase Wallet securely
+            // A. Deduct Money
             const { data: res, error: rpcErr } = await _supabase.rpc('process_purchase_secure', {
                 uid: userId,
                 amt: parseFloat(amount),
@@ -324,51 +359,36 @@
                 input_pin: pin
             });
 
-            if (rpcErr) throw new Error(rpcErr.message);
+            if (rpcErr) throw rpcErr;
 
-            if (res === 'invalid_pin') {
-                showToast("Incorrect PIN. Try again.", "error");
-                pinInputs.forEach(i => i.value = '');
-                pinInputs[0].focus();
-            } else if (res === 'pin_not_set') {
-                showToast("Please set a PIN in Settings first", "error");
-            } else if (res === 'insufficient_balance') {
-                showToast("Insufficient Wallet Balance", "error");
-            } else if (res === 'success') {
+            if (res === 'success') {
+                showToast("Payment verified. Delivering...", "success");
                 
-                // STEP B: Trigger Real Delivery via Edge Function
-                showToast("Payment confirmed. Delivering data...", "success");
-                
-                const { data: vtuData, error: funcErr } = await _supabase.functions.invoke('buy-vtu', {
-                    body: { 
-                        networkId: selectedNetworkId,
-                        planId: selectedPlanId,
-                        phoneNumber: phone
-                    }
+                // B. Call VTU API
+                const { data: vtu, error: fErr } = await _supabase.functions.invoke('buy-vtu', {
+                    body: { networkId: selectedNetworkId, planId: selectedPlanId, phoneNumber: phone }
                 });
 
-                if (funcErr) {
-                    // Note: Money was deducted, but API failed. Admin should check dashboard.
-                    showToast("Wallet deducted, but delivery delayed. Contact Support.", "error");
+                if (fErr) {
+                    showToast("Wallet deducted, but delivery failed. Contact Support.", "error");
                 } else {
-                    showToast("✅ " + planName + " Sent Successfully!", "success");
+                    showToast("✅ Data Sent Successfully!", "success");
                     setTimeout(() => window.location.href = "dashboard.html", 2000);
                 }
+            } else {
+                showToast(res.replace('_', ' '), "error");
+                if (res === 'invalid_pin') { pinInputs.forEach(i => i.value = ''); pinInputs[0].focus(); }
             }
         } catch (err) {
-            console.error(err);
             showToast("System Error: " + err.message, "error");
         } finally {
-            btn.innerText = "Confirm Payment";
-            btn.disabled = false;
+            btn.innerText = "Confirm Payment"; btn.disabled = false;
         }
     }
 
     function toggleMenu() {
-        const sb = document.getElementById('sidebar');
-        const ov = document.getElementById('overlay');
-        sb.classList.toggle('-translate-x-full');
-        ov.classList.toggle('hidden');
+        document.getElementById('sidebar').classList.toggle('-translate-x-full');
+        document.getElementById('overlay').classList.toggle('hidden');
     }
 
     window.onload = init;
