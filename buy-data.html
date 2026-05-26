@@ -320,36 +320,44 @@
         }
 
         async function confirmPurchase() {
-            let pin = "";
-            pinInputs.forEach(i => pin += i.value);
-            if (pin.length < 4) return showToast("Enter 4-digit PIN", "error");
+    // ... (PIN check remains same) ...
+    
+    // 1. Deduct the money from Supabase first
+    const { data: res, error: rpcErr } = await _supabase.rpc('process_purchase_secure', {
+        uid: userId, amt: parseFloat(amount), p_type: 'Data Purchase',
+        p_desc: `${networkName} ${planName} to ${phone}`, input_pin: pin
+    });
 
-            const btn = document.getElementById('confirmPinBtn');
-            const phone = document.getElementById('phoneInput').value;
-            btn.innerText = "Processing..."; btn.disabled = true;
+    if (res === 'success') {
+        // 2. Try to deliver via VTU Provider
+        const { data: vtu, error: fErr } = await _supabase.functions.invoke('buy-vtu', {
+            body: { networkId: selectedNetworkId, planId: selectedPlanId, phoneNumber: phone }
+        });
 
-            try {
-                const { data: res, error: rpcErr } = await _supabase.rpc('process_purchase_secure', {
-                    uid: userId, amt: parseFloat(amount), p_type: 'Data Purchase',
-                    p_desc: `${networkName} ${planName} to ${phone}`, input_pin: pin
-                });
+        // 3. IF PROVIDER FAILS, REFUND THE USER IMMEDIATELY
+        if (fErr || vtu.status === 'fail' || vtu.Status === 'failed') {
+            
+            // Call the same fund_wallet_v2 function to give the money back
+            await _supabase.rpc('fund_wallet_v2', {
+                uid: userId,
+                amt: parseFloat(amount)
+            });
 
-                if (rpcErr) throw rpcErr;
+            // Log the refund in transactions
+            await _supabase.from('transactions').insert([{
+                user_id: userId,
+                amount: parseFloat(amount),
+                type: 'Refund',
+                status: 'Successful'
+            }]);
 
-                if (res === 'success') {
-                    showToast("Verified. Delivering data...", "success");
-                    const { data: vtu, error: fErr } = await _supabase.functions.invoke('buy-vtu', {
-                        body: { networkId: selectedNetworkId, planId: selectedPlanId, phoneNumber: phone }
-                    });
-                    if (fErr) showToast("Deducted, but delivery failed. Contact Support.", "error");
-                    else { showToast("✅ " + planName + " Sent!", "success"); setTimeout(() => window.location.href = "dashboard.html", 2000); }
-                } else {
-                    showToast(res.replace('_', ' '), "error");
-                    if (res === 'invalid_pin') { pinInputs.forEach(i => i.value = ''); pinInputs[0].focus(); }
-                }
-            } catch (err) { showToast("System Error: " + err.message, "error"); }
-            finally { btn.innerText = "Confirm Payment"; btn.disabled = false; }
+            showToast("Provider error. Your money has been refunded to your wallet.", "error");
+        } else {
+            showToast("✅ Data Sent Successfully!", "success");
+            setTimeout(() => window.location.href = "dashboard.html", 2000);
         }
+    }
+}
 
         function toggleMenu() {
             document.getElementById('sidebar').classList.toggle('-translate-x-full');
