@@ -79,6 +79,19 @@
         .dark .bg-\[#F0F5FF\]            { background-color:rgba(0,82,255,.08) !important; border-color:rgba(0,82,255,.15) !important; }
         .dark nav.fixed                  { background-color:#0f1729 !important; border-color:#1e2d45 !important; }
         .dark .tx-label                  { color:#e2e8f0 !important; }
+        /* Referral banner dark mode */
+        .refer-card                      { transition: background-color .2s, border-color .2s; }
+        .dark .refer-card                { background-color:#0d1f3c !important; border-color:#1e3560 !important; }
+        .dark .refer-card h5             { color:#60a5fa !important; }
+        .dark .refer-card p.refer-title  { color:#ffffff !important; }
+        .dark .refer-card p.refer-body   { color:#64748b !important; }
+        /* Data bonus card dark mode */
+        .dark .bonus-card                { background-color:#111827 !important; }
+        .dark .bonus-card .bonus-icon    { background-color:#0d2050 !important; }
+        .dark .bonus-card .bonus-title   { color:#ffffff !important; }
+        .dark .bonus-card .bonus-sub     { color:#64748b !important; }
+        .dark .bonus-card .bonus-price   { color:#e2e8f0 !important; }
+        .dark .bonus-card .bonus-btn     { background-color:#0d2050 !important; color:#60a5fa !important; }
         #page-body                       { background-color:#EEF2FF; }
         .dark #page-body                 { background-color:#0B1120 !important; }
     </style>
@@ -182,11 +195,11 @@
                     </div>
 
                     <div class="lg:hidden mt-6">
-                        <a href="referrals.html" class="block bg-[#F0F5FF] p-6 rounded-[28px] relative overflow-hidden group border border-blue-50">
+                        <a href="referrals.html" class="refer-card block bg-[#F0F5FF] p-6 rounded-[28px] relative overflow-hidden group border border-blue-50">
                             <div class="relative z-10">
                                 <h5 class="font-extrabold text-[11px] mb-1 uppercase tracking-tight text-[#0052FF]">Invite & Earn</h5>
-                                <p class="text-[15px] font-black text-[#081B4B]">Get ₦1,000 instantly!</p>
-                                <p class="text-[10px] text-slate-500 font-medium max-w-[220px] mt-1">Refer your friends to Elite Data and earn bonus when they fund their wallet.</p>
+                                <p class="refer-title text-[15px] font-black text-[#081B4B]">Get ₦1,000 instantly!</p>
+                                <p class="refer-body text-[10px] text-slate-500 font-medium max-w-[220px] mt-1">Refer your friends to Elite Data and earn bonus when they fund their wallet.</p>
                             </div>
                             <i data-lucide="gift" class="w-20 h-20 absolute -right-4 -bottom-4 text-[#0052FF]/10 transition-transform group-hover:scale-110"></i>
                         </a>
@@ -214,19 +227,19 @@
                                     <h4 class="font-bold tracking-widest text-xs uppercase text-slate-400">First Time Data Bonus</h4>
                                     <a href="buy-data.html" class="text-[10px] font-bold text-[#0052FF]">View all</a>
                                 </div>
-                                <div class="card p-5 flex items-center justify-between">
+                                <div class="bonus-card card p-5 flex items-center justify-between">
                                     <div class="flex items-center gap-4">
-                                        <div class="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center text-[#0052FF]">
+                                        <div class="bonus-icon w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center text-[#0052FF]">
                                             <i data-lucide="wifi" class="w-5 h-5"></i>
                                         </div>
                                         <div>
-                                            <p class="font-bold text-sm uppercase">10GB</p>
-                                            <p class="text-[9px] text-slate-400 font-bold uppercase">Valid for 30 Days</p>
+                                            <p class="bonus-title font-bold text-sm uppercase">10GB</p>
+                                            <p class="bonus-sub text-[9px] text-slate-400 font-bold uppercase">Valid for 30 Days</p>
                                         </div>
                                     </div>
                                     <div class="flex items-center gap-4">
-                                        <span class="font-black text-sm text-[#081B4B] balance-num">₦1,500</span>
-                                        <a href="buy-data.html" class="bg-blue-50 text-[#0052FF] px-4 py-1.5 rounded-lg text-[10px] font-black uppercase hover:bg-blue-100 transition-all">Buy</a>
+                                        <span class="bonus-price font-black text-sm text-[#081B4B] balance-num">₦1,500</span>
+                                        <a href="buy-data.html" class="bonus-btn bg-blue-50 text-[#0052FF] px-4 py-1.5 rounded-lg text-[10px] font-black uppercase hover:bg-blue-100 transition-all">Buy</a>
                                     </div>
                                 </div>
                             </section>
@@ -277,11 +290,11 @@
                                     <a href="withdraw-bank.html" class="flex-1 bg-slate-50 text-slate-400 py-3 rounded-full font-bold text-[10px] text-center border border-slate-100 transition-all">Withdraw</a>
                                 </div>
                             </div>
-                            <a href="referrals.html" class="block bg-[#F0F5FF] p-8 rounded-[28px] relative overflow-hidden group border border-blue-50">
+                            <a href="referrals.html" class="refer-card block bg-[#F0F5FF] p-8 rounded-[28px] relative overflow-hidden group border border-blue-50">
                                 <div class="relative z-10">
                                     <h5 class="font-extrabold text-xs mb-1 uppercase tracking-tight text-[#0052FF]">Invite & Earn</h5>
-                                    <p class="text-xl font-black text-[#081B4B] mb-2">Get ₦1,000 per Referral!</p>
-                                    <p class="text-xs text-slate-500 font-medium max-w-[220px]">Refer friends to Elite Data and earn bonus when they fund their wallet.</p>
+                                    <p class="refer-title text-xl font-black text-[#081B4B] mb-2">Get ₦1,000 per Referral!</p>
+                                    <p class="refer-body text-xs text-slate-500 font-medium max-w-[220px]">Refer friends to Elite Data and earn bonus when they fund their wallet.</p>
                                 </div>
                                 <i data-lucide="gift" class="w-24 h-24 absolute -right-4 -bottom-4 text-[#0052FF]/10 transition-transform group-hover:scale-110"></i>
                             </a>
