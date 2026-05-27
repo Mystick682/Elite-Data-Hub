@@ -9,10 +9,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #F8FAFF; margin: 0; padding: 0; overflow-x: hidden; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #EEF2FF; margin: 0; padding: 0; overflow-x: hidden; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .active-nav { background: #0052FF !important; color: white !important; }
-        .provider-card.active { border-color: #0052FF; background: #F0F5FF; border-width: 2px; }
+        .provider-card { background: #ffffff; box-shadow: 0 2px 8px rgba(0,0,0,0.06); transition: all 0.15s ease; }
+        .provider-card.active { border-color: #0052FF !important; background: #ffffff; border-width: 2px; box-shadow: 0 4px 16px rgba(0,82,255,0.15); }
         #sidebar { transition: transform 0.3s ease; }
         .overlap-card { z-index: 70 !important; position: relative; }
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
@@ -26,10 +27,68 @@
         .tile-airtime { top: 32px; right: -5px; animation-delay: 1s; color: #10b981; }
         .tile-tv { bottom: 10px; left: 10px; animation-delay: 0.5s; color: #a855f7; }
 
-        .dark body { background-color: #0B1120 !important; color: #ffffff !important; }
-        .dark .bg-white, .dark aside, .dark nav, .dark header { background-color: #111827 !important; border-color: #1F2937 !important; color: #ffffff !important; }
-        .dark h1, .dark h2, .dark h3, .dark h4, .dark p, .dark span, .dark label { color: #ffffff !important; }
-        .dark input, .dark select { background-color: #1F2937 !important; border-color: #374151 !important; color: #ffffff !important; }
+        /* ── Balance text: always visible in light mode ── */
+        #user-balance-mobile, #user-balance-desktop, #user-balance-desktop-side { color: #081B4B; }
+
+        /* ══════════════════════════════════════════
+           DARK MODE — matches buy-data dark aesthetic
+           Background layers:
+             page bg   → #0B1120  (deepest navy)
+             sidebar   → #0f1729
+             cards     → #111827  (slightly lighter)
+             inputs    → #1a2235  (card surface)
+             borders   → #1e2d45
+        ══════════════════════════════════════════ */
+        .dark body                        { background-color: #0B1120 !important; color: #e2e8f0 !important; }
+        .dark main                        { background-color: #0B1120 !important; }
+
+        /* Sidebar */
+        .dark #sidebar                    { background-color: #0f1729 !important; border-color: #1e2d45 !important; }
+        .dark #sidebar h1                 { color: #ffffff !important; }
+        .dark #sidebar a                  { color: #64748b !important; }
+        .dark #sidebar a.active-nav       { color: #ffffff !important; }
+
+        /* Headers */
+        .dark header                      { background-color: #0f1729 !important; border-color: #1e2d45 !important; }
+        .dark header span, .dark header div { color: #e2e8f0 !important; }
+
+        /* All white cards → dark card surface */
+        .dark .bg-white                   { background-color: #111827 !important; border-color: #1e2d45 !important; }
+
+        /* Section headings (step labels) */
+        .dark h4                          { color: #64748b !important; }
+
+        /* Provider buttons (default / inactive) */
+        .dark .provider-card              { background-color: #111827 !important; border-color: #1e2d45 !important; color: #e2e8f0 !important; }
+        .dark .provider-card span         { color: #94a3b8 !important; }
+        .dark .provider-card.active       { background-color: #0d2050 !important; border-color: #0052FF !important; }
+        .dark .provider-card.active span  { color: #93c5fd !important; }
+
+        /* Inputs & selects */
+        .dark input, .dark select         { background-color: #1a2235 !important; border-color: #1e2d45 !important; color: #e2e8f0 !important; }
+        .dark input::placeholder          { color: #475569 !important; }
+
+        /* Summary card rows */
+        .dark #sum-net, .dark #sum-card,
+        .dark #sum-plan                   { color: #e2e8f0 !important; }
+
+        /* Divider line inside summary */
+        .dark .border-slate-100          { border-color: #1e2d45 !important; }
+
+        /* Balance figures */
+        .dark #user-balance-mobile,
+        .dark #user-balance-desktop,
+        .dark #user-balance-desktop-side  { color: #ffffff !important; }
+
+        /* General text */
+        .dark h1, .dark h2, .dark h3      { color: #ffffff !important; }
+        .dark p, .dark label              { color: #94a3b8 !important; }
+
+        /* Pin modal */
+        .dark #pinModal .bg-white         { background-color: #111827 !important; }
+
+        /* Overlay */
+        .dark #overlay                    { background-color: rgba(0,0,0,0.6) !important; }
     </style>
     <script src="theme.js"></script>
 </head>
@@ -68,20 +127,31 @@
             </nav>
         </aside>
 
-        <main class="flex-1 flex flex-col min-w-0 bg-[#F8FAFF]">
-            <header class="lg:hidden bg-white px-6 py-4 flex justify-between items-center border-b border-slate-50 sticky top-0 z-[60]">
-                <button onclick="toggleMenu()"><i data-lucide="menu" class="w-6 h-6"></i></button>
-                <span class="font-extrabold text-sm text-[#0052FF]">Renew TV</span>
-                <button onclick="toggleTheme()"><i data-lucide="moon" class="w-4 h-4 text-slate-400 dark:hidden"></i><i data-lucide="sun" class="hidden dark:block w-4 h-4 text-yellow-400"></i></button>
+        <main class="flex-1 flex flex-col min-w-0 bg-[#EEF2FF]">
+            <!-- Mobile header -->
+            <header class="lg:hidden bg-white px-5 py-4 flex justify-between items-center border-b border-slate-100 sticky top-0 z-[60] shadow-sm">
+                <button onclick="toggleMenu()" class="w-9 h-9 flex items-center justify-center rounded-xl"><i data-lucide="menu" class="w-5 h-5 text-[#081B4B]"></i></button>
+                <span class="font-extrabold text-sm text-[#0052FF] tracking-wide">Renew TV</span>
+                <!-- theme toggle: dark rounded square with sun icon, matches buy-data -->
+                <button onclick="toggleTheme()" class="w-10 h-10 bg-[#1a2235] rounded-xl flex items-center justify-center transition-all">
+                    <i data-lucide="moon" class="w-4 h-4 text-slate-300 dark:hidden"></i>
+                    <i data-lucide="sun" class="hidden dark:block w-4 h-4 text-yellow-400"></i>
+                </button>
             </header>
 
+            <!-- Desktop header -->
             <header class="hidden lg:flex bg-white border-b border-slate-100 px-10 py-5 justify-between items-center sticky top-0 z-50">
-                <div class="font-bold text-sm">Welcome back, <span id="user-name-desktop" class="font-extrabold text-[#081B4B]">Loading...</span></div>
+                <div class="font-bold text-sm text-[#081B4B]">Welcome back, <span id="user-name-desktop" class="font-extrabold text-[#081B4B]">Loading...</span></div>
                 <div class="flex items-center gap-6">
-                    <button onclick="toggleTheme()" class="bg-slate-50 p-2 rounded-xl border border-slate-100 transition-all"><i data-lucide="moon" class="w-5 h-5"></i></button>
+                    <!-- FIX 3: balanced moon/sun icons for desktop toggle -->
+                    <button onclick="toggleTheme()" class="bg-slate-50 p-2 rounded-xl border border-slate-100 transition-all">
+                        <i data-lucide="moon" class="w-5 h-5 text-slate-500 dark:hidden"></i>
+                        <i data-lucide="sun" class="hidden dark:block w-5 h-5 text-yellow-400"></i>
+                    </button>
                     <div class="flex items-center gap-4 bg-slate-50 px-4 py-2 rounded-xl border border-slate-100">
                         <span class="text-[10px] font-bold text-slate-400 uppercase leading-none">Balance</span>
-                        <span class="text-sm font-black text-[#081B4B]">₦<span id="user-balance-desktop">0.00</span></span>
+                        <!-- FIX 2: explicit text color so balance is always visible in light mode -->
+                        <span class="text-sm font-black text-[#081B4B] dark:text-white">₦<span id="user-balance-desktop">0.00</span></span>
                         <a href="fund-wallet.html" class="ml-1"><i data-lucide="plus-circle" class="w-5 h-5 text-[#0052FF]"></i></a>
                     </div>
                     <img src="https://i.pravatar.cc/100" class="w-9 h-9 rounded-full border border-slate-200">
@@ -89,54 +159,80 @@
             </header>
 
             <div class="w-full pb-32 overflow-y-auto h-full">
-                <div class="lg:hidden bg-[#0052FF] p-6 pb-24 text-white rounded-b-[40px] flex justify-between items-center -mx-6 -mt-6">
+                <!-- Mobile hero banner -->
+                <div class="lg:hidden bg-[#0052FF] px-6 pt-6 pb-24 text-white rounded-b-[40px] flex justify-between items-center">
                     <div class="flex-1"><p class="text-blue-100 text-[10px] font-bold uppercase mb-1">Cable Subscription,</p><h2 class="text-xl font-bold leading-tight font-black uppercase text-white tracking-widest">Renew TV 📺</h2></div>
                     <div class="phone-container"><div class="phone-handset"><div class="phone-display"></div></div><div class="tile tile-data"><i data-lucide="wifi"></i><span>Data</span></div><div class="tile tile-airtime"><i data-lucide="wallet"></i><span>Airtime</span></div><div class="tile tile-tv"><i data-lucide="tv"></i><span>TV</span></div></div>
                 </div>
 
+                <!-- FIX 1: removed extra px padding wrapper; using consistent max-w + px spacing throughout -->
                 <div class="max-w-6xl mx-auto px-4 lg:px-10">
+                    <!-- Mobile balance card: pure white, big shadow, matches buy-data -->
+                    <div class="max-w-6xl mx-auto px-4 lg:px-10">
                     <div class="lg:hidden relative z-20 bg-white p-8 rounded-[32px] -mt-16 shadow-2xl flex flex-col items-center border border-slate-50">
-                        <p class="text-slate-400 text-[10px] font-bold uppercase mb-2 text-center leading-none">Available Balance</p>
+                        <p class="text-slate-400 text-[10px] font-bold uppercase mb-2">Available Balance</p>
                         <div class="flex items-center gap-3 mb-6">
-                            <h3 class="text-3xl font-black text-[#081B4B] dark:text-white">₦<span id="user-balance-mobile">0.00</span></h3>
+                            <h3 class="text-3xl font-black text-[#081B4B]">₦<span id="user-balance-mobile">0.00</span></h3>
                             <button onclick="toggleBalance()"><i id="eye-icon-mobile" data-lucide="eye-off" class="w-5 h-5 text-blue-200"></i></button>
                         </div>
-                        <a href="fund-wallet.html" class="w-full bg-[#0052FF] text-white py-4 rounded-2xl font-extrabold text-sm text-center shadow-lg active:scale-95 transition-transform">+ Fund Wallet</a>
+                        <a href="fund-wallet.html" class="w-full bg-[#0052FF] text-white py-4 rounded-2xl font-extrabold text-sm text-center shadow-lg mt-2">+ Fund Wallet</a>
                     </div>
 
                     <div class="grid grid-cols-1 lg:grid-cols-12 lg:gap-10 mt-10">
-                        <div class="lg:col-span-8 space-y-10 px-2">
+                        <!-- FIX 1: removed stray px-2 from all inner sections so content aligns flush with the grid column -->
+                        <div class="lg:col-span-8 space-y-10">
                             <section>
-                                <h4 class="font-extrabold text-sm mb-4 uppercase text-slate-400 font-bold tracking-widest text-xs uppercase">1. Select Provider</h4>
+                                <h4 class="font-bold tracking-widest text-xs uppercase text-slate-400 mb-4">1. Select Provider</h4>
                                 <div class="grid grid-cols-3 gap-3">
-                                    <button onclick="setProvider('DSTV', 1)" id="cable-DSTV" class="provider-card active bg-white p-4 rounded-2xl border-2 border-slate-100 flex flex-col items-center gap-1 transition-all text-center">DSTV<span class="text-[9px] font-bold text-[#081B4B]">DStv</span></button>
-                                    <button onclick="setProvider('GOTV', 2)" id="cable-GOTV" class="provider-card bg-white p-4 rounded-2xl border-2 border-slate-100 flex flex-col items-center gap-1 transition-all text-center">GOTV<span class="text-[9px] font-bold text-[#081B4B]">GOtv</span></button>
-                                    <button onclick="setProvider('STARTIMES', 3)" id="cable-STARTIMES" class="provider-card bg-white p-4 rounded-2xl border-2 border-slate-100 flex flex-col items-center gap-1 transition-all text-center font-bold text-orange-600 uppercase">STAR<span class="text-[9px] font-bold uppercase text-[#081B4B]">Startimes</span></button>
+                                    <button onclick="setProvider('DSTV', 1)" id="cable-DSTV" class="provider-card active bg-white p-4 rounded-2xl border-2 border-slate-100 flex flex-col items-center gap-1 transition-all text-center font-bold text-[#081B4B]">DSTV<span class="text-[9px] font-semibold text-slate-400">DStv</span></button>
+                                    <button onclick="setProvider('GOTV', 2)" id="cable-GOTV" class="provider-card bg-white p-4 rounded-2xl border-2 border-slate-100 flex flex-col items-center gap-1 transition-all text-center font-bold text-[#081B4B]">GOTV<span class="text-[9px] font-semibold text-slate-400">GOtv</span></button>
+                                    <button onclick="setProvider('STARTIMES', 3)" id="cable-STARTIMES" class="provider-card bg-white p-4 rounded-2xl border-2 border-slate-100 flex flex-col items-center gap-1 transition-all text-center font-bold text-orange-500">STAR<span class="text-[9px] font-semibold text-slate-400">Startimes</span></button>
                                 </div>
                             </section>
 
-                            <section class="space-y-6">
-                                <h4 class="font-extrabold text-sm mb-4 uppercase text-slate-400 px-2 font-bold tracking-widest text-xs uppercase">2. Smartcard / IUC Number</h4>
-                                <div class="relative px-2"><i data-lucide="hash" class="absolute left-6 top-1/2 -translate-y-1/2 text-slate-300 w-5 h-5"></i><input type="number" id="smartCardNumber" oninput="verifyIUC()" class="w-full pl-12 pr-4 py-4 bg-white border border-slate-200 rounded-2xl outline-none focus:border-[#0052FF] font-medium" placeholder="Enter Card Number"></div>
-                                <p id="iucNameDisplay" class="text-[11px] font-black text-[#0052FF] mt-2 ml-3 italic min-h-[1.2rem] uppercase"></p>
+                            <section class="space-y-2">
+                                <h4 class="font-bold tracking-widest text-xs uppercase text-slate-400 mb-4">2. Smartcard / IUC Number</h4>
+                                <div class="relative">
+                                    <i data-lucide="hash" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 w-5 h-5"></i>
+                                    <input type="number" id="smartCardNumber" oninput="verifyIUC()" class="w-full pl-12 pr-4 py-4 bg-white border border-slate-200 rounded-2xl outline-none focus:border-[#0052FF] focus:shadow-[0_0_0_3px_rgba(0,82,255,0.1)] font-medium shadow-sm text-[#081B4B] placeholder:text-slate-300" placeholder="Enter Card Number">
+                                </div>
+                                <p id="iucNameDisplay" class="text-[11px] font-black text-[#0052FF] mt-1 italic min-h-[1.2rem] uppercase"></p>
                             </section>
 
-                            <section class="px-2">
-                                <h4 class="font-extrabold text-sm mb-4 uppercase text-slate-400 font-bold tracking-widest text-xs uppercase">3. Select Package</h4>
-                                <select id="packageList" onchange="setPackage(this)" class="w-full p-4 bg-white border border-slate-200 rounded-2xl outline-none focus:border-[#0052FF] font-bold text-sm"></select>
+                            <section>
+                                <h4 class="font-bold tracking-widest text-xs uppercase text-slate-400 mb-4">3. Select Package</h4>
+                                <select id="packageList" onchange="setPackage(this)" class="w-full p-4 bg-white border border-slate-200 rounded-2xl outline-none focus:border-[#0052FF] focus:shadow-[0_0_0_3px_rgba(0,82,255,0.1)] font-bold text-sm shadow-sm text-[#081B4B]"></select>
                             </section>
 
                             <section class="bg-white p-8 rounded-[32px] border border-slate-100 shadow-sm">
-                                <h4 class="font-extrabold text-sm mb-6 uppercase tracking-wider text-slate-400 font-bold text-xs uppercase">Summary</h4>
-                                <div class="space-y-4 font-bold text-xs uppercase"><div class="flex justify-between text-slate-400"><span>Provider</span> <span id="sum-net" class="text-[#081B4B]">DStv</span></div><div class="flex justify-between text-slate-400"><span>Number</span> <span id="sum-card" class="text-[#081B4B]">---</span></div><div class="flex justify-between text-slate-400"><span>Package</span> <span id="sum-plan" class="text-[#081B4B]">---</span></div><div class="flex justify-between items-center pt-4 border-t border-slate-50 mt-4 font-black text-xs uppercase text-[#081B4B] dark:text-white"><span>Total Amount</span> <span class="text-xl text-[#0052FF]">₦<span id="sum-total">0.00</span></span></div></div>
-                                <button type="button" onclick="openPinModal()" id="payBtn" class="w-full bg-[#0052FF] text-white py-4.5 mt-8 rounded-2xl font-black text-sm shadow-xl active:scale-95 transition-all uppercase tracking-widest">Confirm Subscription</button>
+                                <h4 class="font-bold text-xs uppercase tracking-wider text-slate-400 mb-6">Summary</h4>
+                                <div class="space-y-4 font-bold text-xs uppercase">
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-slate-400">Provider</span>
+                                        <span id="sum-net" class="text-[#081B4B] dark:text-white font-black">DStv</span>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-slate-400">Number</span>
+                                        <span id="sum-card" class="text-[#081B4B] dark:text-white font-black">---</span>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-slate-400">Package</span>
+                                        <span id="sum-plan" class="text-[#081B4B] dark:text-white font-black">---</span>
+                                    </div>
+                                    <div class="flex justify-between items-center pt-5 border-t border-slate-100 dark:border-[#1e2d45] mt-2">
+                                        <span class="text-sm font-black text-[#081B4B] dark:text-white normal-case tracking-normal">Total Amount</span>
+                                        <span class="text-2xl font-black text-[#0052FF]">₦<span id="sum-total">0.00</span></span>
+                                    </div>
+                                </div>
+                                <button type="button" onclick="openPinModal()" id="payBtn" class="w-full bg-[#0052FF] text-white py-4 mt-8 rounded-full font-black text-sm shadow-lg active:scale-95 transition-all uppercase tracking-widest hover:bg-blue-700">Confirm Subscription</button>
                             </section>
                         </div>
+
                         <aside class="hidden lg:block lg:col-span-4 space-y-6">
-                            <div class="bg-white p-8 rounded-[32px] border border-slate-50 shadow-sm flex flex-col items-center text-[#081B4B] dark:text-white font-black">
-                                <p class="text-[10px] font-bold text-slate-400 uppercase mb-1 tracking-widest leading-none">Wallet Balance</p>
-                                <h3 class="text-3xl mb-6">₦<span id="user-balance-desktop-side">0.00</span></h3>
-                                <a href="fund-wallet.html" class="w-full bg-[#0052FF] text-white py-4 rounded-xl font-bold text-xs text-center shadow-lg hover:bg-blue-700 transition-all">+ Fund Wallet</a>
+                            <div class="bg-white dark:bg-[#111827] p-8 rounded-[28px] shadow-xl dark:border dark:border-[#1e2d45] flex flex-col items-center">
+                                <p class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase mb-1 tracking-widest leading-none">Wallet Balance</p>
+                                <h3 class="text-3xl font-black text-[#081B4B] dark:text-white mb-6">₦<span id="user-balance-desktop-side">0.00</span></h3>
+                                <a href="fund-wallet.html" class="w-full bg-[#0052FF] text-white py-4 rounded-full font-bold text-xs text-center shadow-lg hover:bg-blue-700 transition-all">+ Fund Wallet</a>
                             </div>
                         </aside>
                     </div>
