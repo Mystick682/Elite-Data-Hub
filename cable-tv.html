@@ -9,256 +9,354 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #EEF2FF; margin: 0; padding: 0; overflow-x: hidden; }
+        /* ── Base ── */
+        *, *::before, *::after { box-sizing: border-box; }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #EEF2FF;
+            margin: 0; padding: 0; overflow-x: hidden;
+            color: #081B4B;
+        }
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        .active-nav { background: #0052FF !important; color: white !important; }
-        .provider-card { background: #ffffff; box-shadow: 0 2px 8px rgba(0,0,0,0.06); transition: all 0.15s ease; }
-        .provider-card.active { border-color: #0052FF !important; background: #ffffff; border-width: 2px; box-shadow: 0 4px 16px rgba(0,82,255,0.15); }
+
+        /* ── Sidebar ── */
         #sidebar { transition: transform 0.3s ease; }
-        .overlap-card { z-index: 70 !important; position: relative; }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
-        .phone-container { position: relative; width: 85px; height: 90px; margin-right: -5px; }
-        .phone-handset { width: 44px; height: 82px; background: #081B4B; border: 2px solid rgba(255,255,255,0.2); border-radius: 8px; position: absolute; right: 10px; bottom: 0; transform: rotate(-8deg); overflow: hidden; }
-        .phone-display { position: absolute; inset: 2px; background: linear-gradient(180deg, #246BFD 0%, #0052FF 100%); border-radius: 6px; }
-        .tile { position: absolute; background: white; padding: 4px; border-radius: 6px; box-shadow: 0 8px 15px rgba(0,0,0,0.15); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 20; animation: float 3s ease-in-out infinite; }
-        .tile i { width: 12px; height: 12px; }
-        .tile span { font-size: 5px; font-weight: 900; text-transform: uppercase; margin-top: 1px; }
-        .tile-data { top: 5px; left: 0px; animation-delay: 0s; color: #0052FF; }
-        .tile-airtime { top: 32px; right: -5px; animation-delay: 1s; color: #10b981; }
-        .tile-tv { bottom: 10px; left: 10px; animation-delay: 0.5s; color: #a855f7; }
+        .active-nav { background: #0052FF !important; color: #ffffff !important; }
 
-        /* ── Balance text: always visible in light mode ── */
-        #user-balance-mobile, #user-balance-desktop, #user-balance-desktop-side { color: #081B4B; }
+        /* ── Floating phone animation ── */
+        @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)} }
+        .phone-container { position:relative; width:85px; height:90px; margin-right:-5px; }
+        .phone-handset { width:44px; height:82px; background:#081B4B; border:2px solid rgba(255,255,255,.2); border-radius:8px; position:absolute; right:10px; bottom:0; transform:rotate(-8deg); overflow:hidden; }
+        .phone-display { position:absolute; inset:2px; background:linear-gradient(180deg,#246BFD 0%,#0052FF 100%); border-radius:6px; }
+        .tile { position:absolute; background:#fff; padding:4px; border-radius:6px; box-shadow:0 8px 15px rgba(0,0,0,.15); display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:20; animation:float 3s ease-in-out infinite; }
+        .tile i { width:12px; height:12px; }
+        .tile span { font-size:5px; font-weight:900; text-transform:uppercase; margin-top:1px; }
+        .tile-data  { top:5px;  left:0;   animation-delay:0s;   color:#0052FF; }
+        .tile-airtime{ top:32px; right:-5px; animation-delay:1s;  color:#10b981; }
+        .tile-tv    { bottom:10px; left:10px; animation-delay:.5s; color:#a855f7; }
 
-        /* ══════════════════════════════════════════
-           DARK MODE — matches buy-data dark aesthetic
-           Background layers:
-             page bg   → #0B1120  (deepest navy)
-             sidebar   → #0f1729
-             cards     → #111827  (slightly lighter)
-             inputs    → #1a2235  (card surface)
-             borders   → #1e2d45
-        ══════════════════════════════════════════ */
-        .dark body                        { background-color: #0B1120 !important; color: #e2e8f0 !important; }
-        .dark main                        { background-color: #0B1120 !important; }
+        /* ── Provider cards ── */
+        .provider-card {
+            background: #ffffff;
+            border: 2px solid #e8edf8;
+            border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(8,27,75,.06);
+            transition: all .15s ease;
+            cursor: pointer;
+        }
+        .provider-card:hover { box-shadow: 0 4px 16px rgba(0,82,255,.12); }
+        .provider-card.active {
+            border-color: #0052FF !important;
+            box-shadow: 0 4px 20px rgba(0,82,255,.18) !important;
+        }
 
-        /* Sidebar */
-        .dark #sidebar                    { background-color: #0f1729 !important; border-color: #1e2d45 !important; }
-        .dark #sidebar h1                 { color: #ffffff !important; }
-        .dark #sidebar a                  { color: #64748b !important; }
-        .dark #sidebar a.active-nav       { color: #ffffff !important; }
+        /* ── Cards ── */
+        .card {
+            background: #ffffff;
+            border-radius: 24px;
+            box-shadow: 0 4px 24px rgba(8,27,75,.08);
+        }
+        .card-lg {
+            background: #ffffff;
+            border-radius: 28px;
+            box-shadow: 0 8px 40px rgba(8,27,75,.10);
+        }
 
-        /* Headers */
-        .dark header                      { background-color: #0f1729 !important; border-color: #1e2d45 !important; }
-        .dark header span, .dark header div { color: #e2e8f0 !important; }
+        /* ── Inputs ── */
+        .field {
+            width: 100%;
+            background: #ffffff;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 14px 16px;
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 14px;
+            color: #081B4B;
+            outline: none;
+            box-shadow: 0 2px 8px rgba(8,27,75,.05);
+            transition: border-color .15s, box-shadow .15s;
+            -moz-appearance: none; -webkit-appearance: none; appearance: none;
+        }
+        .field:focus {
+            border-color: #0052FF;
+            box-shadow: 0 0 0 3px rgba(0,82,255,.10);
+        }
+        .field::placeholder { color: #c4cde0; font-weight: 500; }
 
-        /* All white cards → dark card surface */
-        .dark .bg-white                   { background-color: #111827 !important; border-color: #1e2d45 !important; }
+        /* ════════════════════════════════════════
+           DARK MODE — matches buy-data dark screenshots
+           body #0B1120 | sidebar/header #0f1729 | cards #111827 | inputs #1a2235
+        ════════════════════════════════════════ */
+        .dark body                       { background-color: #0B1120 !important; color: #e2e8f0 !important; }
+        .dark main                       { background-color: #0B1120 !important; }
+        .dark main > div                 { background-color: #0B1120 !important; }
+        .dark #sidebar                   { background-color: #0f1729 !important; border-color: #1e2d45 !important; }
+        .dark #sidebar h1                { color: #ffffff !important; }
+        .dark #sidebar a                 { color: #64748b !important; }
+        .dark #sidebar a.active-nav      { color: #ffffff !important; background-color: #0052FF !important; }
+        .dark header                     { background-color: #0f1729 !important; border-color: #1e2d45 !important; }
+        .dark header span                { color: #e2e8f0 !important; }
+        .dark header .font-black         { color: #ffffff !important; }
+        .dark header .text-slate-400     { color: #64748b !important; }
+        .dark header .bg-slate-50        { background-color: #1a2235 !important; border-color: #1e2d45 !important; }
+        .dark .card, .dark .card-lg      { background-color: #111827 !important; }
+        .dark .bg-white                  { background-color: #111827 !important; }
+        .dark #pinModal .bg-white        { background-color: #111827 !important; }
+        .dark #pinModal h3               { color: #ffffff !important; }
+        .dark #pinModal input            { background-color: #1a2235 !important; border-color: #1e2d45 !important; color: #ffffff !important; }
+        .dark .provider-card             { background-color: #111827 !important; border-color: #1e2d45 !important; color: #e2e8f0 !important; box-shadow: none !important; }
+        .dark .provider-card span        { color: #64748b !important; }
+        .dark .provider-card.active      { background-color: #0d2050 !important; border-color: #0052FF !important; box-shadow: 0 4px 20px rgba(0,82,255,.25) !important; }
+        .dark .provider-card.active span { color: #93c5fd !important; }
+        .dark .field                     { background-color: #1a2235 !important; border-color: #1e2d45 !important; color: #e2e8f0 !important; box-shadow: none !important; }
+        .dark .field:focus               { border-color: #0052FF !important; box-shadow: 0 0 0 3px rgba(0,82,255,.2) !important; }
+        .dark .field::placeholder        { color: #3d5068 !important; }
+        .dark h1, .dark h2, .dark h3     { color: #ffffff !important; }
+        .dark h4                         { color: #64748b !important; }
+        .dark .text-slate-400            { color: #64748b !important; }
+        .dark .sum-val                   { color: #e2e8f0 !important; }
+        .dark .divider                   { border-color: #1e2d45 !important; }
+        /* ── Page body scroll container ── */
+        #page-body                       { background-color: #EEF2FF; }
+        .dark #page-body                 { background-color: #0B1120 !important; }
 
-        /* Section headings (step labels) */
-        .dark h4                          { color: #64748b !important; }
-
-        /* Provider buttons (default / inactive) */
-        .dark .provider-card              { background-color: #111827 !important; border-color: #1e2d45 !important; color: #e2e8f0 !important; }
-        .dark .provider-card span         { color: #94a3b8 !important; }
-        .dark .provider-card.active       { background-color: #0d2050 !important; border-color: #0052FF !important; }
-        .dark .provider-card.active span  { color: #93c5fd !important; }
-
-        /* Inputs & selects */
-        .dark input, .dark select         { background-color: #1a2235 !important; border-color: #1e2d45 !important; color: #e2e8f0 !important; }
-        .dark input::placeholder          { color: #475569 !important; }
-
-        /* Summary card rows */
-        .dark #sum-net, .dark #sum-card,
-        .dark #sum-plan                   { color: #e2e8f0 !important; }
-
-        /* Divider line inside summary */
-        .dark .border-slate-100          { border-color: #1e2d45 !important; }
-
-        /* Balance figures */
-        .dark #user-balance-mobile,
-        .dark #user-balance-desktop,
-        .dark #user-balance-desktop-side  { color: #ffffff !important; }
-
-        /* General text */
-        .dark h1, .dark h2, .dark h3      { color: #ffffff !important; }
-        .dark p, .dark label              { color: #94a3b8 !important; }
-
-        /* Pin modal */
-        .dark #pinModal .bg-white         { background-color: #111827 !important; }
-
-        /* Overlay */
-        .dark #overlay                    { background-color: rgba(0,0,0,0.6) !important; }
+        /* ── Force dark text to white in dark mode for hardcoded navy spans ── */
+        .dark .text-\[#081B4B\]          { color: #e2e8f0 !important; }
+        .dark .balance-num               { color: #ffffff !important; }
     </style>
     <script src="theme.js"></script>
 </head>
-<body class="text-[#081B4B] antialiased">
+<body class="antialiased">
+
+    <!-- Overlay for mobile sidebar -->
     <div id="overlay" class="fixed inset-0 bg-black/40 z-[80] hidden lg:hidden" onclick="toggleMenu()"></div>
+
+    <!-- PIN Modal -->
     <div id="pinModal" class="fixed inset-0 z-[100] flex items-center justify-center p-6 hidden">
         <div class="fixed inset-0 bg-[#081B4B]/60 backdrop-blur-sm"></div>
-        <div class="bg-white dark:bg-[#111827] w-full max-w-sm rounded-[32px] p-8 relative z-10 shadow-2xl border border-slate-100 dark:border-slate-800 text-center uppercase tracking-widest font-black text-xs">
+        <div class="bg-white w-full max-w-sm rounded-[32px] p-8 relative z-10 shadow-2xl text-center">
             <i data-lucide="lock" class="w-12 h-12 text-[#0052FF] mx-auto mb-4"></i>
-            <h3 class="text-xl font-black mb-6 dark:text-white uppercase">Enter PIN</h3>
+            <h3 class="text-xl font-black mb-6 uppercase tracking-widest">Enter PIN</h3>
             <div class="flex justify-center gap-3 mb-8">
-                <input type="password" maxlength="1" class="pin-box w-12 h-14 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-center text-xl font-black focus:border-[#0052FF] outline-none">
-                <input type="password" maxlength="1" class="pin-box w-12 h-14 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-center text-xl font-black focus:border-[#0052FF] outline-none">
-                <input type="password" maxlength="1" class="pin-box w-12 h-14 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-center text-xl font-black focus:border-[#0052FF] outline-none">
-                <input type="password" maxlength="1" class="pin-box w-12 h-14 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-center text-xl font-black focus:border-[#0052FF] outline-none">
+                <input type="password" maxlength="1" class="pin-box field w-12 h-14 rounded-xl text-center text-xl font-black focus:border-[#0052FF] px-0">
+                <input type="password" maxlength="1" class="pin-box field w-12 h-14 rounded-xl text-center text-xl font-black focus:border-[#0052FF] px-0">
+                <input type="password" maxlength="1" class="pin-box field w-12 h-14 rounded-xl text-center text-xl font-black focus:border-[#0052FF] px-0">
+                <input type="password" maxlength="1" class="pin-box field w-12 h-14 rounded-xl text-center text-xl font-black focus:border-[#0052FF] px-0">
             </div>
-            <button onclick="confirmPurchase()" id="confirmPinBtn" class="w-full bg-[#0052FF] text-white py-4 rounded-2xl font-black shadow-xl active:scale-95 transition-all">Confirm</button>
-            <button onclick="closePinModal()" class="w-full py-3 text-slate-400 font-bold text-[10px] uppercase">Cancel</button>
+            <button onclick="confirmPurchase()" id="confirmPinBtn" class="w-full bg-[#0052FF] text-white py-4 rounded-full font-black shadow-lg active:scale-95 transition-all">Confirm</button>
+            <button onclick="closePinModal()" class="w-full py-3 text-slate-400 font-bold text-[10px] uppercase mt-1">Cancel</button>
         </div>
     </div>
 
     <div class="flex min-h-screen">
+
+        <!-- ── Sidebar ── -->
         <aside id="sidebar" class="fixed lg:sticky top-0 left-0 h-screen w-72 bg-white border-r border-slate-100 z-[90] flex flex-col p-6 -translate-x-full lg:translate-x-0 transition-transform duration-300">
-            <div class="flex items-center gap-3 mb-10"><div class="w-10 h-10 bg-[#0052FF] rounded-xl flex items-center justify-center text-white shadow-lg"><i data-lucide="zap" class="w-6 h-6 fill-current"></i></div><h1 class="text-lg font-extrabold tracking-tight italic">Elite Data</h1></div>
+            <div class="flex items-center gap-3 mb-10">
+                <div class="w-10 h-10 bg-[#0052FF] rounded-xl flex items-center justify-center text-white shadow-lg">
+                    <i data-lucide="zap" class="w-6 h-6 fill-current"></i>
+                </div>
+                <h1 class="text-lg font-extrabold tracking-tight italic text-[#081B4B]">Elite Data</h1>
+            </div>
             <nav class="flex-1 space-y-1 font-bold text-[13px] overflow-y-auto no-scrollbar">
-                <a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="layout-grid" class="w-4 h-4"></i> Dashboard</a>
-                <a href="buy-data.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="shopping-cart" class="w-4 h-4"></i> Buy Data</a>
-                <a href="buy-airtime.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="smartphone" class="w-4 h-4"></i> Airtime</a>
-                <a href="cable-tv.html" class="active-nav flex items-center gap-3 px-4 py-3 rounded-2xl"><i data-lucide="tv" class="w-4 h-4"></i> Cable TV</a>
-                <a href="electricity.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="zap" class="w-4 h-4"></i> Electricity</a>
-                <a href="history.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="history" class="w-4 h-4"></i> History</a>
-                <a href="fund-wallet.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="wallet" class="w-4 h-4"></i> Wallet</a>
-                <a href="referrals.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="users" class="w-4 h-4"></i> Referrals</a>
-                <a href="support.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="headset" class="w-4 h-4"></i> Support</a>
-                <a href="settings.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="settings" class="w-4 h-4"></i> Settings</a>
+                <a href="dashboard.html"  class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="layout-grid"   class="w-4 h-4"></i> Dashboard</a>
+                <a href="buy-data.html"   class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="shopping-cart"  class="w-4 h-4"></i> Buy Data</a>
+                <a href="buy-airtime.html"class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="smartphone"     class="w-4 h-4"></i> Airtime</a>
+                <a href="cable-tv.html"   class="active-nav flex items-center gap-3 px-4 py-3 rounded-2xl">    <i data-lucide="tv"             class="w-4 h-4"></i> Cable TV</a>
+                <a href="electricity.html"class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="zap"            class="w-4 h-4"></i> Electricity</a>
+                <a href="history.html"    class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="history"         class="w-4 h-4"></i> History</a>
+                <a href="fund-wallet.html"class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="wallet"          class="w-4 h-4"></i> Wallet</a>
+                <a href="referrals.html"  class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="users"           class="w-4 h-4"></i> Referrals</a>
+                <a href="support.html"    class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="headset"          class="w-4 h-4"></i> Support</a>
+                <a href="settings.html"   class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="settings"         class="w-4 h-4"></i> Settings</a>
             </nav>
         </aside>
 
-        <main class="flex-1 flex flex-col min-w-0 bg-[#EEF2FF]">
+        <!-- ── Main ── -->
+        <main class="flex-1 flex flex-col min-w-0">
+
             <!-- Mobile header -->
             <header class="lg:hidden bg-white px-5 py-4 flex justify-between items-center border-b border-slate-100 sticky top-0 z-[60] shadow-sm">
-                <button onclick="toggleMenu()" class="w-9 h-9 flex items-center justify-center rounded-xl"><i data-lucide="menu" class="w-5 h-5 text-[#081B4B]"></i></button>
+                <button onclick="toggleMenu()" class="w-9 h-9 flex items-center justify-center">
+                    <i data-lucide="menu" class="w-5 h-5 text-[#081B4B]"></i>
+                </button>
                 <span class="font-extrabold text-sm text-[#0052FF] tracking-wide">Renew TV</span>
-                <!-- theme toggle: dark rounded square with sun icon, matches buy-data -->
-                <button onclick="toggleTheme()" class="w-10 h-10 bg-[#1a2235] rounded-xl flex items-center justify-center transition-all">
+                <!-- Dark square toggle button — identical to buy-data page -->
+                <button onclick="toggleTheme()" class="w-10 h-10 bg-[#1e293b] rounded-xl flex items-center justify-center">
                     <i data-lucide="moon" class="w-4 h-4 text-slate-300 dark:hidden"></i>
-                    <i data-lucide="sun" class="hidden dark:block w-4 h-4 text-yellow-400"></i>
+                    <i data-lucide="sun"  class="hidden dark:block w-4 h-4 text-yellow-400"></i>
                 </button>
             </header>
 
             <!-- Desktop header -->
             <header class="hidden lg:flex bg-white border-b border-slate-100 px-10 py-5 justify-between items-center sticky top-0 z-50">
-                <div class="font-bold text-sm text-[#081B4B]">Welcome back, <span id="user-name-desktop" class="font-extrabold text-[#081B4B]">Loading...</span></div>
-                <div class="flex items-center gap-6">
-                    <!-- FIX 3: balanced moon/sun icons for desktop toggle -->
-                    <button onclick="toggleTheme()" class="bg-slate-50 p-2 rounded-xl border border-slate-100 transition-all">
-                        <i data-lucide="moon" class="w-5 h-5 text-slate-500 dark:hidden"></i>
-                        <i data-lucide="sun" class="hidden dark:block w-5 h-5 text-yellow-400"></i>
+                <div class="font-bold text-sm text-[#081B4B]">Welcome back, <span id="user-name-desktop" class="font-extrabold">Loading...</span></div>
+                <div class="flex items-center gap-5">
+                    <button onclick="toggleTheme()" class="w-10 h-10 bg-[#1e293b] rounded-xl flex items-center justify-center">
+                        <i data-lucide="moon" class="w-4 h-4 text-slate-300 dark:hidden"></i>
+                        <i data-lucide="sun"  class="hidden dark:block w-4 h-4 text-yellow-400"></i>
                     </button>
-                    <div class="flex items-center gap-4 bg-slate-50 px-4 py-2 rounded-xl border border-slate-100">
-                        <span class="text-[10px] font-bold text-slate-400 uppercase leading-none">Balance</span>
-                        <!-- FIX 2: explicit text color so balance is always visible in light mode -->
-                        <span class="text-sm font-black text-[#081B4B] dark:text-white">₦<span id="user-balance-desktop">0.00</span></span>
-                        <a href="fund-wallet.html" class="ml-1"><i data-lucide="plus-circle" class="w-5 h-5 text-[#0052FF]"></i></a>
+                    <div class="flex items-center gap-3 bg-slate-50 px-4 py-2 rounded-xl border border-slate-100">
+                        <span class="text-[10px] font-bold text-slate-400 uppercase">Balance</span>
+                        <span class="text-sm font-black text-[#081B4B]">₦<span id="user-balance-desktop" class="balance-num">0.00</span></span>
+                        <a href="fund-wallet.html"><i data-lucide="plus-circle" class="w-5 h-5 text-[#0052FF]"></i></a>
                     </div>
                     <img src="https://i.pravatar.cc/100" class="w-9 h-9 rounded-full border border-slate-200">
                 </div>
             </header>
 
-            <div class="w-full pb-32 overflow-y-auto h-full">
-                <!-- Mobile hero banner -->
+            <!-- Scrollable body -->
+            <div id="page-body" class="w-full pb-32 overflow-y-auto flex-1">
+
+                <!-- Blue hero banner -->
                 <div class="lg:hidden bg-[#0052FF] px-6 pt-6 pb-24 text-white rounded-b-[40px] flex justify-between items-center">
-                    <div class="flex-1"><p class="text-blue-100 text-[10px] font-bold uppercase mb-1">Cable Subscription,</p><h2 class="text-xl font-bold leading-tight font-black uppercase text-white tracking-widest">Renew TV 📺</h2></div>
-                    <div class="phone-container"><div class="phone-handset"><div class="phone-display"></div></div><div class="tile tile-data"><i data-lucide="wifi"></i><span>Data</span></div><div class="tile tile-airtime"><i data-lucide="wallet"></i><span>Airtime</span></div><div class="tile tile-tv"><i data-lucide="tv"></i><span>TV</span></div></div>
+                    <div class="flex-1">
+                        <p class="text-blue-200 text-[10px] font-bold uppercase mb-1 tracking-widest">Cable Subscription,</p>
+                        <h2 class="text-2xl font-black uppercase text-white tracking-wide">Renew TV 📺</h2>
+                    </div>
+                    <div class="phone-container">
+                        <div class="phone-handset"><div class="phone-display"></div></div>
+                        <div class="tile tile-data"><i data-lucide="wifi"></i><span>Data</span></div>
+                        <div class="tile tile-airtime"><i data-lucide="wallet"></i><span>Airtime</span></div>
+                        <div class="tile tile-tv"><i data-lucide="tv"></i><span>TV</span></div>
+                    </div>
                 </div>
 
-                <!-- FIX 1: removed extra px padding wrapper; using consistent max-w + px spacing throughout -->
                 <div class="max-w-6xl mx-auto px-4 lg:px-10">
-                    <!-- Mobile balance card: pure white, big shadow, matches buy-data -->
-                    <div class="max-w-6xl mx-auto px-4 lg:px-10">
-                    <div class="lg:hidden relative z-20 bg-white p-8 rounded-[32px] -mt-16 shadow-2xl flex flex-col items-center border border-slate-50">
-                        <p class="text-slate-400 text-[10px] font-bold uppercase mb-2">Available Balance</p>
+
+                    <!-- Mobile balance card — pure white, large, overlapping hero -->
+                    <div class="lg:hidden card-lg relative z-20 -mt-16 p-8 flex flex-col items-center">
+                        <p class="text-[10px] font-bold text-slate-400 uppercase mb-2 tracking-widest">Available Balance</p>
                         <div class="flex items-center gap-3 mb-6">
-                            <h3 class="text-3xl font-black text-[#081B4B]">₦<span id="user-balance-mobile">0.00</span></h3>
-                            <button onclick="toggleBalance()"><i id="eye-icon-mobile" data-lucide="eye-off" class="w-5 h-5 text-blue-200"></i></button>
+                            <h3 class="text-3xl font-black text-[#081B4B] balance-num">₦<span id="user-balance-mobile">0.00</span></h3>
+                            <button onclick="toggleBalance()">
+                                <i id="eye-icon-mobile" data-lucide="eye-off" class="w-5 h-5 text-slate-400"></i>
+                            </button>
                         </div>
-                        <a href="fund-wallet.html" class="w-full bg-[#0052FF] text-white py-4 rounded-2xl font-extrabold text-sm text-center shadow-lg mt-2">+ Fund Wallet</a>
+                        <a href="fund-wallet.html" class="w-full bg-[#0052FF] text-white py-4 rounded-full font-extrabold text-sm text-center shadow-md active:scale-95 transition-transform">
+                            + Fund Wallet
+                        </a>
                     </div>
 
-                    <div class="grid grid-cols-1 lg:grid-cols-12 lg:gap-10 mt-10">
-                        <!-- FIX 1: removed stray px-2 from all inner sections so content aligns flush with the grid column -->
-                        <div class="lg:col-span-8 space-y-10">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 lg:gap-10 mt-8">
+
+                        <div class="lg:col-span-8 space-y-8">
+
+                            <!-- Step 1: Provider -->
                             <section>
                                 <h4 class="font-bold tracking-widest text-xs uppercase text-slate-400 mb-4">1. Select Provider</h4>
                                 <div class="grid grid-cols-3 gap-3">
-                                    <button onclick="setProvider('DSTV', 1)" id="cable-DSTV" class="provider-card active bg-white p-4 rounded-2xl border-2 border-slate-100 flex flex-col items-center gap-1 transition-all text-center font-bold text-[#081B4B]">DSTV<span class="text-[9px] font-semibold text-slate-400">DStv</span></button>
-                                    <button onclick="setProvider('GOTV', 2)" id="cable-GOTV" class="provider-card bg-white p-4 rounded-2xl border-2 border-slate-100 flex flex-col items-center gap-1 transition-all text-center font-bold text-[#081B4B]">GOTV<span class="text-[9px] font-semibold text-slate-400">GOtv</span></button>
-                                    <button onclick="setProvider('STARTIMES', 3)" id="cable-STARTIMES" class="provider-card bg-white p-4 rounded-2xl border-2 border-slate-100 flex flex-col items-center gap-1 transition-all text-center font-bold text-orange-500">STAR<span class="text-[9px] font-semibold text-slate-400">Startimes</span></button>
+                                    <button onclick="setProvider('DSTV',1)" id="cable-DSTV"
+                                        class="provider-card active p-4 flex flex-col items-center gap-1 text-center font-black text-sm text-[#081B4B]">
+                                        DSTV
+                                        <span class="text-[9px] font-semibold text-slate-400 normal-case">DStv</span>
+                                    </button>
+                                    <button onclick="setProvider('GOTV',2)" id="cable-GOTV"
+                                        class="provider-card p-4 flex flex-col items-center gap-1 text-center font-black text-sm text-[#081B4B]">
+                                        GOTV
+                                        <span class="text-[9px] font-semibold text-slate-400 normal-case">GOtv</span>
+                                    </button>
+                                    <button onclick="setProvider('STARTIMES',3)" id="cable-STARTIMES"
+                                        class="provider-card p-4 flex flex-col items-center gap-1 text-center font-black text-sm text-orange-500">
+                                        STAR
+                                        <span class="text-[9px] font-semibold text-slate-400 normal-case">Startimes</span>
+                                    </button>
                                 </div>
                             </section>
 
-                            <section class="space-y-2">
+                            <!-- Step 2: Card Number -->
+                            <section>
                                 <h4 class="font-bold tracking-widest text-xs uppercase text-slate-400 mb-4">2. Smartcard / IUC Number</h4>
                                 <div class="relative">
-                                    <i data-lucide="hash" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 w-5 h-5"></i>
-                                    <input type="number" id="smartCardNumber" oninput="verifyIUC()" class="w-full pl-12 pr-4 py-4 bg-white border border-slate-200 rounded-2xl outline-none focus:border-[#0052FF] focus:shadow-[0_0_0_3px_rgba(0,82,255,0.1)] font-medium shadow-sm text-[#081B4B] placeholder:text-slate-300" placeholder="Enter Card Number">
+                                    <i data-lucide="hash" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 w-5 h-5 pointer-events-none"></i>
+                                    <input type="number" id="smartCardNumber" oninput="verifyIUC()"
+                                        class="field pl-12"
+                                        placeholder="Enter Card Number">
                                 </div>
-                                <p id="iucNameDisplay" class="text-[11px] font-black text-[#0052FF] mt-1 italic min-h-[1.2rem] uppercase"></p>
+                                <p id="iucNameDisplay" class="text-[11px] font-black text-[#0052FF] mt-2 italic min-h-[1.2rem] uppercase"></p>
                             </section>
 
+                            <!-- Step 3: Package -->
                             <section>
                                 <h4 class="font-bold tracking-widest text-xs uppercase text-slate-400 mb-4">3. Select Package</h4>
-                                <select id="packageList" onchange="setPackage(this)" class="w-full p-4 bg-white border border-slate-200 rounded-2xl outline-none focus:border-[#0052FF] focus:shadow-[0_0_0_3px_rgba(0,82,255,0.1)] font-bold text-sm shadow-sm text-[#081B4B]"></select>
+                                <select id="packageList" onchange="setPackage(this)" class="field"></select>
                             </section>
 
-                            <section class="bg-white p-8 rounded-[32px] border border-slate-100 shadow-sm">
-                                <h4 class="font-bold text-xs uppercase tracking-wider text-slate-400 mb-6">Summary</h4>
-                                <div class="space-y-4 font-bold text-xs uppercase">
+                            <!-- Summary card -->
+                            <section class="card-lg p-8">
+                                <h4 class="font-bold text-xs uppercase tracking-widest text-slate-400 mb-6">Summary</h4>
+                                <div class="space-y-4 text-xs uppercase font-bold">
                                     <div class="flex justify-between items-center">
                                         <span class="text-slate-400">Provider</span>
-                                        <span id="sum-net" class="text-[#081B4B] dark:text-white font-black">DStv</span>
+                                        <span id="sum-net" class="sum-val text-[#081B4B] font-black">DStv</span>
                                     </div>
                                     <div class="flex justify-between items-center">
                                         <span class="text-slate-400">Number</span>
-                                        <span id="sum-card" class="text-[#081B4B] dark:text-white font-black">---</span>
+                                        <span id="sum-card" class="sum-val text-[#081B4B] font-black">---</span>
                                     </div>
                                     <div class="flex justify-between items-center">
                                         <span class="text-slate-400">Package</span>
-                                        <span id="sum-plan" class="text-[#081B4B] dark:text-white font-black">---</span>
+                                        <span id="sum-plan" class="sum-val text-[#081B4B] font-black">---</span>
                                     </div>
-                                    <div class="flex justify-between items-center pt-5 border-t border-slate-100 dark:border-[#1e2d45] mt-2">
-                                        <span class="text-sm font-black text-[#081B4B] dark:text-white normal-case tracking-normal">Total Amount</span>
+                                    <div class="divider flex justify-between items-center pt-5 mt-2 border-t border-slate-100">
+                                        <span class="text-sm font-black text-[#081B4B] normal-case tracking-normal">Total Amount</span>
                                         <span class="text-2xl font-black text-[#0052FF]">₦<span id="sum-total">0.00</span></span>
                                     </div>
                                 </div>
-                                <button type="button" onclick="openPinModal()" id="payBtn" class="w-full bg-[#0052FF] text-white py-4 mt-8 rounded-full font-black text-sm shadow-lg active:scale-95 transition-all uppercase tracking-widest hover:bg-blue-700">Confirm Subscription</button>
+                                <button type="button" onclick="openPinModal()" id="payBtn"
+                                    class="w-full bg-[#0052FF] text-white py-4 mt-8 rounded-full font-black text-sm shadow-lg active:scale-95 transition-all uppercase tracking-widest hover:bg-blue-700">
+                                    Confirm Subscription
+                                </button>
                             </section>
+
                         </div>
 
+                        <!-- Desktop sidebar wallet card -->
                         <aside class="hidden lg:block lg:col-span-4 space-y-6">
-                            <div class="bg-white dark:bg-[#111827] p-8 rounded-[28px] shadow-xl dark:border dark:border-[#1e2d45] flex flex-col items-center">
-                                <p class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase mb-1 tracking-widest leading-none">Wallet Balance</p>
-                                <h3 class="text-3xl font-black text-[#081B4B] dark:text-white mb-6">₦<span id="user-balance-desktop-side">0.00</span></h3>
-                                <a href="fund-wallet.html" class="w-full bg-[#0052FF] text-white py-4 rounded-full font-bold text-xs text-center shadow-lg hover:bg-blue-700 transition-all">+ Fund Wallet</a>
+                            <div class="card-lg p-8 flex flex-col items-center">
+                                <p class="text-[10px] font-bold text-slate-400 uppercase mb-1 tracking-widest">Wallet Balance</p>
+                                <h3 class="text-3xl font-black text-[#081B4B] balance-num mb-6">₦<span id="user-balance-desktop-side">0.00</span></h3>
+                                <a href="fund-wallet.html" class="w-full bg-[#0052FF] text-white py-4 rounded-full font-bold text-xs text-center shadow-md hover:bg-blue-700 transition-all">
+                                    + Fund Wallet
+                                </a>
                             </div>
                         </aside>
+
                     </div>
                 </div>
             </div>
         </main>
     </div>
 
-    <script src="supabase-config.js"></script><script src="notifications.js"></script>
+    <script src="supabase-config.js"></script>
+    <script src="notifications.js"></script>
     <script>
         lucide.createIcons();
+
         const allCablePlans = {
-            1: [{id: 6, name: "DStv Yanga", price: 6000}, {id: 22, name: "DSTV CONFAM", price: 11000}, {id: 7, name: "DStv Compact", price: 19000}],
-            2: [{id: 17, name: "GOtv Smallie", price: 1900}, {id: 47, name: "GOtv Jolli", price: 5800}, {id: 2, name: "GOtv Max", price: 8500}],
-            3: [{id: 37, name: "Nova(Dish)", price: 700}, {id: 38, name: "Basic(Antenna)", price: 1400}, {id: 39, name: "Smart", price: 1700}]
+            1: [{id:6,  name:"DStv Yanga",      price:6000},  {id:22, name:"DSTV CONFAM",  price:11000}, {id:7,  name:"DStv Compact",  price:19000}],
+            2: [{id:17, name:"GOtv Smallie",    price:1900},  {id:47, name:"GOtv Jolli",   price:5800},  {id:2,  name:"GOtv Max",      price:8500}],
+            3: [{id:37, name:"Nova(Dish)",       price:700},   {id:38, name:"Basic(Antenna)",price:1400}, {id:39, name:"Smart",         price:1700}]
         };
-        let cableName = 'DSTV', cableId = 1, amount = 0, planName = '', planId = 0, userId = "", actualBalance = 0, isHidden = false, isIUCVerified = false;
+
+        let cableName='DSTV', cableId=1, amount=0, planName='', planId=0;
+        let userId='', actualBalance=0, isHidden=false, isIUCVerified=false;
+
         const pinInputs = document.querySelectorAll('.pin-box');
-        pinInputs.forEach((input, idx) => { input.addEventListener('keyup', (e) => { if (e.target.value.length === 1 && idx < 3) pinInputs[idx+1].focus(); if (e.key === 'Backspace' && idx > 0) pinInputs[idx-1].focus(); }); });
-        
+        pinInputs.forEach((input, idx) => {
+            input.addEventListener('keyup', e => {
+                if (e.target.value.length === 1 && idx < 3) pinInputs[idx+1].focus();
+                if (e.key === 'Backspace' && idx > 0) pinInputs[idx-1].focus();
+            });
+        });
+
         async function init() {
             const { data: { session } } = await _supabase.auth.getSession();
-            if (!session) { window.location.href = "login.html"; return; }
+            if (!session) { window.location.href = 'login.html'; return; }
             userId = session.user.id;
             const { data: prof } = await _supabase.from('profiles').select('full_name').eq('id', userId).single();
-            if(prof) document.getElementById('user-name-desktop').innerText = prof.full_name;
+            if (prof) document.getElementById('user-name-desktop').innerText = prof.full_name;
             const { data: wall } = await _supabase.from('wallets').select('balance').eq('id', userId).single();
             if (wall) { actualBalance = parseFloat(wall.balance); updateBalanceUI(); }
             renderPackages(1);
@@ -268,10 +366,19 @@
             const iuc = document.getElementById('smartCardNumber').value;
             const display = document.getElementById('iucNameDisplay');
             if (iuc.length >= 9) {
-                display.innerText = "🔍 Verifying...";
-                const { data } = await _supabase.functions.invoke('buy-vtu', { body: { actionType: 'validate-iuc', smartCardNumber: iuc, cableId: cableName } });
-                if (data && data.name) { display.innerText = "✅ CUSTOMER: " + data.name; display.style.color="#10b981"; isIUCVerified = true; }
-                else { display.innerText = "❌ Verification failed"; display.style.color="#ef4444"; isIUCVerified = false; }
+                display.innerText = '🔍 Verifying...';
+                const { data } = await _supabase.functions.invoke('buy-vtu', {
+                    body: { actionType: 'validate-iuc', smartCardNumber: iuc, cableId: cableName }
+                });
+                if (data && data.name) {
+                    display.innerText = '✅ CUSTOMER: ' + data.name;
+                    display.style.color = '#10b981';
+                    isIUCVerified = true;
+                } else {
+                    display.innerText = '❌ Verification failed';
+                    display.style.color = '#ef4444';
+                    isIUCVerified = false;
+                }
             }
             updateSummary();
         }
@@ -279,68 +386,94 @@
         function setProvider(name, id) {
             cableName = name; cableId = id;
             document.querySelectorAll('.provider-card').forEach(c => c.classList.remove('active'));
-            document.getElementById('cable-'+name).classList.add('active');
-            renderPackages(id); verifyIUC();
+            document.getElementById('cable-' + name).classList.add('active');
+            renderPackages(id);
+            verifyIUC();
         }
 
         function renderPackages(id) {
             const select = document.getElementById('packageList');
             const plans = allCablePlans[id] || [];
-            select.innerHTML = '<option value="">-- Choose a Package --</option>' + plans.map(p => `<option value="${p.price}" data-id="${p.id}" data-name="${p.name}">${p.name} - ₦${p.price.toLocaleString()}</option>`).join('');
+            select.innerHTML = '<option value="">-- Choose a Package --</option>' +
+                plans.map(p => `<option value="${p.price}" data-id="${p.id}" data-name="${p.name}">${p.name} — ₦${p.price.toLocaleString()}</option>`).join('');
         }
 
         function setPackage(sel) {
-            amount = sel.value;
-            planId = sel.options[sel.selectedIndex].getAttribute('data-id');
-            planName = sel.options[sel.selectedIndex].getAttribute('data-name');
+            amount  = sel.value;
+            planId  = sel.options[sel.selectedIndex].getAttribute('data-id');
+            planName= sel.options[sel.selectedIndex].getAttribute('data-name');
             updateSummary();
         }
 
         function updateSummary() {
-            document.getElementById('sum-net').innerText = cableName;
+            document.getElementById('sum-net').innerText  = cableName;
             document.getElementById('sum-card').innerText = document.getElementById('smartCardNumber').value || '---';
             document.getElementById('sum-plan').innerText = planName || '---';
-            document.getElementById('sum-total').innerText = parseFloat(amount || 0).toLocaleString();
+            document.getElementById('sum-total').innerText= parseFloat(amount || 0).toLocaleString();
         }
 
         function openPinModal() {
-            if (!isIUCVerified) return showToast("Please verify account number first", "error");
-            if (amount == 0) return showToast("Select a package", "error");
-            document.getElementById('pinModal').classList.remove('hidden'); pinInputs[0].focus();
+            if (!isIUCVerified) return showToast('Please verify account number first', 'error');
+            if (amount == 0)    return showToast('Select a package', 'error');
+            document.getElementById('pinModal').classList.remove('hidden');
+            pinInputs[0].focus();
         }
-        function closePinModal() { document.getElementById('pinModal').classList.add('hidden'); pinInputs.forEach(i => i.value = ''); }
+        function closePinModal() {
+            document.getElementById('pinModal').classList.add('hidden');
+            pinInputs.forEach(i => i.value = '');
+        }
 
         async function confirmPurchase() {
-            let pin = ""; pinInputs.forEach(i => pin += i.value);
-            if (pin.length < 4) return showToast("Enter 4-digit PIN", "error");
+            let pin = '';
+            pinInputs.forEach(i => pin += i.value);
+            if (pin.length < 4) return showToast('Enter 4-digit PIN', 'error');
             const scNum = document.getElementById('smartCardNumber').value;
             const btn = document.getElementById('confirmPinBtn');
-            btn.innerText = "Processing..."; btn.disabled = true;
-
+            btn.innerText = 'Processing...'; btn.disabled = true;
             try {
                 const { data: res } = await _supabase.rpc('verify_before_purchase', { uid: userId, amt: parseFloat(amount), input_pin: pin });
                 if (res === 'verified') {
-                    const { data: vtu, error: fErr } = await _supabase.functions.invoke('buy-vtu', { body: { actionType: 'cable', cableId: cableName, smartCardNumber: scNum, planId: planId } });
-                    if (fErr || !vtu || vtu.error || vtu.Status === 'failed') { showToast("Provider Error. Low API balance.", "error"); } 
-                    else {
+                    const { data: vtu, error: fErr } = await _supabase.functions.invoke('buy-vtu', {
+                        body: { actionType: 'cable', cableId: cableName, smartCardNumber: scNum, planId: planId }
+                    });
+                    if (fErr || !vtu || vtu.error || vtu.Status === 'failed') {
+                        showToast('Provider Error. Low API balance.', 'error');
+                    } else {
                         await _supabase.rpc('execute_deduction', { uid: userId, amt: parseFloat(amount), p_type: 'Cable TV', p_desc: `${cableName} (${planName}) to ${scNum}` });
-                        showToast("✅ Payment Successful!", "success");
-                        setTimeout(() => window.location.href = "dashboard.html", 2000);
+                        showToast('✅ Payment Successful!', 'success');
+                        setTimeout(() => window.location.href = 'dashboard.html', 2000);
                     }
-                } else { showToast(res.replace('_', ' '), "error"); }
-            } catch (err) { showToast("System Error", "error"); }
-            finally { btn.innerText = "Confirm Payment"; btn.disabled = false; }
+                } else {
+                    showToast(res.replace('_', ' '), 'error');
+                }
+            } catch (err) {
+                showToast('System Error', 'error');
+            } finally {
+                btn.innerText = 'Confirm Payment'; btn.disabled = false;
+            }
         }
 
-        function toggleBalance() { isHidden = !isHidden; updateBalanceUI(); }
+        function toggleBalance() {
+            isHidden = !isHidden;
+            updateBalanceUI();
+        }
         function updateBalanceUI() {
-            const display = isHidden ? "****.**" : actualBalance.toLocaleString(undefined, {minimumFractionDigits: 2});
-            const icon = isHidden ? "eye" : "eye-off";
-            ['user-balance-mobile', 'user-balance-desktop', 'user-balance-desktop-side'].forEach(id => { const el = document.getElementById(id); if (el) el.innerText = display; });
-            if(document.getElementById('eye-icon-mobile')) document.getElementById('eye-icon-mobile').setAttribute('data-lucide', icon);
+            const display = isHidden ? '****.**' : actualBalance.toLocaleString(undefined, { minimumFractionDigits: 2 });
+            const icon    = isHidden ? 'eye' : 'eye-off';
+            ['user-balance-mobile','user-balance-desktop','user-balance-desktop-side'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.innerText = display;
+            });
+            const eyeEl = document.getElementById('eye-icon-mobile');
+            if (eyeEl) eyeEl.setAttribute('data-lucide', icon);
             lucide.createIcons();
         }
-        function toggleMenu() { document.getElementById('sidebar').classList.toggle('-translate-x-full'); document.getElementById('overlay').classList.toggle('hidden'); }
+
+        function toggleMenu() {
+            document.getElementById('sidebar').classList.toggle('-translate-x-full');
+            document.getElementById('overlay').classList.toggle('hidden');
+        }
+
         window.onload = init;
     </script>
 </body>
