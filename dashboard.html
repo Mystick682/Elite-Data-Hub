@@ -9,101 +9,105 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #F8FAFF; margin: 0; padding: 0; overflow-x: hidden; }
+        *, *::before, *::after { box-sizing: border-box; }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #EEF2FF;
+            margin: 0; padding: 0; overflow-x: hidden;
+            color: #081B4B;
+        }
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        .active-nav { background: #0052FF !important; color: white !important; }
         #sidebar { transition: transform 0.3s ease; }
-        .overlap-card { z-index: 70 !important; position: relative; }
-        
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-        .animate-toast { animation: slideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        .active-nav { background: #0052FF !important; color: #ffffff !important; }
 
-        /* --- 3D MOCKUP CSS --- */
-        .phone-container { position: relative; width: 85px; height: 90px; margin-right: -5px; }
-        .phone-handset { 
-            width: 44px; height: 82px; background: #081B4B; border: 2px solid rgba(255,255,255,0.2); 
-            border-radius: 8px; position: absolute; right: 10px; bottom: 0;
-            transform: rotate(-8deg); overflow: hidden;
-        }
-        .phone-display { position: absolute; inset: 2px; background: linear-gradient(180deg, #246BFD 0%, #0052FF 100%); border-radius: 6px; }
-        .tile { 
-            position: absolute; background: white; padding: 4px; border-radius: 6px; 
-            box-shadow: 0 8px 15px rgba(0,0,0,0.15); display: flex; flex-direction: column; 
-            align-items: center; justify-content: center; z-index: 20; animation: float 3s ease-in-out infinite; 
-        }
-        .tile i { width: 12px; height: 12px; }
-        .tile span { font-size: 5px; font-weight: 900; text-transform: uppercase; margin-top: 1px; }
-        
-        .tile-data { top: 5px; left: 0px; animation-delay: 0s; color: #0052FF; }
-        .tile-airtime { top: 32px; right: -5px; animation-delay: 1s; color: #10b981; }
-        .tile-tv { bottom: 10px; left: 10px; animation-delay: 0.5s; color: #a855f7; }
-        
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+        @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)} }
+        .phone-container { position:relative; width:85px; height:90px; margin-right:-5px; }
+        .phone-handset { width:44px; height:82px; background:#081B4B; border:2px solid rgba(255,255,255,.2); border-radius:8px; position:absolute; right:10px; bottom:0; transform:rotate(-8deg); overflow:hidden; }
+        .phone-display { position:absolute; inset:2px; background:linear-gradient(180deg,#246BFD 0%,#0052FF 100%); border-radius:6px; }
+        .tile { position:absolute; background:#fff; padding:4px; border-radius:6px; box-shadow:0 8px 15px rgba(0,0,0,.15); display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:20; animation:float 3s ease-in-out infinite; }
+        .tile i { width:12px; height:12px; }
+        .tile span { font-size:5px; font-weight:900; text-transform:uppercase; margin-top:1px; }
+        .tile-data   { top:5px;  left:0;    animation-delay:0s;   color:#0052FF; }
+        .tile-airtime{ top:32px; right:-5px; animation-delay:1s;  color:#10b981; }
+        .tile-tv     { bottom:10px; left:10px; animation-delay:.5s; color:#a855f7; }
 
-        /* Elite Dark Mode Colors */
-        .dark body { background-color: #0B1120 !important; color: #F1F5F9 !important; }
-        .dark .bg-white, .dark aside, .dark nav, .dark header { background-color: #111827 !important; border-color: #1F2937 !important; color: #F1F5F9 !important; }
-        .dark [class*="bg-[#F8FAFF]"], .dark .bg-slate-50 { background-color: #0B1120 !important; }
-        .dark [class*="text-[#081B4B]"], .dark .text-slate-900 { color: #F1F5F9 !important; }
-        .dark .text-slate-400, .dark .text-slate-500 { color: #94A3B8 !important; }
-        .dark input { background-color: #1F2937 !important; border-color: #374151 !important; color: white !important; }
-        .dark .border-slate-50, .dark .border-slate-100 { border-color: #1F2937 !important; }
-        .dark .shadow-blue-500\/40, .dark .shadow-2xl { box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5) !important; }
-        .dark [class*="bg-[#F0F5FF]"] { background-color: rgba(0, 82, 255, 0.1) !important; }
+        .card    { background:#ffffff; border-radius:24px; box-shadow:0 4px 24px rgba(8,27,75,.08); }
+        .card-lg { background:#ffffff; border-radius:28px; box-shadow:0 8px 40px rgba(8,27,75,.10); }
 
-        /* --- ADVERT ANIMATION --- */
-        @keyframes shine {
-            0% { left: -100%; }
-            20% { left: 100%; }
-            100% { left: 100%; }
+        .action-card {
+            background:#ffffff; border:2px solid #e8edf8; border-radius:20px;
+            box-shadow:0 2px 8px rgba(8,27,75,.06); transition:all .15s ease;
+            display:flex; flex-direction:column; align-items:center;
+            padding:20px 12px; text-align:center; text-decoration:none;
         }
-        .premium-ad-card {
-            position: relative;
-            overflow: hidden;
-            transition: all 0.4s ease;
-        }
+        .action-card:hover { box-shadow:0 4px 16px rgba(0,82,255,.12); transform:translateY(-2px); }
+
+        @keyframes shine { 0%{left:-100%} 20%{left:100%} 100%{left:100%} }
+        .premium-ad-card { position:relative; overflow:hidden; transition:all .4s ease; }
         .premium-ad-card::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 50%;
-            height: 100%;
-            background: linear-gradient(to right, transparent, rgba(255,255,255,0.4), transparent);
-            transform: skewX(-25deg);
-            animation: shine 5s infinite;
+            content:''; position:absolute; top:0; left:-100%; width:50%; height:100%;
+            background:linear-gradient(to right,transparent,rgba(255,255,255,.4),transparent);
+            transform:skewX(-25deg); animation:shine 5s infinite;
         }
-        .premium-ad-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(0, 82, 255, 0.15);
-        }
+        .premium-ad-card:hover { transform:translateY(-6px); box-shadow:0 20px 40px rgba(0,82,255,.15); }
+
+        .dark body                       { background-color:#0B1120 !important; color:#e2e8f0 !important; }
+        .dark main                       { background-color:#0B1120 !important; }
+        .dark main > div                 { background-color:#0B1120 !important; }
+        .dark #sidebar                   { background-color:#0f1729 !important; border-color:#1e2d45 !important; }
+        .dark #sidebar h1                { color:#ffffff !important; }
+        .dark #sidebar a                 { color:#64748b !important; }
+        .dark #sidebar a.active-nav      { color:#ffffff !important; background-color:#0052FF !important; }
+        .dark #sidebar .border-slate-50  { border-color:#1e2d45 !important; }
+        .dark header                     { background-color:#0f1729 !important; border-color:#1e2d45 !important; }
+        .dark header span                { color:#e2e8f0 !important; }
+        .dark header .font-black         { color:#ffffff !important; }
+        .dark header .bg-slate-50        { background-color:#1a2235 !important; border-color:#1e2d45 !important; }
+        .dark .card, .dark .card-lg      { background-color:#111827 !important; }
+        .dark .bg-white                  { background-color:#111827 !important; }
+        .dark .action-card               { background-color:#111827 !important; border-color:#1e2d45 !important; box-shadow:none !important; }
+        .dark .action-card p             { color:#94a3b8 !important; }
+        .dark h1, .dark h2, .dark h3     { color:#ffffff !important; }
+        .dark h4, .dark h5               { color:#64748b !important; }
+        .dark .text-slate-400            { color:#64748b !important; }
+        .dark .text-slate-500            { color:#64748b !important; }
+        .dark .text-\[#081B4B\]          { color:#e2e8f0 !important; }
+        .dark .balance-num               { color:#ffffff !important; }
+        .dark .border-slate-50,
+        .dark .border-slate-100          { border-color:#1e2d45 !important; }
+        .dark .bg-slate-50               { background-color:#1a2235 !important; }
+        .dark .bg-\[#F0F5FF\]            { background-color:rgba(0,82,255,.08) !important; border-color:rgba(0,82,255,.15) !important; }
+        .dark nav.fixed                  { background-color:#0f1729 !important; border-color:#1e2d45 !important; }
+        .dark .tx-label                  { color:#e2e8f0 !important; }
+        #page-body                       { background-color:#EEF2FF; }
+        .dark #page-body                 { background-color:#0B1120 !important; }
     </style>
+    <script src="theme.js"></script>
 </head>
-<body class="text-[#081B4B] antialiased">
+<body class="antialiased">
 
     <div id="overlay" class="fixed inset-0 bg-black/40 z-[80] hidden lg:hidden" onclick="toggleMenu()"></div>
-    
+
     <div class="flex min-h-screen">
+
         <aside id="sidebar" class="fixed lg:sticky top-0 left-0 h-screen w-72 bg-white border-r border-slate-100 z-[90] flex flex-col p-6 -translate-x-full lg:translate-x-0 transition-transform duration-300">
             <div class="flex items-center gap-3 mb-10">
-                <div class="w-10 h-10 bg-[#0052FF] rounded-xl flex items-center justify-center text-white shadow-lg"><i data-lucide="zap" class="w-6 h-6 fill-current"></i></div>
-                <h1 class="text-lg font-extrabold tracking-tight">Elite Data</h1>
+                <div class="w-10 h-10 bg-[#0052FF] rounded-xl flex items-center justify-center text-white shadow-lg">
+                    <i data-lucide="zap" class="w-6 h-6 fill-current"></i>
+                </div>
+                <h1 class="text-lg font-extrabold tracking-tight italic text-[#081B4B]">Elite Data</h1>
             </div>
             <nav class="flex-1 space-y-1 overflow-y-auto no-scrollbar font-bold text-[13px]">
-               <a href="dashboard.html" class="active-nav flex items-center gap-3 px-4 py-3 rounded-2xl"><i data-lucide="layout-grid" class="w-4 h-4"></i> Dashboard</a>
-                <a href="buy-data.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="shopping-cart" class="w-4 h-4"></i> Buy Data</a>
-                <a href="buy-airtime.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="smartphone" class="w-4 h-4"></i> Airtime Top-up</a>
-                <a href="cable-tv.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="tv" class="w-4 h-4"></i> Cable TV</a>
-                <a href="electricity.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="zap" class="w-4 h-4"></i> Electricity</a>
-                <a href="history.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="history" class="w-4 h-4"></i> History</a>
-                <a href="fund-wallet.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="wallet" class="w-4 h-4"></i> Wallet</a>
-                <a href="referrals.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="users" class="w-4 h-4"></i> Referrals</a>
-                <a href="support.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="headset" class="w-4 h-4"></i> Support</a>
-                <a href="settings.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="settings" class="w-4 h-4"></i> Settings</a>
-
+                <a href="dashboard.html"   class="active-nav flex items-center gap-3 px-4 py-3 rounded-2xl">    <i data-lucide="layout-grid"  class="w-4 h-4"></i> Dashboard</a>
+                <a href="buy-data.html"    class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="shopping-cart" class="w-4 h-4"></i> Buy Data</a>
+                <a href="buy-airtime.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="smartphone"    class="w-4 h-4"></i> Airtime Top-up</a>
+                <a href="cable-tv.html"    class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="tv"            class="w-4 h-4"></i> Cable TV</a>
+                <a href="electricity.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="zap"           class="w-4 h-4"></i> Electricity</a>
+                <a href="history.html"     class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="history"        class="w-4 h-4"></i> History</a>
+                <a href="fund-wallet.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="wallet"         class="w-4 h-4"></i> Wallet</a>
+                <a href="referrals.html"   class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="users"          class="w-4 h-4"></i> Referrals</a>
+                <a href="support.html"     class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="headset"         class="w-4 h-4"></i> Support</a>
+                <a href="settings.html"    class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="settings"        class="w-4 h-4"></i> Settings</a>
                 <div id="admin-link-container" class="hidden pt-4 border-t border-slate-50 mt-4">
                     <a href="admin.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-[13px] font-black text-purple-600 bg-purple-50">
                         <i data-lucide="shield-check" class="w-4 h-4"></i> Admin Panel
@@ -111,46 +115,48 @@
                 </div>
             </nav>
             <div class="pt-6 border-t border-slate-50 mt-auto">
-                <button onclick="handleLogout()" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-red-500 hover:bg-red-100 transition-all"><i data-lucide="log-out" class="w-4 h-4"></i> Logout</button>
+                <button onclick="handleLogout()" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-red-500 hover:bg-red-50 transition-all">
+                    <i data-lucide="log-out" class="w-4 h-4"></i> Logout
+                </button>
             </div>
         </aside>
 
-        <main class="flex-1 flex flex-col min-w-0 bg-[#F8FAFF]">
-            <header class="lg:hidden bg-white px-6 py-4 flex justify-between items-center border-b border-slate-50 sticky top-0 z-[60]">
-                <button onclick="toggleMenu()"><i data-lucide="menu" class="w-6 h-6 text-slate-700"></i></button>
-                <span class="font-extrabold text-sm text-[#0052FF]">Elite Data Services</span>
-                <div class="flex items-center gap-3">
-                    <i data-lucide="bell" class="w-6 h-6 text-slate-400"></i>
-                    <button onclick="toggleTheme()" class="w-8 h-8 flex items-center justify-center bg-slate-50 dark:bg-slate-800 rounded-lg transition-all">
-                        <i data-lucide="moon" class="w-4 h-4 text-slate-400 dark:hidden"></i>
-                        <i data-lucide="sun" class="hidden dark:block w-4 h-4 text-yellow-400"></i>
-                    </button>
-                </div>
+        <main class="flex-1 flex flex-col min-w-0">
+
+            <header class="lg:hidden bg-white px-5 py-4 flex justify-between items-center border-b border-slate-100 sticky top-0 z-[60] shadow-sm">
+                <button onclick="toggleMenu()" class="w-9 h-9 flex items-center justify-center">
+                    <i data-lucide="menu" class="w-5 h-5 text-[#081B4B]"></i>
+                </button>
+                <span class="font-extrabold text-sm text-[#0052FF] tracking-wide">Elite Data Services</span>
+                <button onclick="toggleTheme()" class="w-10 h-10 bg-[#1e293b] rounded-xl flex items-center justify-center">
+                    <i data-lucide="moon" class="w-4 h-4 text-slate-300 dark:hidden"></i>
+                    <i data-lucide="sun"  class="hidden dark:block w-4 h-4 text-yellow-400"></i>
+                </button>
             </header>
 
             <header class="hidden lg:flex bg-white border-b border-slate-100 px-10 py-5 justify-between items-center sticky top-0 z-50">
-                <div class="font-bold text-sm">Welcome back, <span id="user-name-desktop" class="text-slate-900 font-extrabold text-lg">Loading...</span></div>
-                <div class="flex items-center gap-6">
-                    <button onclick="toggleTheme()" class="w-10 h-10 flex items-center justify-center bg-slate-50 dark:bg-slate-800 rounded-xl transition-all">
-                        <i data-lucide="moon" class="w-5 h-5 text-slate-400 dark:hidden"></i>
-                        <i data-lucide="sun" class="hidden dark:block w-5 h-5 text-yellow-400"></i>
+                <div class="font-bold text-sm text-[#081B4B]">Welcome back, <span id="user-name-desktop" class="font-extrabold text-lg">Loading...</span></div>
+                <div class="flex items-center gap-5">
+                    <button onclick="toggleTheme()" class="w-10 h-10 bg-[#1e293b] rounded-xl flex items-center justify-center">
+                        <i data-lucide="moon" class="w-4 h-4 text-slate-300 dark:hidden"></i>
+                        <i data-lucide="sun"  class="hidden dark:block w-4 h-4 text-yellow-400"></i>
                     </button>
-                    <div class="flex items-center gap-4 bg-slate-50 px-4 py-2 rounded-xl border border-slate-100">
+                    <div class="flex items-center gap-3 bg-slate-50 px-4 py-2 rounded-xl border border-slate-100">
                         <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Balance</span>
-                        <span class="text-sm font-black text-[#0052FF]">₦<span id="user-balance-desktop">0.00</span></span>
-                        <a href="fund-wallet.html" class="ml-2 text-[#0052FF]"><i data-lucide="plus-circle" class="w-5 h-5"></i></a>
+                        <span class="text-sm font-black text-[#081B4B]">₦<span id="user-balance-desktop" class="balance-num">0.00</span></span>
+                        <a href="fund-wallet.html"><i data-lucide="plus-circle" class="w-5 h-5 text-[#0052FF]"></i></a>
                     </div>
                     <img src="https://i.pravatar.cc/100" class="w-9 h-9 rounded-full border border-slate-200">
                 </div>
             </header>
 
-            <div class="w-full h-full pb-32 overflow-y-auto">
-                <div class="lg:hidden bg-[#0052FF] p-6 pb-24 text-white flex justify-between items-center rounded-b-[40px]">
-                    <div class="flex-1">
-                        <p class="text-blue-100 text-[10px] font-bold uppercase tracking-widest mb-1">Welcome back,</p>
-                        <h2 class="text-xl font-bold leading-tight" id="user-name-mobile">Loading...</h2>
-                    </div>
+            <div id="page-body" class="w-full pb-32 overflow-y-auto flex-1">
 
+                <div class="lg:hidden bg-[#0052FF] px-6 pt-6 pb-24 text-white rounded-b-[40px] flex justify-between items-center">
+                    <div class="flex-1">
+                        <p class="text-blue-200 text-[10px] font-bold uppercase mb-1 tracking-widest">Welcome back,</p>
+                        <h2 class="text-2xl font-black text-white tracking-wide" id="user-name-mobile">Loading...</h2>
+                    </div>
                     <div class="phone-container">
                         <div class="phone-handset"><div class="phone-display"></div></div>
                         <div class="tile tile-data"><i data-lucide="wifi"></i><span>Data</span></div>
@@ -159,23 +165,24 @@
                     </div>
                 </div>
 
-                <div class="max-w-5xl mx-auto px-6">
-                    <div class="lg:hidden relative z-20 bg-white p-8 rounded-[32px] -mt-16 shadow-2xl flex flex-col items-center border border-slate-50">
-                        <p class="text-slate-400 text-[10px] font-bold uppercase mb-2 tracking-widest">Available Balance</p>
+                <div class="max-w-5xl mx-auto px-4 lg:px-10">
+
+                    <div class="lg:hidden card-lg relative z-20 -mt-16 p-8 flex flex-col items-center">
+                        <p class="text-[10px] font-bold text-slate-400 uppercase mb-2 tracking-widest">Available Balance</p>
                         <div class="flex items-center gap-3 mb-6">
-                            <h3 class="text-3xl font-black text-[#081B4B] dark:text-white">₦<span id="user-balance-mobile">0.00</span></h3>
-                            <button onclick="toggleBalance()"><i id="eye-icon-mobile" data-lucide="eye-off" class="w-5 h-5 text-blue-200"></i></button>
+                            <h3 class="text-3xl font-black text-[#081B4B] balance-num">₦<span id="user-balance-mobile">0.00</span></h3>
+                            <button onclick="toggleBalance()">
+                                <i id="eye-icon-mobile" data-lucide="eye-off" class="w-5 h-5 text-slate-400"></i>
+                            </button>
                         </div>
-                        
-                        <!-- UPDATED: SIDE-BY-SIDE BUTTONS ON MOBILE -->
                         <div class="flex gap-3 w-full">
-                            <a href="fund-wallet.html" class="flex-1 bg-[#0052FF] text-white py-3 rounded-2xl font-extrabold text-xs text-center shadow-lg active:scale-95 transition-all">+ Fund Wallet</a>
-                            <a href="withdraw-bank.html" class="flex-1 bg-slate-50 dark:bg-slate-800 text-slate-500 dark:text-slate-300 py-3 rounded-2xl font-extrabold text-xs text-center border border-slate-100 dark:border-slate-700 active:scale-95 transition-all">Withdraw</a>
+                            <a href="fund-wallet.html" class="flex-1 bg-[#0052FF] text-white py-3 rounded-full font-extrabold text-xs text-center shadow-lg active:scale-95 transition-all">+ Fund Wallet</a>
+                            <a href="withdraw-bank.html" class="flex-1 bg-slate-50 text-slate-500 py-3 rounded-full font-extrabold text-xs text-center border border-slate-100 active:scale-95 transition-all">Withdraw</a>
                         </div>
                     </div>
 
-                    <div class="lg:hidden mt-8">
-                        <a href="referrals.html" class="block bg-[#F0F5FF] p-6 rounded-[32px] relative overflow-hidden group border border-blue-50">
+                    <div class="lg:hidden mt-6">
+                        <a href="referrals.html" class="block bg-[#F0F5FF] p-6 rounded-[28px] relative overflow-hidden group border border-blue-50">
                             <div class="relative z-10">
                                 <h5 class="font-extrabold text-[11px] mb-1 uppercase tracking-tight text-[#0052FF]">Invite & Earn</h5>
                                 <p class="text-[15px] font-black text-[#081B4B]">Get ₦1,000 instantly!</p>
@@ -185,137 +192,158 @@
                         </a>
                     </div>
 
-                    <div class="grid grid-cols-1 lg:grid-cols-12 lg:gap-10 mt-10">
-                        <div class="lg:col-span-8 space-y-10">
-                            <section>
-                                <div class="flex justify-between items-center mb-4 px-2"><h4 class="font-extrabold text-sm uppercase tracking-wider">Quick Actions</h4><a href="#" class="text-[10px] font-bold text-[#0052FF]">View all</a></div>
-                                <div class="grid grid-cols-4 gap-3 lg:gap-5">
-                                    <a href="buy-data.html" class="bg-white p-5 rounded-3xl border border-slate-50 text-center shadow-sm block transition-transform hover:scale-105"><i data-lucide="wifi" class="w-6 h-6 text-blue-600 mx-auto mb-2"></i><p class="text-[9px] font-bold uppercase">Data</p></a>
-                                    <a href="buy-airtime.html" class="bg-white p-5 rounded-3xl border border-slate-50 text-center shadow-sm block transition-transform hover:scale-105"><i data-lucide="phone" class="w-6 h-6 text-green-500 mx-auto mb-2"></i><p class="text-[9px] font-bold uppercase">Airtime</p></a>
-                                    <a href="cable-tv.html" class="bg-white p-5 rounded-3xl border border-slate-50 text-center shadow-sm block transition-transform hover:scale-105"><i data-lucide="tv" class="w-6 h-6 text-purple-500 mx-auto mb-2"></i><p class="text-[9px] font-bold uppercase">Cable TV</p></a>
-                                    <a href="electricity.html" class="bg-white p-5 rounded-3xl border border-slate-50 text-center shadow-sm block transition-transform hover:scale-105"><i data-lucide="zap" class="w-6 h-6 text-orange-500 mx-auto mb-2"></i><p class="text-[9px] font-bold uppercase">Power</p></a>
-                                </div>
-                            </section>
+                    <div class="grid grid-cols-1 lg:grid-cols-12 lg:gap-10 mt-8">
+
+                        <div class="lg:col-span-8 space-y-8">
 
                             <section>
-                                <div class="flex justify-between items-center mb-4 px-2"><h4 class="font-extrabold text-sm uppercase tracking-wider">First Time Data Bonus </h4><a href="buy-data.html" class="text-[10px] font-bold text-[#0052FF]">View all</a></div>
-                                <div class="bg-white p-5 rounded-3xl border border-slate-50 flex items-center justify-between shadow-sm">
-                                    <div class="flex items-center gap-4"><div class="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600"><i data-lucide="wifi" class="w-5 h-5"></i></div>
-                                    <div><p class="font-bold text-sm uppercase">10GB</p><p class="text-[9px] text-slate-400 font-bold uppercase">Valid for 30 Days</p></div></div>
-                                    <div class="flex items-center gap-4"><span class="font-black text-sm text-[#081B4B] dark:text-white">₦1,500</span><a href="buy-data.html" class="bg-blue-50 text-blue-600 px-4 py-1.5 rounded-lg text-[10px] font-black uppercase">Buy</a></div>
-                                </div>
-                            </section>
-
-                            <section class="mt-12 px-2 lg:px-0">
                                 <div class="flex justify-between items-center mb-4">
-                                    <h4 class="font-extrabold text-xs uppercase tracking-[0.2em] text-slate-400">Featured Partner</h4>
+                                    <h4 class="font-bold tracking-widest text-xs uppercase text-slate-400">Quick Actions</h4>
+                                    <a href="#" class="text-[10px] font-bold text-[#0052FF]">View all</a>
+                                </div>
+                                <div class="grid grid-cols-4 gap-3">
+                                    <a href="buy-data.html"    class="action-card"><i data-lucide="wifi"  class="w-6 h-6 text-[#0052FF] mb-2"></i><p class="text-[9px] font-bold uppercase text-slate-500">Data</p></a>
+                                    <a href="buy-airtime.html" class="action-card"><i data-lucide="phone" class="w-6 h-6 text-green-500 mb-2"></i><p class="text-[9px] font-bold uppercase text-slate-500">Airtime</p></a>
+                                    <a href="cable-tv.html"    class="action-card"><i data-lucide="tv"    class="w-6 h-6 text-purple-500 mb-2"></i><p class="text-[9px] font-bold uppercase text-slate-500">Cable TV</p></a>
+                                    <a href="electricity.html" class="action-card"><i data-lucide="zap"   class="w-6 h-6 text-orange-500 mb-2"></i><p class="text-[9px] font-bold uppercase text-slate-500">Power</p></a>
+                                </div>
+                            </section>
+
+                            <section>
+                                <div class="flex justify-between items-center mb-4">
+                                    <h4 class="font-bold tracking-widest text-xs uppercase text-slate-400">First Time Data Bonus</h4>
+                                    <a href="buy-data.html" class="text-[10px] font-bold text-[#0052FF]">View all</a>
+                                </div>
+                                <div class="card p-5 flex items-center justify-between">
+                                    <div class="flex items-center gap-4">
+                                        <div class="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center text-[#0052FF]">
+                                            <i data-lucide="wifi" class="w-5 h-5"></i>
+                                        </div>
+                                        <div>
+                                            <p class="font-bold text-sm uppercase">10GB</p>
+                                            <p class="text-[9px] text-slate-400 font-bold uppercase">Valid for 30 Days</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center gap-4">
+                                        <span class="font-black text-sm text-[#081B4B] balance-num">₦1,500</span>
+                                        <a href="buy-data.html" class="bg-blue-50 text-[#0052FF] px-4 py-1.5 rounded-lg text-[10px] font-black uppercase hover:bg-blue-100 transition-all">Buy</a>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <section>
+                                <div class="flex justify-between items-center mb-4">
+                                    <h4 class="font-bold tracking-widest text-xs uppercase text-slate-400">Featured Partner</h4>
                                     <span class="bg-blue-50 text-[#0052FF] text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-tighter">Sponsored</span>
                                 </div>
-                                <div class="premium-ad-card relative rounded-[40px] overflow-hidden bg-[#081B4B] shadow-2xl flex flex-col md:flex-row h-auto md:h-64 border border-white/5 group">
+                                <div class="premium-ad-card rounded-[32px] overflow-hidden bg-[#081B4B] shadow-2xl flex flex-col md:flex-row h-auto md:h-64 border border-white/5 group">
                                     <div class="w-full md:w-1/2 h-52 md:h-full relative overflow-hidden">
-                                        <img src="https://github.com/Mystick682/Elite-Data-Hub/blob/main/promo.jpg?raw=true" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" alt="Toyeen Travels">
+                                        <img src="https://github.com/Mystick682/Elite-Data-Hub/blob/main/promo.jpg?raw=true" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" alt="Promo">
                                         <div class="absolute inset-0 bg-gradient-to-r from-transparent via-[#081B4B]/20 to-[#081B4B]"></div>
                                         <div class="absolute inset-0 bg-gradient-to-t from-[#081B4B] md:from-transparent to-transparent"></div>
                                     </div>
                                     <div class="p-8 md:p-10 flex flex-col justify-center flex-1 relative z-10">
-                                        <div class="mb-4"><h3 class="text-white text-2xl lg:text-3xl font-black tracking-tighter leading-none mb-2">Toyeen Travels & Shortlets</h3><div class="h-1 w-12 bg-[#0052FF] rounded-full"></div></div>
+                                        <div class="mb-4">
+                                            <h3 class="text-white text-2xl lg:text-3xl font-black tracking-tighter leading-none mb-2">Toyeen Travels & Shortlets</h3>
+                                            <div class="h-1 w-12 bg-[#0052FF] rounded-full"></div>
+                                        </div>
                                         <p class="text-blue-200 text-[10px] font-bold uppercase tracking-[0.2em] mb-4">Your Journey, Your Stay, Our Priority!</p>
                                         <p class="text-slate-400 text-xs leading-relaxed mb-8 max-w-xs font-medium">Global Flight Bookings, Expert Visa Consultations, and Luxury Shortlet Apartments.</p>
-                                        <div class="flex items-center gap-4">
-                                            <a href="https://wa.me/2347011234567" target="_blank" class="bg-[#0052FF] text-white px-8 py-3 rounded-2xl font-black text-xs shadow-xl shadow-blue-500/20 hover:bg-blue-600 active:scale-95 transition-all">Book Now</a>
+                                        <div>
+                                            <a href="https://wa.me/2347011234567" target="_blank" class="bg-[#0052FF] text-white px-8 py-3 rounded-2xl font-black text-xs shadow-xl shadow-blue-500/20 hover:bg-blue-600 active:scale-95 transition-all inline-block">Book Now</a>
                                         </div>
                                     </div>
-                                    <div class="elite-shine-sweep"></div>
                                 </div>
                             </section>
 
                             <section>
-                                <div class="flex justify-between items-center mb-4 px-2"><h4 class="font-extrabold text-sm uppercase tracking-wider">Recent Transactions</h4><a href="history.html" class="text-[10px] font-bold text-[#0052FF]">View all</a></div>
-                                <div id="transaction-list" class="bg-white rounded-[32px] p-6 border border-slate-100 shadow-sm space-y-6">
+                                <div class="flex justify-between items-center mb-4">
+                                    <h4 class="font-bold tracking-widest text-xs uppercase text-slate-400">Recent Transactions</h4>
+                                    <a href="history.html" class="text-[10px] font-bold text-[#0052FF]">View all</a>
+                                </div>
+                                <div id="transaction-list" class="card-lg p-6 space-y-5">
                                     <p class="text-xs text-slate-400 text-center py-4 uppercase font-bold tracking-widest opacity-40">No transactions found.</p>
                                 </div>
                             </section>
+
                         </div>
 
-                        <div class="hidden lg:block lg:col-span-4 space-y-6">
-                            <div class="bg-white p-8 rounded-[32px] border border-slate-50 shadow-sm flex flex-col items-center">
-                                <p class="text-[10px] font-bold text-slate-400 uppercase mb-1">Total Balance</p>
-                                <h3 class="text-3xl font-black mb-6 text-[#081B4B] dark:text-white">₦<span id="user-balance-desktop-side">0.00</span></h3>
-                                
-                                <!-- UPDATED: SIDE-BY-SIDE BUTTONS ON DESKTOP SIDEBAR -->
+                        <aside class="hidden lg:block lg:col-span-4 space-y-6">
+                            <div class="card-lg p-8 flex flex-col items-center">
+                                <p class="text-[10px] font-bold text-slate-400 uppercase mb-1 tracking-widest">Total Balance</p>
+                                <h3 class="text-3xl font-black text-[#081B4B] balance-num mb-6">₦<span id="user-balance-desktop-side">0.00</span></h3>
                                 <div class="flex gap-2 w-full">
-                                    <a href="fund-wallet.html" class="flex-1 bg-[#0052FF] text-white py-3 rounded-xl font-bold text-[10px] text-center shadow-lg hover:bg-blue-700 transition-all">+ Fund</a>
-                                    <a href="withdraw-bank.html" class="flex-1 bg-slate-50 dark:bg-slate-800 text-slate-400 py-3 rounded-xl font-bold text-[10px] text-center border border-slate-100 dark:border-slate-700 transition-all">Withdraw</a>
+                                    <a href="fund-wallet.html"  class="flex-1 bg-[#0052FF] text-white py-3 rounded-full font-bold text-[10px] text-center shadow-lg hover:bg-blue-700 transition-all">+ Fund</a>
+                                    <a href="withdraw-bank.html" class="flex-1 bg-slate-50 text-slate-400 py-3 rounded-full font-bold text-[10px] text-center border border-slate-100 transition-all">Withdraw</a>
                                 </div>
                             </div>
-
-                            <a href="referrals.html" class="block bg-[#F0F5FF] p-8 rounded-[32px] relative overflow-hidden group border border-blue-50 shadow-sm">
+                            <a href="referrals.html" class="block bg-[#F0F5FF] p-8 rounded-[28px] relative overflow-hidden group border border-blue-50">
                                 <div class="relative z-10">
                                     <h5 class="font-extrabold text-xs mb-1 uppercase tracking-tight text-[#0052FF]">Invite & Earn</h5>
-                                    <p class="text-xl font-black text-[#081B4B] mb-2 dark:text-white">Get ₦1,000 per Referral!</p>
+                                    <p class="text-xl font-black text-[#081B4B] mb-2">Get ₦1,000 per Referral!</p>
                                     <p class="text-xs text-slate-500 font-medium max-w-[220px]">Refer friends to Elite Data and earn bonus when they fund their wallet.</p>
                                 </div>
                                 <i data-lucide="gift" class="w-24 h-24 absolute -right-4 -bottom-4 text-[#0052FF]/10 transition-transform group-hover:scale-110"></i>
                             </a>
-                        </div>
+                        </aside>
+
                     </div>
                 </div>
             </div>
 
             <nav class="lg:hidden fixed bottom-0 left-0 w-full bg-white border-t border-slate-100 flex justify-around p-4 z-50 shadow-lg">
-                <a href="dashboard.html" class="flex flex-col items-center gap-1 text-[#0052FF]"><i data-lucide="home" class="w-5 h-5"></i><span class="text-[8px] font-black uppercase">Home</span></a>
-                <a href="history.html" class="flex flex-col items-center gap-1 text-slate-300"><i data-lucide="history" class="w-5 h-5"></i><span class="text-[8px] font-black uppercase">History</span></a>
-                <a href="fund-wallet.html" class="flex flex-col items-center gap-1 text-slate-300"><i data-lucide="wallet" class="w-5 h-5"></i><span class="text-[8px] font-black uppercase">Wallet</span></a>
-                <a href="settings.html" class="flex flex-col items-center gap-1 text-slate-300"><i data-lucide="settings" class="w-5 h-5"></i><span class="text-[8px] font-black uppercase">Settings</span></a>
+                <a href="dashboard.html"   class="flex flex-col items-center gap-1 text-[#0052FF]"><i data-lucide="home"     class="w-5 h-5"></i><span class="text-[8px] font-black uppercase">Home</span></a>
+                <a href="history.html"     class="flex flex-col items-center gap-1 text-slate-300"><i data-lucide="history"  class="w-5 h-5"></i><span class="text-[8px] font-black uppercase">History</span></a>
+                <a href="fund-wallet.html" class="flex flex-col items-center gap-1 text-slate-300"><i data-lucide="wallet"   class="w-5 h-5"></i><span class="text-[8px] font-black uppercase">Wallet</span></a>
+                <a href="settings.html"    class="flex flex-col items-center gap-1 text-slate-300"><i data-lucide="settings" class="w-5 h-5"></i><span class="text-[8px] font-black uppercase">Settings</span></a>
             </nav>
         </main>
     </div>
 
-    <script src="theme.js"></script>
     <script src="supabase-config.js"></script>
     <script src="notifications.js"></script>
     <script>
         lucide.createIcons();
-        let actualBalanceNum = 0;
-        let isHidden = false;
+        let actualBalanceNum = 0, isHidden = false;
 
         async function loadData() {
             try {
                 const { data: { session } } = await _supabase.auth.getSession();
-                if (!session) { window.location.href = "login.html"; return; }
+                if (!session) { window.location.href = 'login.html'; return; }
                 const uid = session.user.id;
 
                 const { data: profile } = await _supabase.from('profiles').select('full_name, is_admin').eq('id', uid).single();
                 if (profile) {
-                    const n = (profile.full_name || "Elite Member") + " 👋";
+                    const n = (profile.full_name || 'Elite Member') + ' 👋';
                     document.getElementById('user-name-mobile').innerText = n;
                     document.getElementById('user-name-desktop').innerText = n;
                     if (profile.is_admin === true) {
-                        const adminContainer = document.getElementById('admin-link-container');
-                        if (adminContainer) adminContainer.classList.remove('hidden');
+                        document.getElementById('admin-link-container').classList.remove('hidden');
                         lucide.createIcons();
                     }
                 }
 
                 const { data: wallet } = await _supabase.from('wallets').select('balance').eq('id', uid).single();
-                if (wallet) {
-                    actualBalanceNum = parseFloat(wallet.balance);
-                    updateBalanceUI();
-                }
+                if (wallet) { actualBalanceNum = parseFloat(wallet.balance); updateBalanceUI(); }
 
                 const { data: trans } = await _supabase.from('transactions').select('*').eq('user_id', uid).order('created_at', { ascending: false }).limit(5);
                 if (trans && trans.length > 0) {
                     const list = document.getElementById('transaction-list');
-                    list.innerHTML = "";
+                    list.innerHTML = '';
                     trans.forEach(t => {
                         const isFunding = t.type === 'Wallet Funding';
                         list.innerHTML += `
                             <div class="flex justify-between items-center">
                                 <div class="flex items-center gap-3">
-                                    <div class="w-9 h-9 ${isFunding ? 'bg-blue-50 text-blue-600' : 'bg-green-50 text-green-600'} rounded-full flex items-center justify-center"><i data-lucide="${isFunding ? 'plus' : 'arrow-down-left'}" class="w-4 h-4"></i></div>
-                                    <div><p class="font-bold text-[13px] uppercase">${t.type}</p><p class="text-[9px] text-slate-400 font-bold uppercase">${new Date(t.created_at).toLocaleDateString()}</p></div>
+                                    <div class="w-10 h-10 ${isFunding ? 'bg-blue-50 text-[#0052FF]' : 'bg-green-50 text-green-600'} rounded-xl flex items-center justify-center flex-shrink-0">
+                                        <i data-lucide="${isFunding ? 'plus' : 'arrow-down-left'}" class="w-4 h-4"></i>
+                                    </div>
+                                    <div>
+                                        <p class="tx-label font-bold text-[13px] uppercase text-[#081B4B]">${t.type}</p>
+                                        <p class="text-[9px] text-slate-400 font-bold uppercase">${new Date(t.created_at).toLocaleDateString()}</p>
+                                    </div>
                                 </div>
-                                <p class="font-black text-sm ${isFunding ? 'text-blue-600' : 'text-green-600'}">${isFunding ? '+' : '-'}₦${parseFloat(t.amount).toLocaleString()}</p>
+                                <p class="font-black text-sm ${isFunding ? 'text-[#0052FF]' : 'text-green-600'}">${isFunding ? '+' : '-'}₦${parseFloat(t.amount).toLocaleString()}</p>
                             </div>`;
                     });
                     lucide.createIcons();
@@ -325,21 +353,27 @@
 
         function toggleBalance() { isHidden = !isHidden; updateBalanceUI(); }
         function updateBalanceUI() {
-            const display = isHidden ? "****.**" : actualBalanceNum.toLocaleString(undefined, {minimumFractionDigits: 2});
-            const icon = isHidden ? "eye" : "eye-off";
+            const display = isHidden ? '****.**' : actualBalanceNum.toLocaleString(undefined, { minimumFractionDigits: 2 });
+            const icon    = isHidden ? 'eye' : 'eye-off';
             ['user-balance-mobile', 'user-balance-desktop', 'user-balance-desktop-side'].forEach(id => {
                 const el = document.getElementById(id); if (el) el.innerText = display;
             });
-            const mobileEye = document.getElementById('eye-icon-mobile');
-            if(mobileEye) mobileEye.setAttribute('data-lucide', icon);
+            const eyeEl = document.getElementById('eye-icon-mobile');
+            if (eyeEl) eyeEl.setAttribute('data-lucide', icon);
             lucide.createIcons();
         }
-        function toggleMenu() { document.getElementById('sidebar').classList.toggle('-translate-x-full'); document.getElementById('overlay').classList.toggle('hidden'); }
+
+        function toggleMenu() {
+            document.getElementById('sidebar').classList.toggle('-translate-x-full');
+            document.getElementById('overlay').classList.toggle('hidden');
+        }
+
         async function handleLogout() {
             await _supabase.auth.signOut();
-            showToast("Logged out successfully!");
-            setTimeout(() => { window.location.href = "login.html"; }, 1000);
+            showToast('Logged out successfully!');
+            setTimeout(() => window.location.href = 'login.html', 1000);
         }
+
         window.onload = loadData;
     </script>
 </body>
