@@ -9,58 +9,42 @@ serve(async (req: Request) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders })
 
   try {
-    const bodyReq = await req.json()
-    const { actionType, networkId, phoneNumber, planId, amount, meterNumber, discoId, meterType, smartCardNumber, cableId } = bodyReq
+    const b = await req.json()
     const VTU_KEY = Deno.env.get('VTU_API_KEY')
-
-    let endpoint = ''
-    let apiBody: any = { Ported_number: true }
+    let url = ''
     let method = 'POST'
+    let body: any = null
 
-    if (actionType === 'data') {
-      endpoint = 'https://gladtidingsdata.com/api/data/';
-      apiBody = { ...apiBody, network: networkId, mobile_number: phoneNumber, plan: planId };
-    } 
-    else if (actionType === 'airtime') {
-      endpoint = 'https://gladtidingsdata.com/api/topup/';
-      apiBody = { ...apiBody, network: networkId, mobile_number: phoneNumber, plan: planId, amount: amount, airtime_type: "VTU" };
-    }
-    else if (actionType === 'electricity') {
-      endpoint = 'https://gladtidingsdata.com/api/billpayment/';
-      apiBody = { ...apiBody, disco_name: discoId, meter_number: meterNumber, Meter_Type: meterType, amount: amount };
-    }
-    else if (actionType === 'cable') {
-      endpoint = 'https://gladtidingsdata.com/api/cablesub/';
-      apiBody = { ...apiBody, cablename: cableId, smart_card_number: smartCardNumber, cableplan: planId };
-    }
-    else if (actionType === 'validate-meter') {
+    if (b.actionType === 'validate-meter') {
       method = 'GET';
-      endpoint = `https://gladtidingsdata.com/api/validatemeter/?meternumber=${meterNumber}&disconame=${discoId}&mtype=${meterType}`;
-    }
-    else if (actionType === 'validate-iuc') {
+      url = `https://gladtidingsdata.com/api/validatemeter/?meternumber=${b.meterNumber}&disconame=${b.discoId}&mtype=${b.meterType}`;
+    } else if (b.actionType === 'validate-iuc') {
       method = 'GET';
-      endpoint = `https://gladtidingsdata.com/api/validateiuc/?smart_card_number=${smartCardNumber}&cablename=${cableId}`;
+      url = `https://gladtidingsdata.com/api/validateiuc/?smart_card_number=${b.smartCardNumber}&cablename=${b.cableId}`;
+    } else if (b.actionType === 'electricity') {
+      url = 'https://gladtidingsdata.com/api/billpayment/';
+      body = { disco_name: b.discoId, meter_number: b.meterNumber, Meter_Type: b.meterType, amount: b.amount };
+    } else if (b.actionType === 'cable') {
+      url = 'https://gladtidingsdata.com/api/cablesub/';
+      body = { cablename: b.cableId, smart_card_number: b.smartCardNumber, cableplan: b.planId };
+    } else if (b.actionType === 'data') {
+      url = 'https://gladtidingsdata.com/api/data/';
+      body = { network: b.networkId, mobile_number: b.phoneNumber, plan: b.planId, Ported_number: true };
+    } else if (b.actionType === 'airtime') {
+      url = 'https://gladtidingsdata.com/api/topup/';
+      body = { network: b.networkId, mobile_number: b.phoneNumber, plan: b.planId, amount: b.amount, airtime_type: "VTU", Ported_number: true };
     }
 
-    const fetchOptions: any = {
+    const res = await fetch(url, {
       method: method,
-      headers: { 'Authorization': `Token ${VTU_KEY}`, 'Content-Type': 'application/json' }
-    }
-    if (method === 'POST') fetchOptions.body = JSON.stringify(apiBody)
-
-    const response = await fetch(endpoint, fetchOptions)
-    const data = await response.json()
-
-    // Pass everything back to frontend
-    return new Response(JSON.stringify(data), { 
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' }, 
-        status: 200 
+      headers: { 'Authorization': `Token ${VTU_KEY}`, 'Content-Type': 'application/json' },
+      body: body ? JSON.stringify(body) : null
     })
+
+    const data = await res.json()
+    return new Response(JSON.stringify(data), { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 })
 
   } catch (error) {
-    return new Response(JSON.stringify({ error: error.message }), { 
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' }, 
-        status: 500 
-    })
+    return new Response(JSON.stringify({ error: error.message }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 400 })
   }
 })
