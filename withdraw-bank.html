@@ -202,34 +202,45 @@
         }
 
         async function verifyReceiver() {
-            const bank = document.getElementById('bankList').value;
-            const account = document.getElementById('accountNumber').value;
-            const display = document.getElementById('accountNameDisplay');
+    const bank = document.getElementById('bankList').value;
+    const account = document.getElementById('accountNumber').value;
+    const display = document.getElementById('accountNameDisplay');
 
-            if (bank && account.length === 10) {
-                display.innerText = "🔍 Fetching receiver name...";
-                
-                // We call the 'verify' action in your Payout Edge Function
-                const { data, error } = await _supabase.functions.invoke('payout', {
-                    body: { 
-                        action: 'verify',
-                        bankCode: bank,
-                        accountNumber: account
-                    }
-                });
+    if (bank && account.length === 10) {
+        display.innerText = "🔍 Verifying...";
+        display.style.color = "#94a3b8"; // Grey
 
-                if (data && data.status) {
-                    verifiedName = data.data.account_name;
-                    display.innerText = "✅ RECEIVER: " + verifiedName;
-                    display.style.color = "#10b981";
-                } else {
-                    display.innerText = "❌ Account not found. Try again.";
-                    display.style.color = "#ef4444";
-                    verifiedName = "";
+        try {
+            const { data, error } = await _supabase.functions.invoke('payout', {
+                body: { 
+                    action: 'verify',
+                    bankCode: bank,
+                    accountNumber: account
                 }
-            }
-        }
+            });
 
+            if (error) throw error;
+
+            console.log("Verification Data:", data);
+
+            if (data && data.status === true) {
+                verifiedName = data.data.account_name;
+                display.innerText = "✅ RECEIVER: " + verifiedName;
+                display.style.color = "#10b981"; // Success Green
+            } else {
+                // Show the specific error message from Paystack
+                const msg = data?.message || "Account not found";
+                display.innerText = "❌ " + msg;
+                display.style.color = "#ef4444"; // Error Red
+                verifiedName = "";
+            }
+        } catch (err) {
+            console.error("Function error:", err);
+            display.innerText = "❌ Service busy. Try again.";
+            display.style.color = "#ef4444";
+        }
+    }
+}
         function openModal() {
             if (!verifiedName) return showToast("Verify account details first", "error");
             const amt = document.getElementById('transferAmount').value;
