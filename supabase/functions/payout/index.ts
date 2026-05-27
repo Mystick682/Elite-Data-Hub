@@ -9,50 +9,44 @@ serve(async (req: Request) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders })
 
   try {
-    const { bankCode, accountNumber, amount, userId } = await req.json()
+    const { action, bankCode, accountNumber, amount } = await req.json()
     const sk = Deno.env.get('PAYSTACK_SECRET_KEY')
 
-    // 1. Resolve Account Name (Verification)
-    const resolveRes = await fetch(`https://api.paystack.co/bank/resolve?account_number=${accountNumber}&bank_code=${bankCode}`, {
-      headers: { 'Authorization': `Bearer ${sk}` }
-    })
-    const accountData = await resolveRes.json()
-    if (!accountData.status) throw new Error("Account verification failed")
-
-    const accountName = accountData.data.account_name
-
-    // 2. Create Transfer Recipient
-    const recipientRes = await fetch('https://api.paystack.co/transferrecipient', {
-      method: 'POST',
-      headers: { 'Authorization': `Bearer ${sk}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        type: "nuban",
-        name: accountName,
-        account_number: accountNumber,
-        bank_code: bankCode,
-        currency: "NGN"
+    // ACTION 1: VERIFY ACCOUNT NAME
+    if (action === 'verify') {
+      const resolveRes = await fetch(`https://api.paystack.co/bank/resolve?account_number=${accountNumber}&bank_code=${bankCode}`, {
+        headers: { 'Authorization': `Bearer ${sk}` }
       })
-    })
-    const recipientData = await recipientRes.json()
-
-    // 3. Initiate the REAL Transfer
-    const transferRes = await fetch('https://api.paystack.co/transfer', {
-      method: 'POST',
-      headers: { 'Authorization': `Bearer ${sk}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        source: "balance",
-        amount: amount * 100, // Naira to Kobo
-        recipient: recipientData.data.recipient_code,
-        reason: "Elite Data Payout"
+      const data = await resolveRes.json()
+      return new Response(JSON.stringify(data), { 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }, 
+          status: 200 
       })
-    })
+    }
 
-    const transferData = await transferRes.json()
+    // ACTION 2: INITIATE TRANSFER (Existing logic)
+    if (action === 'transfer') {
+      // 1. Create Recipient
+      const recipientRes = await fetch('https://api.paystack.co/transferrecipient', {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${sk}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: "nuban", name: "Elite User", account_number: accountNumber, bank_code: bankCode, currency: "NGN" })
+      })
+      const recipientData = await recipientRes.json()
 
-    return new Response(JSON.stringify({ status: "success", data: transferData, accountName }), { 
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' }, 
-        status: 200 
-    })
+      // 2. Send Money
+      const transferRes = await fetch('https://api.paystack.co/transfer', {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${sk}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ source: "balance", amount: amount * 100, recipient: recipientData.data.recipient_code })
+      })
+      const transferData = await transferRes.json()
+      
+      return new Response(JSON.stringify(transferData), { 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }, 
+          status: 200 
+      })
+    }
 
   } catch (error) {
     return new Response(JSON.stringify({ error: error.message }), { 
