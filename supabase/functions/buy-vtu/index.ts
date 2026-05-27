@@ -17,35 +17,29 @@ serve(async (req: Request) => {
     let apiBody: any = { Ported_number: true }
     let method = 'POST'
 
-    // --- 1. DATA ---
     if (actionType === 'data') {
-      endpoint = 'https://gladtidingsdata.com/api/data/'
-      apiBody = { ...apiBody, network: networkId, mobile_number: phoneNumber, plan: planId }
+      endpoint = 'https://gladtidingsdata.com/api/data/';
+      apiBody = { ...apiBody, network: networkId, mobile_number: phoneNumber, plan: planId };
     } 
-    // --- 2. AIRTIME ---
     else if (actionType === 'airtime') {
-      endpoint = 'https://gladtidingsdata.com/api/topup/'
-      apiBody = { ...apiBody, network: networkId, mobile_number: phoneNumber, plan: planId, amount: amount, airtime_type: "VTU" }
+      endpoint = 'https://gladtidingsdata.com/api/topup/';
+      apiBody = { ...apiBody, network: networkId, mobile_number: phoneNumber, plan: planId, amount: amount, airtime_type: "VTU" };
     }
-    // --- 3. ELECTRICITY ---
     else if (actionType === 'electricity') {
-      endpoint = 'https://gladtidingsdata.com/api/billpayment/'
-      apiBody = { ...apiBody, disco_name: discoId, meter_number: meterNumber, Meter_Type: meterType, amount: amount }
+      endpoint = 'https://gladtidingsdata.com/api/billpayment/';
+      apiBody = { ...apiBody, disco_name: discoId, meter_number: meterNumber, Meter_Type: meterType, amount: amount };
     }
-    // --- 4. CABLE ---
     else if (actionType === 'cable') {
-      endpoint = 'https://gladtidingsdata.com/api/cablesub/'
-      apiBody = { ...apiBody, cablename: cableId, smart_card_number: smartCardNumber, cableplan: planId }
+      endpoint = 'https://gladtidingsdata.com/api/cablesub/';
+      apiBody = { ...apiBody, cablename: cableId, smart_card_number: smartCardNumber, cableplan: planId };
     }
-    // --- 5. VALIDATION METER ---
     else if (actionType === 'validate-meter') {
-      method = 'GET'
-      endpoint = `https://gladtidingsdata.com/api/validatemeter/?meternumber=${meterNumber}&disconame=${discoId}&mtype=${meterType}`
+      method = 'GET';
+      endpoint = `https://gladtidingsdata.com/api/validatemeter/?meternumber=${meterNumber}&disconame=${discoId}&mtype=${meterType}`;
     }
-    // --- 6. VALIDATION IUC ---
     else if (actionType === 'validate-iuc') {
-      method = 'GET'
-      endpoint = `https://gladtidingsdata.com/api/validateiuc/?smart_card_number=${smartCardNumber}&cablename=${cableId}`
+      method = 'GET';
+      endpoint = `https://gladtidingsdata.com/api/validateiuc/?smart_card_number=${smartCardNumber}&cablename=${cableId}`;
     }
 
     const fetchOptions: any = {
@@ -57,9 +51,10 @@ serve(async (req: Request) => {
     const response = await fetch(endpoint, fetchOptions)
     const data = await response.json()
 
-    // Error handling
-    if (data.status === 'fail' || data.Status === 'failed' || data.invalid) {
-       return new Response(JSON.stringify({ error: data.invalid || data.error || "Request Failed", details: data }), { 
+    // --- CRITICAL ERROR CHECK ---
+    // If the provider says fail, failed, or returns an error field, we return 400
+    if (data.status === 'fail' || data.Status === 'failed' || data.error) {
+       return new Response(JSON.stringify({ error: "API_REJECTED", msg: data.error || data.msg || "Insufficient API Balance" }), { 
          headers: { ...corsHeaders, 'Content-Type': 'application/json' }, 
          status: 400 
        })
