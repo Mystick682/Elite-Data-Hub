@@ -1,68 +1,38 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
+async function confirmPurchase() {
+    let pin = ""; pinInputs.forEach(i => pin += i.value);
+    if (pin.length < 4) return showToast("Enter 4-digit PIN", "error");
+    const phone = document.getElementById('phoneInput').value;
+    const btn = document.getElementById('confirmPinBtn');
+    btn.innerText = "Processing..."; btn.disabled = true;
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+    try {
+        // 1. VERIFY BALANCE (NO DEDUCTION)
+        const { data: vRes } = await _supabase.rpc('verify_before_purchase', { uid: userId, amt: parseFloat(amount), input_pin: pin });
+        if (vRes !== 'verified') {
+            btn.disabled = false; btn.innerText = "Confirm Payment";
+            return showToast(vRes.replace('_', ' '), "error");
+        }
+
+        // 2. ATTEMPT VTU DELIVERY
+        showToast("Verified. Delivering...", "success");
+        const { data: vtu, error: fErr } = await _supabase.functions.invoke('buy-vtu', {
+            body: { actionType: 'airtime', networkId: selectedNetworkId, phoneNumber: phone, planId: selectedRechargeId, amount: amount }
+        });
+
+        // 3. CHECK RESPONSE (IF 400 ERROR, fErr WILL EXIST)
+        if (fErr || !vtu || vtu.error) {
+            btn.disabled = false; btn.innerText = "Confirm Payment";
+            return showToast("Provider Error: Low Stock. Your wallet was NOT charged.", "error");
+        }
+
+        // 4. ONLY IF WE ARE HERE (SUCCESS), TAKE THE MONEY
+        await _supabase.rpc('execute_deduction', { uid: userId, amt: parseFloat(amount), p_type: 'Airtime', p_desc: `${networkName} ₦${amount} to ${phone}` });
+        
+        showToast("✅ Airtime Sent Successfully!", "success");
+        setTimeout(() => window.location.href = "dashboard.html", 2000);
+
+    } catch (err) { 
+        showToast("System Busy", "error"); 
+        btn.disabled = false; 
+    }
 }
-
-serve(async (req: Request) => {
-  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders })
-
-  try {
-    const bodyReq = await req.json()
-    const { actionType, networkId, phoneNumber, planId, amount, meterNumber, discoId, meterType, smartCardNumber, cableId } = bodyReq
-    const VTU_KEY = Deno.env.get('VTU_API_KEY')
-
-    let endpoint = ''
-    let apiBody: any = { Ported_number: true }
-    let method = 'POST'
-
-    if (actionType === 'data') {
-      endpoint = 'https://gladtidingsdata.com/api/data/';
-      apiBody = { ...apiBody, network: networkId, mobile_number: phoneNumber, plan: planId };
-    } 
-    else if (actionType === 'airtime') {
-      endpoint = 'https://gladtidingsdata.com/api/topup/';
-      apiBody = { ...apiBody, network: networkId, mobile_number: phoneNumber, plan: planId, amount: amount, airtime_type: "VTU" };
-    }
-    else if (actionType === 'electricity') {
-      endpoint = 'https://gladtidingsdata.com/api/billpayment/';
-      apiBody = { ...apiBody, disco_name: discoId, meter_number: meterNumber, Meter_Type: meterType, amount: amount };
-    }
-    else if (actionType === 'cable') {
-      endpoint = 'https://gladtidingsdata.com/api/cablesub/';
-      apiBody = { ...apiBody, cablename: cableId, smart_card_number: smartCardNumber, cableplan: planId };
-    }
-    else if (actionType === 'validate-meter') {
-      method = 'GET';
-      endpoint = `https://gladtidingsdata.com/api/validatemeter/?meternumber=${meterNumber}&disconame=${discoId}&mtype=${meterType}`;
-    }
-    else if (actionType === 'validate-iuc') {
-      method = 'GET';
-      endpoint = `https://gladtidingsdata.com/api/validateiuc/?smart_card_number=${smartCardNumber}&cablename=${cableId}`;
-    }
-
-    const fetchOptions: any = {
-      method: method,
-      headers: { 'Authorization': `Token ${VTU_KEY}`, 'Content-Type': 'application/json' }
-    }
-    if (method === 'POST') fetchOptions.body = JSON.stringify(apiBody)
-
-    const response = await fetch(endpoint, fetchOptions)
-    const data = await response.json()
-
-    // --- CRITICAL ERROR CHECK ---
-    // If the provider says fail, failed, or returns an error field, we return 400
-    if (data.status === 'fail' || data.Status === 'failed' || data.error) {
-       return new Response(JSON.stringify({ error: "API_REJECTED", msg: data.error || data.msg || "Insufficient API Balance" }), { 
-         headers: { ...corsHeaders, 'Content-Type': 'application/json' }, 
-         status: 400 
-       })
-    }
-
-    return new Response(JSON.stringify(data), { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 })
-
-  } catch (error) {
-    return new Response(JSON.stringify({ error: error.message }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 })
-  }
-})
