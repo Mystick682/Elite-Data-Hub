@@ -13,18 +13,16 @@ serve(async (req: Request) => {
     const { actionType, networkId, phoneNumber, planId, amount, meterNumber, discoId, meterType, smartCardNumber, cableId } = bodyReq
     const VTU_KEY = Deno.env.get('VTU_API_KEY')
 
-    console.log(`Processing ${actionType} for ${phoneNumber}`);
-
     let endpoint = '';
-    let apiBody: any = { Ported_number: true }; // Always include this now!
+    let apiBody: any = { Ported_number: true };
 
+    // --- PURCHASE LOGIC ---
     if (actionType === 'data') {
       endpoint = 'https://gladtidingsdata.com/api/data/';
       apiBody = { ...apiBody, network: networkId, mobile_number: phoneNumber, plan: planId };
     } 
     else if (actionType === 'airtime') {
       endpoint = 'https://gladtidingsdata.com/api/topup/';
-      // Airtime needs the Recharge ID in the 'plan' field for Glad Tidings
       apiBody = { ...apiBody, network: networkId, mobile_number: phoneNumber, plan: planId, amount: amount, airtime_type: "VTU" };
     }
     else if (actionType === 'electricity') {
@@ -36,8 +34,21 @@ serve(async (req: Request) => {
       apiBody = { ...apiBody, cablename: cableId, smart_card_number: smartCardNumber, cableplan: planId };
     }
 
-    console.log("Payload to Provider:", apiBody);
+    // --- VALIDATION LOGIC ---
+    else if (actionType === 'validate-meter') {
+      endpoint = `https://gladtidingsdata.com/api/validatemeter/?meternumber=${meterNumber}&disconame=${discoId}&mtype=${meterType}`;
+      const res = await fetch(endpoint, { headers: { 'Authorization': `Token ${VTU_KEY}` } });
+      const data = await res.json();
+      return new Response(JSON.stringify(data), { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 });
+    }
+    else if (actionType === 'validate-iuc') {
+      endpoint = `https://gladtidingsdata.com/api/validateiuc/?smart_card_number=${smartCardNumber}&cablename=${cableId}`;
+      const res = await fetch(endpoint, { headers: { 'Authorization': `Token ${VTU_KEY}` } });
+      const data = await res.json();
+      return new Response(JSON.stringify(data), { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 });
+    }
 
+    // Process the POST requests (Purchases)
     const response = await fetch(endpoint, {
       method: 'POST',
       headers: { 'Authorization': `Token ${VTU_KEY}`, 'Content-Type': 'application/json' },
@@ -45,18 +56,9 @@ serve(async (req: Request) => {
     })
 
     const data = await response.json()
-    console.log("Provider Response:", data);
-
-    // Return the response back to your site
-    return new Response(JSON.stringify(data), { 
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' }, 
-      status: 200 
-    })
+    return new Response(JSON.stringify(data), { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 })
 
   } catch (error) {
-    return new Response(JSON.stringify({ error: error.message }), { 
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' }, 
-      status: 400 
-    })
+    return new Response(JSON.stringify({ error: error.message }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 400 })
   }
 })
