@@ -14,8 +14,6 @@
         .active-nav { background: #0052FF !important; color: white !important; }
         .disco-card.active { border-color: #0052FF; background: #F0F5FF; border-width: 2px; }
         #sidebar { transition: transform 0.3s ease; }
-        
-        /* 3D MOCKUP CSS */
         .phone-container { position: relative; width: 85px; height: 90px; margin-right: -5px; }
         .phone-handset { width: 44px; height: 82px; background: #081B4B; border: 2px solid rgba(255,255,255,0.2); border-radius: 8px; position: absolute; right: 10px; bottom: 0; transform: rotate(-8deg); overflow: hidden; }
         .phone-display { position: absolute; inset: 2px; background: linear-gradient(180deg, #246BFD 0%, #0052FF 100%); border-radius: 6px; }
@@ -27,21 +25,18 @@
         .tile-tv { bottom: 10px; left: 10px; animation-delay: 0.5s; color: #a855f7; }
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
 
-        /* Dark Mode Support */
-        .dark body { background-color: #0B1120 !important; color: #F1F5F9 !important; }
-        .dark .bg-white, .dark aside, .dark nav, .dark header { background-color: #111827 !important; border-color: #1F2937 !important; color: #F1F5F9 !important; }
-        .dark [class*="bg-[#F8FAFF]"], .dark .bg-slate-50 { background-color: #0B1120 !important; }
-        .dark [class*="text-[#081B4B]"], .dark .text-slate-900, .dark h2, .dark h3, .dark h4 { color: #ffffff !important; }
-        .dark input { background-color: #1F2937 !important; border-color: #374151 !important; color: white !important; }
+        /* Dark Mode Consistency Fix */
+        .dark body { background-color: #0B1120 !important; color: #ffffff !important; }
+        .dark .bg-white, .dark aside, .dark nav, .dark header { background-color: #111827 !important; border-color: #1F2937 !important; color: #ffffff !important; }
+        .dark h1, .dark h2, .dark h3, .dark h4, .dark p, .dark span { color: #ffffff !important; }
         .dark .text-slate-400, .dark .text-slate-500 { color: #94A3B8 !important; }
+        .dark input { background-color: #1F2937 !important; border-color: #374151 !important; color: #ffffff !important; }
     </style>
     <script src="theme.js"></script>
 </head>
 <body class="text-[#081B4B] antialiased">
-
     <div id="overlay" class="fixed inset-0 bg-black/40 z-[80] hidden lg:hidden" onclick="toggleMenu()"></div>
     
-    <!-- PIN MODAL -->
     <div id="pinModal" class="fixed inset-0 z-[100] flex items-center justify-center p-6 hidden">
         <div class="fixed inset-0 bg-[#081B4B]/60 backdrop-blur-sm"></div>
         <div class="bg-white dark:bg-[#111827] w-full max-w-sm rounded-[32px] p-8 relative z-10 shadow-2xl border border-slate-100 dark:border-slate-800 text-center uppercase tracking-widest font-black text-xs">
@@ -59,7 +54,6 @@
     </div>
 
     <div class="flex min-h-screen">
-        <!-- SIDEBAR (Full 10 Items) -->
         <aside id="sidebar" class="fixed lg:sticky top-0 left-0 h-screen w-72 bg-white border-r border-slate-100 z-[90] flex flex-col p-6 -translate-x-full lg:translate-x-0 transition-transform duration-300">
             <div class="flex items-center gap-3 mb-10">
                 <div class="w-10 h-10 bg-[#0052FF] rounded-xl flex items-center justify-center text-white shadow-lg"><i data-lucide="zap" class="w-6 h-6 fill-current"></i></div>
@@ -68,7 +62,7 @@
             <nav class="flex-1 space-y-1 font-bold text-[13px] overflow-y-auto no-scrollbar">
                 <a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="layout-grid" class="w-4 h-4"></i> Dashboard</a>
                 <a href="buy-data.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="shopping-cart" class="w-4 h-4"></i> Buy Data</a>
-                <a href="buy-airtime.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="smartphone" class="w-4 h-4"></i> Airtime Top-up</a>
+                <a href="buy-airtime.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="smartphone" class="w-4 h-4"></i> Airtime</a>
                 <a href="cable-tv.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="tv" class="w-4 h-4"></i> Cable TV</a>
                 <a href="electricity.html" class="active-nav flex items-center gap-3 px-4 py-3 rounded-2xl"><i data-lucide="zap" class="w-4 h-4"></i> Electricity</a>
                 <a href="history.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="history" class="w-4 h-4"></i> History</a>
@@ -81,7 +75,7 @@
 
         <main class="flex-1 flex flex-col min-w-0 bg-[#F8FAFF]">
             <header class="lg:hidden bg-white px-6 py-4 flex justify-between items-center border-b border-slate-50 sticky top-0 z-[60]">
-                <button onclick="toggleMenu()"><i data-lucide="menu" class="w-6 h-6 text-slate-700"></i></button>
+                <button onclick="toggleMenu()"><i data-lucide="menu" class="w-6 h-6"></i></button>
                 <span class="font-extrabold text-sm text-[#0052FF]">Electricity Bill</span>
                 <button onclick="toggleTheme()"><i data-lucide="moon" class="w-4 h-4 text-slate-400 dark:hidden"></i><i data-lucide="sun" class="hidden dark:block w-4 h-4 text-yellow-400"></i></button>
             </header>
@@ -95,22 +89,13 @@
                         <span class="text-sm font-black text-[#0052FF]">₦<span id="user-balance-desktop">0.00</span></span>
                         <a href="fund-wallet.html" class="ml-1"><i data-lucide="plus-circle" class="w-5 h-5 text-[#0052FF]"></i></a>
                     </div>
-                    <img src="https://i.pravatar.cc/100" class="w-9 h-9 rounded-full border border-slate-200">
                 </div>
             </header>
 
             <div class="w-full pb-32">
                 <div class="lg:hidden bg-[#0052FF] p-6 pb-24 text-white rounded-b-[40px] flex justify-between items-center">
-                    <div class="flex-1">
-                        <p class="text-blue-100 text-[10px] font-bold uppercase tracking-widest mb-1">Pay Utility Bill,</p>
-                        <h2 class="text-xl font-bold leading-tight">Electricity ⚡️</h2>
-                    </div>
-                    <div class="phone-container">
-                        <div class="phone-handset"><div class="phone-display"></div></div>
-                        <div class="tile tile-data"><i data-lucide="wifi"></i><span>Data</span></div>
-                        <div class="tile tile-airtime"><i data-lucide="wallet"></i><span>Airtime</span></div>
-                        <div class="tile tile-tv"><i data-lucide="tv"></i><span>TV</span></div>
-                    </div>
+                    <div class="flex-1"><p class="text-blue-100 text-[10px] font-bold uppercase mb-1">Pay Utility Bill,</p><h2 class="text-xl font-bold leading-tight">Electricity ⚡️</h2></div>
+                    <div class="phone-container"><div class="phone-handset"><div class="phone-display"></div></div><div class="tile tile-data"><i data-lucide="wifi"></i><span>Data</span></div><div class="tile tile-airtime"><i data-lucide="wallet"></i><span>Airtime</span></div><div class="tile tile-tv"><i data-lucide="tv"></i><span>TV</span></div></div>
                 </div>
 
                 <div class="max-w-6xl mx-auto px-4 lg:px-10">
@@ -128,32 +113,32 @@
                             <section>
                                 <h4 class="font-extrabold text-sm mb-4 uppercase text-slate-400 px-2 font-bold tracking-widest">1. Select Provider</h4>
                                 <div class="grid grid-cols-3 md:grid-cols-4 gap-3">
-                                    <button onclick="setProvider('Ikeja Electric', 18)" id="disco-18" class="disco-card active bg-white p-4 rounded-2xl border-2 border-slate-100 flex flex-col items-center gap-1 transition-all text-center">IKE<span class="text-[8px] font-bold uppercase">Ikeja</span></button>
-                                    <button onclick="setProvider('Ibadan Electric', 19)" id="disco-19" class="disco-card bg-white p-4 rounded-2xl border-2 border-slate-100 flex flex-col items-center gap-1 transition-all text-center">IBA<span class="text-[8px] font-bold uppercase">Ibadan</span></button>
-                                    <button onclick="setProvider('Eko Electric', 20)" id="disco-20" class="disco-card bg-white p-4 rounded-2xl border-2 border-slate-100 flex flex-col items-center gap-1 transition-all text-center">EKO<span class="text-[8px] font-bold uppercase">Eko</span></button>
-                                    <button onclick="setProvider('Abuja Electric', 25)" id="disco-25" class="disco-card bg-white p-4 rounded-2xl border-2 border-slate-100 flex flex-col items-center gap-1 transition-all text-center">ABJ<span class="text-[8px] font-bold uppercase">Abuja</span></button>
+                                    <button onclick="setProvider('Ikeja_Electric', 18)" id="disco-18" class="disco-card active bg-white p-4 rounded-2xl border-2 border-slate-100 flex flex-col items-center gap-1 transition-all text-center">IKE<span class="text-[8px] font-bold uppercase">Ikeja</span></button>
+                                    <button onclick="setProvider('Ibadan_Electric', 19)" id="disco-19" class="disco-card bg-white p-4 rounded-2xl border-2 border-slate-100 flex flex-col items-center gap-1 transition-all text-center">IBA<span class="text-[8px] font-bold uppercase">Ibadan</span></button>
+                                    <button onclick="setProvider('Eko_Electric', 20)" id="disco-20" class="disco-card bg-white p-4 rounded-2xl border-2 border-slate-100 flex flex-col items-center gap-1 transition-all text-center">EKO<span class="text-[8px] font-bold uppercase">Eko</span></button>
+                                    <button onclick="setProvider('Abuja_Electric', 25)" id="disco-25" class="disco-card bg-white p-4 rounded-2xl border-2 border-slate-100 flex flex-col items-center gap-1 transition-all text-center">ABJ<span class="text-[8px] font-bold uppercase">Abuja</span></button>
                                 </div>
                             </section>
 
                             <section class="space-y-6">
                                 <h4 class="font-extrabold text-sm uppercase text-slate-400 px-2 font-bold tracking-widest">2. Meter Details</h4>
                                 <div class="flex gap-4">
-                                    <label class="flex-1 bg-white p-4 rounded-2xl border border-slate-200 flex items-center gap-3 cursor-pointer"><input type="radio" name="mType" value="Prepaid" checked><span class="font-bold text-xs uppercase">Prepaid</span></label>
-                                    <label class="flex-1 bg-white p-4 rounded-2xl border border-slate-200 flex items-center gap-3 cursor-pointer"><input type="radio" name="mType" value="Postpaid"><span class="font-bold text-xs uppercase">Postpaid</span></label>
+                                    <label class="flex-1 bg-white p-4 rounded-2xl border border-slate-200 flex items-center gap-3 cursor-pointer"><input type="radio" name="mType" value="1" checked><span class="font-bold text-xs uppercase">Prepaid</span></label>
+                                    <label class="flex-1 bg-white p-4 rounded-2xl border border-slate-200 flex items-center gap-3 cursor-pointer"><input type="radio" name="mType" value="2"><span class="font-bold text-xs uppercase">Postpaid</span></label>
                                 </div>
-                                <div class="relative"><i data-lucide="hash" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 w-5 h-5"></i><input type="number" id="meterNumber" oninput="verifyMeter()" class="w-full pl-12 pr-4 py-4 bg-white border border-slate-200 rounded-2xl outline-none focus:border-[#0052FF] font-medium" placeholder="Enter Meter Number"></div>
+                                <div class="relative"><i data-lucide="hash" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 w-5 h-5"></i><input type="number" id="meterNumber" oninput="verifyMeter()" class="w-full pl-12 pr-4 py-4 bg-white border border-slate-200 rounded-2xl outline-none focus:border-[#0052FF] font-medium text-sm" placeholder="Enter Meter Number"></div>
                                 <p id="meterNameDisplay" class="text-[11px] font-black text-[#0052FF] mt-2 ml-1 italic min-h-[1rem]"></p>
                             </section>
 
                             <section>
                                 <h4 class="font-extrabold text-sm mb-4 uppercase text-slate-400 px-2 font-bold tracking-widest">3. Amount</h4>
-                                <input type="number" id="payAmt" oninput="updateSummary()" class="w-full p-4 bg-white border border-slate-200 rounded-2xl outline-none focus:border-[#0052FF] font-bold text-sm shadow-sm" placeholder="Minimum ₦100">
+                                <input type="number" id="fundAmount" oninput="updateSummary()" class="w-full p-4 bg-white border border-slate-200 rounded-2xl outline-none focus:border-[#0052FF] font-bold text-sm shadow-sm" placeholder="Minimum ₦100">
                             </section>
 
                             <section class="bg-white p-8 rounded-[32px] border border-slate-100 shadow-sm">
                                 <h4 class="font-extrabold text-sm mb-6 uppercase tracking-wider text-slate-400 font-bold">Summary</h4>
-                                <div class="space-y-4 font-bold text-xs uppercase"><div class="flex justify-between text-slate-400"><span>Disco</span> <span id="sum-net">Ikeja Electric</span></div><div class="flex justify-between text-slate-400"><span>Meter No.</span> <span id="sum-meter">---</span></div><div class="flex justify-between items-center pt-4 border-t border-slate-50 mt-4 font-black text-xs uppercase"><span>Total Amount</span> <span class="text-xl text-[#0052FF]">₦<span id="sum-total">0.00</span></span></div></div>
-                                <button type="button" onclick="openPinModal()" id="payBtn" class="w-full bg-[#0052FF] text-white py-4.5 mt-8 rounded-2xl font-black text-sm shadow-xl active:scale-95 transition-all">Pay Bill Now</button>
+                                <div class="space-y-4 font-bold text-xs uppercase"><div class="flex justify-between text-slate-400"><span>Disco</span> <span id="sum-net">Ikeja Electric</span></div><div class="flex justify-between text-slate-400"><span>Meter No.</span> <span id="sum-meter">---</span></div><div class="flex justify-between items-center pt-4 border-t border-slate-50 mt-4 font-black"><span>Total Amount</span> <span class="text-xl text-[#0052FF]">₦<span id="sum-total">0.00</span></span></div></div>
+                                <button type="button" onclick="openPinModal()" id="payBtn" class="w-full bg-[#0052FF] text-white py-4.5 mt-8 rounded-2xl font-black text-sm shadow-xl active:scale-95 transition-all uppercase">Pay Bill Now</button>
                             </section>
                         </div>
                     </div>
@@ -165,7 +150,7 @@
     <script src="supabase-config.js"></script><script src="notifications.js"></script>
     <script>
         lucide.createIcons();
-        let providerName = 'Ikeja Electric', providerId = 18, amount = 0, userId = "", actualBalance = 0, isHidden = false, isMeterVerified = false;
+        let providerName = 'Ikeja_Electric', providerId = 18, amount = 0, userId = "", actualBalance = 0, isHidden = false, isMeterVerified = false;
         const pinInputs = document.querySelectorAll('.pin-box');
         pinInputs.forEach((input, idx) => { input.addEventListener('keyup', (e) => { if (e.target.value.length === 1 && idx < 3) pinInputs[idx+1].focus(); if (e.key === 'Backspace' && idx > 0) pinInputs[idx-1].focus(); }); });
         
@@ -187,7 +172,7 @@
                 display.innerText = "🔍 Verifying...";
                 const { data } = await _supabase.functions.invoke('buy-vtu', { body: { actionType: 'validate-meter', meterNumber: meter, discoId: providerName, meterType: mType } });
                 if (data && data.name) { display.innerText = "✅ USER: " + data.name; display.style.color="#10b981"; isMeterVerified = true; } 
-                else { display.innerText = "❌ " + (data?.error || "Invalid Meter"); display.style.color="#ef4444"; isMeterVerified = false; }
+                else { display.innerText = "❌ Invalid Meter"; display.style.color="#ef4444"; isMeterVerified = false; }
             }
             updateSummary();
         }
@@ -200,11 +185,8 @@
         }
 
         function updateSummary() {
-            amount = document.getElementById('payAmt')?.value || document.getElementById('fundAmount')?.value || document.getElementById('payAmount')?.value || 0;
-            // Handle unique ID in this specific file version
-            const val = document.getElementById('payAmt')?.value || document.getElementById('fundAmount')?.value;
-            amount = val || 0;
-            document.getElementById('sum-net').innerText = providerName;
+            amount = document.getElementById('fundAmount').value || 0;
+            document.getElementById('sum-net').innerText = providerName.replace('_', ' ');
             document.getElementById('sum-meter').innerText = document.getElementById('meterNumber').value || '---';
             document.getElementById('sum-total').innerText = parseFloat(amount).toLocaleString();
         }
@@ -227,10 +209,10 @@
             try {
                 const { data: res } = await _supabase.rpc('verify_before_purchase', { uid: userId, amt: parseFloat(amount), input_pin: pin });
                 if (res === 'verified') {
-                    const { data: vtu, error: fErr } = await _supabase.functions.invoke('buy-vtu', { body: { actionType: 'electricity', discoId: providerId, meterNumber: meter, meterType: mType, amount: amount } });
-                    if (fErr || !vtu || vtu.error) { showToast("Provider Error. Low API balance.", "error"); } 
+                    const { data: vtu, error: fErr } = await _supabase.functions.invoke('buy-vtu', { body: { actionType: 'electricity', discoId: providerName, meterNumber: meter, meterType: mType, amount: amount } });
+                    if (fErr || !vtu || vtu.error || vtu.Status === 'failed') { showToast("Provider Error. Transaction aborted.", "error"); } 
                     else {
-                        await _supabase.rpc('execute_deduction', { uid: userId, amt: parseFloat(amount), p_type: 'Electricity', p_desc: `${providerName} to ${meter}` });
+                        await _supabase.rpc('execute_deduction', { uid: userId, amt: parseFloat(amount), p_type: 'Electricity', p_desc: `${providerName.replace('_', ' ')} to ${meter}` });
                         showToast("✅ Payment Successful!", "success");
                         setTimeout(() => window.location.href = "dashboard.html", 2000);
                     }
