@@ -27,19 +27,18 @@
         .dark body { background-color: #0B1120 !important; color: #F1F5F9 !important; }
         .dark .bg-white, .dark aside, .dark nav, .dark header { background-color: #111827 !important; border-color: #1F2937 !important; color: #F1F5F9 !important; }
         .dark [class*="bg-[#F8FAFF]"] { background-color: #0B1120 !important; }
-        .dark [class*="text-[#081B4B]"], .dark .text-slate-900, .dark h2, .dark h3, .dark h4 { color: #ffffff !important; }
+        .dark [class*="text-[#081B4B]"], .dark h2, .dark h3, .dark h4 { color: #ffffff !important; }
         .dark input, .dark select { background-color: #1F2937 !important; border-color: #374151 !important; color: white !important; }
     </style>
     <script src="theme.js"></script>
 </head>
-<body class="text-[#081B4B] antialiased text-sm">
-
+<body class="text-[#081B4B] antialiased">
     <div id="overlay" class="fixed inset-0 bg-black/40 z-[80] hidden lg:hidden" onclick="toggleMenu()"></div>
     
     <!-- PIN MODAL -->
     <div id="pinModal" class="fixed inset-0 z-[100] flex items-center justify-center p-6 hidden">
         <div class="fixed inset-0 bg-[#081B4B]/60 backdrop-blur-sm"></div>
-        <div class="bg-white dark:bg-[#111827] w-full max-w-sm rounded-[32px] p-8 relative z-10 shadow-2xl border border-slate-100 dark:border-slate-800 text-center">
+        <div class="bg-white dark:bg-[#111827] w-full max-w-sm rounded-[32px] p-8 relative z-10 shadow-2xl text-center uppercase font-black text-xs">
             <i data-lucide="lock" class="w-12 h-12 text-[#0052FF] mx-auto mb-4"></i>
             <h3 class="text-xl font-black mb-6 dark:text-white uppercase">Enter PIN</h3>
             <div class="flex justify-center gap-3 mb-8">
@@ -48,8 +47,8 @@
                 <input type="password" maxlength="1" class="pin-box w-12 h-14 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-center text-xl font-black focus:border-[#0052FF] outline-none">
                 <input type="password" maxlength="1" class="pin-box w-12 h-14 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-center text-xl font-black focus:border-[#0052FF] outline-none">
             </div>
-            <button onclick="confirmPurchase()" id="confirmPinBtn" class="w-full bg-[#0052FF] text-white py-4 rounded-2xl font-black shadow-xl active:scale-95 transition-all">Confirm Payment</button>
-            <button onclick="closePinModal()" class="w-full py-3 text-slate-400 font-bold text-xs uppercase">Cancel</button>
+            <button onclick="confirmPurchase()" id="confirmPinBtn" class="w-full bg-[#0052FF] text-white py-4 rounded-2xl font-black shadow-xl active:scale-95 transition-all">Confirm</button>
+            <button onclick="closePinModal()" class="w-full py-3 text-slate-400 font-bold text-[10px] uppercase">Cancel</button>
         </div>
     </div>
 
@@ -75,12 +74,9 @@
 
         <main class="flex-1 flex flex-col min-w-0 bg-[#F8FAFF]">
             <header class="lg:hidden bg-white px-6 py-4 flex justify-between items-center border-b border-slate-50 sticky top-0 z-[60]">
-                <button onclick="toggleMenu()"><i data-lucide="menu" class="w-6 h-6 text-slate-700"></i></button>
+                <button onclick="toggleMenu()"><i data-lucide="menu" class="w-6 h-6"></i></button>
                 <span class="font-extrabold text-sm text-[#0052FF]">Cable TV</span>
-                <div class="flex items-center gap-3">
-                    <i data-lucide="bell" class="w-6 h-6 text-slate-400"></i>
-                    <button onclick="toggleTheme()" class="w-8 h-8 flex items-center justify-center bg-slate-50 dark:bg-slate-800 rounded-lg transition-all"><i data-lucide="moon" class="w-4 h-4 text-slate-400 dark:hidden"></i><i data-lucide="sun" class="hidden dark:block w-4 h-4 text-yellow-400"></i></button>
-                </div>
+                <button onclick="toggleTheme()"><i data-lucide="moon" class="w-4 h-4 text-slate-400 dark:hidden"></i><i data-lucide="sun" class="hidden dark:block w-4 h-4 text-yellow-400"></i></button>
             </header>
 
             <header class="hidden lg:flex bg-white border-b border-slate-100 px-10 py-5 justify-between items-center sticky top-0 z-50">
@@ -97,43 +93,43 @@
 
             <div class="w-full pb-32">
                 <div class="lg:hidden bg-[#0052FF] p-6 pb-24 text-white rounded-b-[40px] flex justify-between items-center">
-                    <div class="flex-1"><p class="text-blue-100 text-[10px] font-bold uppercase mb-1">Cable Subscription,</p><h2 class="text-xl font-bold leading-tight">Renew Instantly 📺</h2></div>
+                    <div class="flex-1"><p class="text-blue-100 text-[10px] font-bold uppercase mb-1">Cable Subscription,</p><h2 class="text-xl font-bold leading-tight uppercase font-black tracking-widest">Renew Instantly 📺</h2></div>
                     <div class="phone-container"><div class="phone-handset"><div class="phone-display"></div></div><div class="tile tile-data"><i data-lucide="wifi"></i><span>Data</span></div><div class="tile tile-airtime"><i data-lucide="wallet"></i><span>Airtime</span></div><div class="tile tile-tv"><i data-lucide="tv"></i><span>TV</span></div></div>
                 </div>
 
                 <div class="max-w-6xl mx-auto px-4 lg:px-10">
                     <div class="lg:hidden relative z-20 bg-white p-8 rounded-[32px] -mt-16 shadow-2xl flex flex-col items-center border border-slate-50">
-                        <p class="text-slate-400 text-[10px] font-bold uppercase mb-2">Available Balance</p>
+                        <p class="text-slate-400 text-[10px] font-bold uppercase mb-2 text-center">Available Balance</p>
                         <h3 class="text-3xl font-black text-[#081B4B]">₦<span id="user-balance-mobile">0.00</span></h3>
-                        <a href="fund-wallet.html" class="w-full bg-[#0052FF] text-white py-3 rounded-2xl font-extrabold text-sm text-center mt-4">+ Fund Wallet</a>
+                        <a href="fund-wallet.html" class="w-full bg-[#0052FF] text-white py-4 rounded-2xl font-extrabold text-sm text-center shadow-lg">+ Fund Wallet</a>
                     </div>
 
                     <div class="grid grid-cols-1 lg:grid-cols-12 lg:gap-10 mt-10">
                         <div class="lg:col-span-8 space-y-10">
                             <section>
-                                <h4 class="font-extrabold text-sm mb-4 uppercase text-slate-400 px-2 font-bold tracking-widest">1. Select Provider</h4>
+                                <h4 class="font-extrabold text-sm mb-4 uppercase text-slate-400 px-2 font-bold tracking-widest text-xs">1. Select Provider</h4>
                                 <div class="grid grid-cols-3 gap-3">
-                                    <button onclick="setProvider('DStv', 1)" id="cable-DStv" class="provider-card active bg-white p-4 rounded-2xl border-2 border-slate-100 flex flex-col items-center gap-2 transition-all text-center">DSTV<span class="text-[9px] font-bold">DStv</span></button>
-                                    <button onclick="setProvider('GOtv', 2)" id="cable-GOtv" class="provider-card bg-white p-4 rounded-2xl border-2 border-slate-100 flex flex-col items-center gap-2 transition-all text-center">GOTV<span class="text-[9px] font-bold">GOtv</span></button>
-                                    <button onclick="setProvider('StarTimes', 3)" id="cable-StarTimes" class="provider-card bg-white p-4 rounded-2xl border-2 border-slate-100 flex flex-col items-center gap-2 transition-all text-center">STAR<span class="text-[9px] font-bold uppercase">StarTimes</span></button>
+                                    <button onclick="setProvider('DStv', 1)" id="cable-DStv" class="provider-card active bg-white p-4 rounded-2xl border-2 border-slate-100 flex flex-col items-center gap-2 transition-all text-center font-black text-blue-700">DSTV<span class="text-[9px] font-bold text-[#081B4B]">DStv</span></button>
+                                    <button onclick="setProvider('GOtv', 2)" id="cable-GOtv" class="provider-card bg-white p-4 rounded-2xl border-2 border-slate-100 flex flex-col items-center gap-2 transition-all text-center font-black text-green-600">GOTV<span class="text-[9px] font-bold text-[#081B4B]">GOtv</span></button>
+                                    <button onclick="setProvider('StarTimes', 3)" id="cable-StarTimes" class="provider-card bg-white p-4 rounded-2xl border-2 border-slate-100 flex flex-col items-center gap-2 transition-all text-center font-black text-orange-600">STAR<span class="text-[9px] font-bold uppercase text-[#081B4B]">StarTimes</span></button>
                                 </div>
                             </section>
 
                             <section>
-                                <h4 class="font-extrabold text-sm mb-4 uppercase text-slate-400 px-2 font-bold tracking-widest">2. Smartcard / IUC Number</h4>
-                                <div class="relative"><i data-lucide="hash" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 w-5 h-5"></i><input type="number" id="smartCardNumber" oninput="verifyIUC()" class="w-full pl-12 pr-4 py-4 bg-white border border-slate-200 rounded-2xl outline-none focus:border-[#0052FF] font-medium" placeholder="Enter Number"></div>
+                                <h4 class="font-extrabold text-sm mb-4 uppercase text-slate-400 px-2 font-bold tracking-widest text-xs">2. Smartcard / IUC Number</h4>
+                                <div class="relative"><i data-lucide="hash" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 w-5 h-5"></i><input type="number" id="smartCardNumber" oninput="verifyIUC()" class="w-full pl-12 pr-4 py-4 bg-white border border-slate-200 rounded-2xl outline-none focus:border-[#0052FF] font-medium" placeholder="Enter Card Number"></div>
                                 <p id="iucNameDisplay" class="text-[11px] font-black text-[#0052FF] mt-2 ml-1 italic min-h-[1.2rem]"></p>
                             </section>
 
                             <section>
-                                <h4 class="font-extrabold text-sm mb-4 uppercase text-slate-400 px-2 font-bold tracking-widest">3. Select Package</h4>
+                                <h4 class="font-extrabold text-sm mb-4 uppercase text-slate-400 px-2 font-bold tracking-widest text-xs">3. Select Package</h4>
                                 <select id="packageList" onchange="setPackage(this)" class="w-full p-4 bg-white border border-slate-200 rounded-2xl outline-none focus:border-[#0052FF] font-bold text-sm"></select>
                             </section>
 
                             <section class="bg-white p-8 rounded-[32px] border border-slate-100 shadow-sm">
-                                <h4 class="font-extrabold text-sm mb-6 uppercase tracking-wider text-slate-400">Review Summary</h4>
-                                <div class="space-y-4 font-bold text-xs"><div class="flex justify-between uppercase text-slate-400"><span>Provider</span> <span id="sum-net">DStv</span></div><div class="flex justify-between uppercase text-slate-400"><span>IUC Number</span> <span id="sum-card">---</span></div><div class="flex justify-between uppercase text-slate-400"><span>Package</span> <span id="sum-plan">---</span></div><div class="flex justify-between items-center pt-4 border-t border-slate-50 mt-4 font-black"><span>Total Amount</span> <span class="text-xl text-[#0052FF]">₦<span id="sum-total">0.00</span></span></div></div>
-                                <button type="button" onclick="openPinModal()" id="payBtn" class="w-full bg-[#0052FF] text-white py-4.5 mt-8 rounded-2xl font-black text-sm shadow-xl hover:bg-blue-700 active:scale-95 transition-all">Proceed to Payment</button>
+                                <h4 class="font-extrabold text-sm mb-6 uppercase tracking-wider text-slate-400 font-bold">Summary</h4>
+                                <div class="space-y-4 font-bold text-xs uppercase"><div class="flex justify-between text-slate-400"><span>Provider</span> <span id="sum-net" class="text-[#081B4B]">DStv</span></div><div class="flex justify-between text-slate-400"><span>Number</span> <span id="sum-card" class="text-[#081B4B]">---</span></div><div class="flex justify-between text-slate-400"><span>Package</span> <span id="sum-plan" class="text-[#081B4B]">---</span></div><div class="flex justify-between items-center pt-4 border-t border-slate-50 mt-4 font-black text-xs uppercase"><span>Total Amount</span> <span class="text-xl text-[#0052FF]">₦<span id="sum-total">0.00</span></span></div></div>
+                                <button type="button" onclick="openPinModal()" id="payBtn" class="w-full bg-[#0052FF] text-white py-4.5 mt-8 rounded-2xl font-black text-sm shadow-xl active:scale-95 transition-all">Confirm Subscription</button>
                             </section>
                         </div>
                     </div>
@@ -146,9 +142,15 @@
     <script>
         lucide.createIcons();
         const allCablePlans = {
-            1: [{id: 6, name: "DStv Yanga", price: 6000}, {id: 22, name: "DSTV CONFAM", price: 11000}, {id: 7, name: "DStv Compact", price: 19000}],
-            2: [{id: 17, name: "GOtv Smallie", price: 1900}, {id: 47, name: "GOtv Jolli", price: 5800}, {id: 2, name: "GOtv Max", price: 8500}],
-            3: [{id: 37, name: "Nova(Dish)", price: 700}, {id: 38, name: "Basic(Antenna)", price: 1400}, {id: 39, name: "Smart", price: 1700}]
+            1: [ // DStv
+                {id: 6, name: "DStv Yanga", price: 6000}, {id: 22, name: "DSTV CONFAM", price: 11000}, {id: 7, name: "DStv Compact", price: 19000}, {id: 8, name: "DStv Compact Plus", price: 30000}, {id: 9, name: "DStv Premium", price: 44500}, {id: 23, name: "DStv Asia French", price: 39000}, {id: 33, name: "DStv Padi", price: 4400}, {id: 34, name: "DStv premium extra view", price: 24500}, {id: 56, name: "DStv Compact XtraView", price: 24000}
+            ],
+            2: [ // GOtv
+                {id: 17, name: "GOtv Smallie-monthly", price: 1900}, {id: 16, name: "GOtv Jinja", price: 3900}, {id: 47, name: "Gotv-jolli", price: 5800}, {id: 2, name: "GOtv Max", price: 8500}, {id: 52, name: "Gotv-supa monthly", price: 11400}, {id: 55, name: "gotv-supa plus monthly", price: 16800}, {id: 35, name: "GOtv Smallie - Qtrly", price: 5700}, {id: 36, name: "GOtv Smallie - Yearly", price: 22800}
+            ],
+            3: [ // Startimes
+                {id: 37, name: "Nova(Dish) - 1 Week", price: 700}, {id: 38, name: "Basic(Antenna) -1 Wk", price: 1400}, {id: 39, name: "Smart - 1 Week", price: 1700}, {id: 40, name: "Classic(Antenna) - 1 Wk", price: 2000}, {id: 50, name: "classic(Dish) - 1 Month", price: 7400}, {id: 48, name: "Super(Antenna) -1 Mon", price: 9500}, {id: 49, name: "Basic(Antenna)- 1 mon", price: 4000}, {id: 54, name: "Nova(Antenna) - 1 Mon", price: 2100}
+            ]
         };
         let cableName = 'DStv', cableId = 1, amount = 0, planName = '', planId = 0, userId = "", actualBalance = 0, isHidden = false, isIUCVerified = false;
         const pinInputs = document.querySelectorAll('.pin-box');
@@ -169,9 +171,9 @@
             const iuc = document.getElementById('smartCardNumber').value;
             const display = document.getElementById('iucNameDisplay');
             if (iuc.length >= 9) {
-                display.innerText = "🔍 Verifying Account...";
+                display.innerText = "🔍 Verifying...";
                 const { data } = await _supabase.functions.invoke('buy-vtu', { body: { actionType: 'validate-iuc', smartCardNumber: iuc, cableId: cableName } });
-                if (data && data.name) { display.innerText = "CUSTOMER: " + data.name; display.style.color="#10b981"; isIUCVerified = true; }
+                if (data && data.name) { display.innerText = "✅ CUSTOMER: " + data.name; display.style.color="#10b981"; isIUCVerified = true; }
                 else { display.innerText = "❌ Invalid Account Number"; display.style.color="#ef4444"; isIUCVerified = false; }
             }
             updateSummary();
@@ -181,7 +183,7 @@
             cableName = name; cableId = id;
             document.querySelectorAll('.provider-card').forEach(c => c.classList.remove('active'));
             document.getElementById('cable-'+name).classList.add('active');
-            renderPackages(id); updateSummary();
+            renderPackages(id); verifyIUC();
         }
 
         function renderPackages(id) {
@@ -201,12 +203,12 @@
             document.getElementById('sum-net').innerText = cableName;
             document.getElementById('sum-card').innerText = document.getElementById('smartCardNumber').value || '---';
             document.getElementById('sum-plan').innerText = planName || '---';
-            document.getElementById('sum-total').innerText = parseFloat(amount).toLocaleString();
+            document.getElementById('sum-total').innerText = parseFloat(amount || 0).toLocaleString();
         }
 
         function openPinModal() {
-            if (!isIUCVerified) return showToast("Verify account details first", "error");
-            if (amount == 0) return showToast("Select a package", "error");
+            if (!isIUCVerified) return showToast("Please verify account number", "error");
+            if (!planId) return showToast("Select a Package", "error");
             document.getElementById('pinModal').classList.remove('hidden'); pinInputs[0].focus();
         }
         function closePinModal() { document.getElementById('pinModal').classList.add('hidden'); pinInputs.forEach(i => i.value = ''); }
@@ -221,13 +223,12 @@
             try {
                 const { data: res } = await _supabase.rpc('verify_before_purchase', { uid: userId, amt: parseFloat(amount), input_pin: pin });
                 if (res === 'verified') {
-                    showToast("Verified. Connecting...", "success");
+                    showToast("Verified. Delivering...", "success");
                     const { data: vtu, error: fErr } = await _supabase.functions.invoke('buy-vtu', { body: { actionType: 'cable', cableId: cableName, smartCardNumber: scNum, planId: planId } });
-                    if (fErr || vtu.error || vtu.status === 'fail') {
-                        showToast("Provider error. Transaction aborted.", "error");
-                    } else {
+                    if (fErr || !vtu || vtu.error) { showToast("Provider Error. Transaction aborted.", "error"); } 
+                    else {
                         await _supabase.rpc('execute_deduction', { uid: userId, amt: parseFloat(amount), p_type: 'Cable TV', p_desc: `${cableName} to ${scNum}` });
-                        showToast("✅ Subscription Successful!", "success");
+                        showToast("✅ Payment Successful!", "success");
                         setTimeout(() => window.location.href = "dashboard.html", 2000);
                     }
                 } else { showToast(res.replace('_', ' '), "error"); }
