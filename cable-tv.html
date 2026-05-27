@@ -14,6 +14,8 @@
         .active-nav { background: #0052FF !important; color: white !important; }
         .provider-card.active { border-color: #0052FF; background: #F0F5FF; border-width: 2px; }
         #sidebar { transition: transform 0.3s ease; }
+        
+        /* 3D MOCKUP CSS */
         .phone-container { position: relative; width: 85px; height: 90px; margin-right: -5px; }
         .phone-handset { width: 44px; height: 82px; background: #081B4B; border: 2px solid rgba(255,255,255,0.2); border-radius: 8px; position: absolute; right: 10px; bottom: 0; transform: rotate(-8deg); overflow: hidden; }
         .phone-display { position: absolute; inset: 2px; background: linear-gradient(180deg, #246BFD 0%, #0052FF 100%); border-radius: 6px; }
@@ -24,11 +26,14 @@
         .tile-airtime { top: 32px; right: -5px; animation-delay: 1s; color: #10b981; }
         .tile-tv { bottom: 10px; left: 10px; animation-delay: 0.5s; color: #a855f7; }
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+
+        /* Dark Mode Support */
         .dark body { background-color: #0B1120 !important; color: #F1F5F9 !important; }
         .dark .bg-white, .dark aside, .dark nav, .dark header { background-color: #111827 !important; border-color: #1F2937 !important; color: #F1F5F9 !important; }
-        .dark [class*="bg-[#F8FAFF]"] { background-color: #0B1120 !important; }
-        .dark [class*="text-[#081B4B]"], .dark h2, .dark h3, .dark h4 { color: #ffffff !important; }
+        .dark [class*="bg-[#F8FAFF]"], .dark .bg-slate-50 { background-color: #0B1120 !important; }
+        .dark [class*="text-[#081B4B]"], .dark .text-slate-900, .dark h2, .dark h3, .dark h4 { color: #ffffff !important; }
         .dark input, .dark select { background-color: #1F2937 !important; border-color: #374151 !important; color: white !important; }
+        .dark .text-slate-400, .dark .text-slate-500 { color: #94A3B8 !important; }
     </style>
     <script src="theme.js"></script>
 </head>
@@ -36,6 +41,7 @@
 
     <div id="overlay" class="fixed inset-0 bg-black/40 z-[80] hidden lg:hidden" onclick="toggleMenu()"></div>
     
+    <!-- TRANSACTION PIN MODAL -->
     <div id="pinModal" class="fixed inset-0 z-[100] flex items-center justify-center p-6 hidden">
         <div class="fixed inset-0 bg-[#081B4B]/60 backdrop-blur-sm"></div>
         <div class="bg-white dark:bg-[#111827] w-full max-w-sm rounded-[32px] p-8 relative z-10 shadow-2xl border border-slate-100 dark:border-slate-800 text-center uppercase tracking-widest font-black text-xs">
@@ -53,6 +59,7 @@
     </div>
 
     <div class="flex min-h-screen">
+        <!-- SIDEBAR (Full 10 Items) -->
         <aside id="sidebar" class="fixed lg:sticky top-0 left-0 h-screen w-72 bg-white border-r border-slate-100 z-[90] flex flex-col p-6 -translate-x-full lg:translate-x-0 transition-transform duration-300">
             <div class="flex items-center gap-3 mb-10">
                 <div class="w-10 h-10 bg-[#0052FF] rounded-xl flex items-center justify-center text-white shadow-lg"><i data-lucide="zap" class="w-6 h-6 fill-current"></i></div>
@@ -61,7 +68,7 @@
             <nav class="flex-1 space-y-1 font-bold text-[13px] overflow-y-auto no-scrollbar">
                 <a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="layout-grid" class="w-4 h-4"></i> Dashboard</a>
                 <a href="buy-data.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="shopping-cart" class="w-4 h-4"></i> Buy Data</a>
-                <a href="buy-airtime.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="smartphone" class="w-4 h-4"></i> Airtime Top-up</a>
+                <a href="buy-airtime.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="smartphone" class="w-4 h-4"></i> Airtime</a>
                 <a href="cable-tv.html" class="active-nav flex items-center gap-3 px-4 py-3 rounded-2xl"><i data-lucide="tv" class="w-4 h-4"></i> Cable TV</a>
                 <a href="electricity.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="zap" class="w-4 h-4"></i> Electricity</a>
                 <a href="history.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="history" class="w-4 h-4"></i> History</a>
@@ -73,38 +80,44 @@
         </aside>
 
         <main class="flex-1 flex flex-col min-w-0 bg-[#F8FAFF]">
+            <!-- MOBILE HEADER -->
             <header class="lg:hidden bg-white px-6 py-4 flex justify-between items-center border-b border-slate-50 sticky top-0 z-[60]">
                 <button onclick="toggleMenu()"><i data-lucide="menu" class="w-6 h-6"></i></button>
                 <span class="font-extrabold text-sm text-[#0052FF]">Cable TV</span>
                 <div class="flex items-center gap-3">
                     <i data-lucide="bell" class="w-6 h-6 text-slate-400"></i>
-                    <button onclick="toggleTheme()" class="w-8 h-8 flex items-center justify-center bg-slate-50 dark:bg-slate-800 rounded-lg transition-all"><i data-lucide="moon" class="w-4 h-4 text-slate-400 dark:hidden"></i><i data-lucide="sun" class="hidden dark:block w-4 h-4 text-yellow-400"></i></button>
+                    <button onclick="toggleTheme()" class="w-8 h-8 flex items-center justify-center bg-slate-50 dark:bg-slate-800 rounded-lg"><i data-lucide="moon" class="w-4 h-4 text-slate-400 dark:hidden"></i><i data-lucide="sun" class="hidden dark:block w-4 h-4 text-yellow-400"></i></button>
                 </div>
             </header>
 
+            <!-- DESKTOP HEADER -->
             <header class="hidden lg:flex bg-white border-b border-slate-100 px-10 py-5 justify-between items-center sticky top-0 z-50">
                 <div class="font-bold text-sm">Welcome back, <span id="user-name-desktop" class="font-extrabold text-[#081B4B]">Loading...</span></div>
                 <div class="flex items-center gap-6">
-                    <button onclick="toggleTheme()" class="bg-slate-50 p-2 rounded-xl border border-slate-100 transition-all"><i data-lucide="moon" class="w-5 h-5"></i></button>
+                    <button onclick="toggleTheme()" class="bg-slate-50 p-2 rounded-xl border border-slate-100"><i data-lucide="moon" class="w-5 h-5"></i></button>
                     <div class="flex items-center gap-4 bg-slate-50 px-4 py-2 rounded-xl border border-slate-100">
                         <span class="text-[10px] font-bold text-slate-400 uppercase">Balance</span>
                         <span class="text-sm font-black text-[#0052FF]">₦<span id="user-balance-desktop">0.00</span></span>
                         <a href="fund-wallet.html" class="ml-1"><i data-lucide="plus-circle" class="w-5 h-5 text-[#0052FF]"></i></a>
                     </div>
+                    <img src="https://i.pravatar.cc/100" class="w-9 h-9 rounded-full border border-slate-200">
                 </div>
             </header>
 
             <div class="w-full pb-32">
                 <div class="lg:hidden bg-[#0052FF] p-6 pb-24 text-white rounded-b-[40px] flex justify-between items-center">
-                    <div class="flex-1"><p class="text-blue-100 text-[10px] font-bold uppercase mb-1">Cable Subscription,</p><h2 class="text-xl font-bold leading-tight uppercase font-black tracking-widest">Renew TV 📺</h2></div>
+                    <div class="flex-1"><p class="text-blue-100 text-[10px] font-bold uppercase mb-1">Cable Subscription,</p><h2 class="text-xl font-bold leading-tight">Renew Instantly 📺</h2></div>
                     <div class="phone-container"><div class="phone-handset"><div class="phone-display"></div></div><div class="tile tile-data"><i data-lucide="wifi"></i><span>Data</span></div><div class="tile tile-airtime"><i data-lucide="wallet"></i><span>Airtime</span></div><div class="tile tile-tv"><i data-lucide="tv"></i><span>TV</span></div></div>
                 </div>
 
                 <div class="max-w-6xl mx-auto px-4 lg:px-10">
                     <div class="lg:hidden relative z-20 bg-white p-8 rounded-[32px] -mt-16 shadow-2xl flex flex-col items-center border border-slate-50">
                         <p class="text-slate-400 text-[10px] font-bold uppercase mb-2">Available Balance</p>
-                        <h3 class="text-3xl font-black text-[#081B4B]">₦<span id="user-balance-mobile">0.00</span></h3>
-                        <a href="fund-wallet.html" class="w-full bg-[#0052FF] text-white py-4 rounded-2xl font-extrabold text-sm text-center shadow-lg mt-2">+ Fund Wallet</a>
+                        <div class="flex items-center gap-3 mb-6">
+                            <h3 class="text-3xl font-black text-[#081B4B]">₦<span id="user-balance-mobile">0.00</span></h3>
+                            <button onclick="toggleBalance()"><i id="eye-icon-mobile" data-lucide="eye-off" class="w-5 h-5 text-blue-200"></i></button>
+                        </div>
+                        <a href="fund-wallet.html" class="w-full bg-[#0052FF] text-white py-4 rounded-2xl font-extrabold text-sm text-center shadow-lg">+ Fund Wallet</a>
                     </div>
 
                     <div class="grid grid-cols-1 lg:grid-cols-12 lg:gap-10 mt-10">
@@ -112,9 +125,9 @@
                             <section>
                                 <h4 class="font-extrabold text-sm mb-4 uppercase text-slate-400 px-2 font-bold tracking-widest text-xs">1. Select Provider</h4>
                                 <div class="grid grid-cols-3 gap-3">
-                                    <button onclick="setProvider('DSTV', 1)" id="cable-DSTV" class="provider-card active bg-white p-4 rounded-2xl border-2 border-slate-100 flex flex-col items-center gap-1 transition-all text-center">DSTV<span class="text-[9px] font-bold uppercase">DStv</span></button>
-                                    <button onclick="setProvider('GOTV', 2)" id="cable-GOTV" class="provider-card bg-white p-4 rounded-2xl border-2 border-slate-100 flex flex-col items-center gap-1 transition-all text-center">GOTV<span class="text-[9px] font-bold uppercase">GOtv</span></button>
-                                    <button onclick="setProvider('STARTIMES', 3)" id="cable-STARTIMES" class="provider-card bg-white p-4 rounded-2xl border-2 border-slate-100 flex flex-col items-center gap-1 transition-all text-center">STAR<span class="text-[9px] font-bold uppercase">Startimes</span></button>
+                                    <button onclick="setProvider('DSTV', 1)" id="cable-DSTV" class="provider-card active bg-white p-4 rounded-2xl border-2 border-slate-100 flex flex-col items-center gap-2 transition-all text-center font-black text-blue-700">DSTV<span class="text-[9px] font-bold uppercase">DStv</span></button>
+                                    <button onclick="setProvider('GOTV', 2)" id="cable-GOTV" class="provider-card bg-white p-4 rounded-2xl border-2 border-slate-100 flex flex-col items-center gap-2 transition-all text-center font-black text-green-600">GOTV<span class="text-[9px] font-bold uppercase">GOtv</span></button>
+                                    <button onclick="setProvider('STARTIMES', 3)" id="cable-STARTIMES" class="provider-card bg-white p-4 rounded-2xl border-2 border-slate-100 flex flex-col items-center gap-2 transition-all text-center font-black text-orange-600">STAR<span class="text-[9px] font-bold uppercase">Startimes</span></button>
                                 </div>
                             </section>
 
@@ -130,7 +143,7 @@
                             </section>
 
                             <section class="bg-white p-8 rounded-[32px] border border-slate-100 shadow-sm">
-                                <h4 class="font-extrabold text-sm mb-6 uppercase tracking-wider text-slate-400 font-bold text-xs">Summary</h4>
+                                <h4 class="font-extrabold text-sm mb-6 uppercase tracking-wider text-slate-400 font-bold">Review Summary</h4>
                                 <div class="space-y-4 font-bold text-xs uppercase"><div class="flex justify-between text-slate-400"><span>Provider</span> <span id="sum-net">DStv</span></div><div class="flex justify-between text-slate-400"><span>Number</span> <span id="sum-card">---</span></div><div class="flex justify-between text-slate-400"><span>Package</span> <span id="sum-plan">---</span></div><div class="flex justify-between items-center pt-4 border-t border-slate-50 mt-4 font-black"><span>Total Amount</span> <span class="text-xl text-[#0052FF]">₦<span id="sum-total">0.00</span></span></div></div>
                                 <button type="button" onclick="openPinModal()" id="payBtn" class="w-full bg-[#0052FF] text-white py-4.5 mt-8 rounded-2xl font-black text-sm shadow-xl active:scale-95 transition-all">Confirm Subscription</button>
                             </section>
@@ -145,8 +158,8 @@
     <script>
         lucide.createIcons();
         const allCablePlans = {
-            1: [{id: 6, name: "DStv Yanga", price: 6000}, {id: 22, name: "DSTV CONFAM", price: 11000}, {id: 7, name: "DStv Compact", price: 19000}],
-            2: [{id: 17, name: "GOtv Smallie", price: 1900}, {id: 47, name: "GOtv Jolli", price: 5800}, {id: 2, name: "GOtv Max", price: 8500}],
+            1: [{id: 6, name: "DStv Yanga", price: 6000}, {id: 22, name: "DSTV CONFAM", price: 11000}, {id: 7, name: "DStv Compact", price: 19000}, {id: 8, name: "DStv Compact Plus", price: 30000}, {id: 9, name: "DStv Premium", price: 44500}],
+            2: [{id: 17, name: "GOtv Smallie", price: 1900}, {id: 16, name: "GOtv Jinja", price: 3900}, {id: 47, name: "Gotv-jolli", price: 5800}, {id: 2, name: "GOtv Max", price: 8500}, {id: 52, name: "Gotv-supa", price: 11400}],
             3: [{id: 37, name: "Nova(Dish)", price: 700}, {id: 38, name: "Basic(Antenna)", price: 1400}, {id: 39, name: "Smart", price: 1700}]
         };
         let cableName = 'DSTV', cableId = 1, amount = 0, planName = '', planId = 0, userId = "", actualBalance = 0, isHidden = false, isIUCVerified = false;
@@ -168,7 +181,7 @@
             const iuc = document.getElementById('smartCardNumber').value;
             const display = document.getElementById('iucNameDisplay');
             if (iuc.length >= 9) {
-                display.innerText = "🔍 Verifying Account...";
+                display.innerText = "🔍 Verifying...";
                 const { data } = await _supabase.functions.invoke('buy-vtu', { body: { actionType: 'validate-iuc', smartCardNumber: iuc, cableId: cableName } });
                 if (data && data.name) { display.innerText = "✅ CUSTOMER: " + data.name; display.style.color="#10b981"; isIUCVerified = true; }
                 else { display.innerText = "❌ Invalid IUC Number"; display.style.color="#ef4444"; isIUCVerified = false; }
@@ -204,7 +217,7 @@
         }
 
         function openPinModal() {
-            if (!isIUCVerified) return showToast("Verify account details first", "error");
+            if (!isIUCVerified) return showToast("Please verify account number first", "error");
             if (amount == 0) return showToast("Select a package", "error");
             document.getElementById('pinModal').classList.remove('hidden'); pinInputs[0].focus();
         }
@@ -225,15 +238,14 @@
                     return showToast(vRes.replace('_', ' '), "error");
                 }
 
-                // 2. Call API
-                showToast("Verified. Connecting...", "success");
+                // 2. Call API (Wait for success)
                 const { data: vtu, error: fErr } = await _supabase.functions.invoke('buy-vtu', { 
                     body: { actionType: 'cable', cableId: cableName, smartCardNumber: scNum, planId: planId } 
                 });
 
-                // 3. Deduct ONLY on success
+                // 3. Deduct ONLY if the provider says OK
                 if (fErr || !vtu || vtu.error) {
-                    showToast("Provider Error. Low API balance.", "error");
+                    showToast("Provider Error: Low API balance. Wallet NOT charged.", "error");
                 } else {
                     await _supabase.rpc('execute_deduction', { uid: userId, amt: parseFloat(amount), p_type: 'Cable TV', p_desc: `${cableName} (${planName}) to ${scNum}` });
                     showToast("✅ Subscription Successful!", "success");
