@@ -14,6 +14,12 @@
         .active-nav { background: #0052FF !important; color: white !important; }
         .disco-card.active { border-color: #0052FF; background: #F0F5FF; border-width: 2px; }
         #sidebar { transition: transform 0.3s ease; }
+        .overlap-card { z-index: 70 !important; position: relative; }
+        
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .animate-toast { animation: slideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+
+        /* 3D MOCKUP CSS */
         .phone-container { position: relative; width: 85px; height: 90px; margin-right: -5px; }
         .phone-handset { width: 44px; height: 82px; background: #081B4B; border: 2px solid rgba(255,255,255,0.2); border-radius: 8px; position: absolute; right: 10px; bottom: 0; transform: rotate(-8deg); overflow: hidden; }
         .phone-display { position: absolute; inset: 2px; background: linear-gradient(180deg, #246BFD 0%, #0052FF 100%); border-radius: 6px; }
@@ -25,35 +31,38 @@
         .tile-tv { bottom: 10px; left: 10px; animation-delay: 0.5s; color: #a855f7; }
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
 
-        /* Dark Mode Consistency Fix */
-        .dark body { background-color: #0B1120 !important; color: #ffffff !important; }
-        .dark .bg-white, .dark aside, .dark nav, .dark header { background-color: #111827 !important; border-color: #1F2937 !important; color: #ffffff !important; }
-        .dark h1, .dark h2, .dark h3, .dark h4, .dark p, .dark span { color: #ffffff !important; }
-        .dark .text-slate-400, .dark .text-slate-500 { color: #94A3B8 !important; }
-        .dark input { background-color: #1F2937 !important; border-color: #374151 !important; color: #ffffff !important; }
+        /* Dark Mode Support */
+        .dark body { background-color: #0B1120 !important; color: #F1F5F9 !important; }
+        .dark .bg-white, .dark aside, .dark nav, .dark header { background-color: #111827 !important; border-color: #1F2937 !important; color: #F1F5F9 !important; }
+        .dark [class*="bg-[#F8FAFF]"], .dark .bg-slate-50 { background-color: #0B1120 !important; }
+        .dark [class*="text-[#081B4B]"], .dark .text-slate-900, .dark h2, .dark h3, .dark h4 { color: #ffffff !important; }
+        .dark input { background-color: #1F2937 !important; border-color: #374151 !important; color: white !important; }
     </style>
     <script src="theme.js"></script>
 </head>
 <body class="text-[#081B4B] antialiased">
+
     <div id="overlay" class="fixed inset-0 bg-black/40 z-[80] hidden lg:hidden" onclick="toggleMenu()"></div>
     
+    <!-- PIN MODAL -->
     <div id="pinModal" class="fixed inset-0 z-[100] flex items-center justify-center p-6 hidden">
         <div class="fixed inset-0 bg-[#081B4B]/60 backdrop-blur-sm"></div>
-        <div class="bg-white dark:bg-[#111827] w-full max-w-sm rounded-[32px] p-8 relative z-10 shadow-2xl border border-slate-100 dark:border-slate-800 text-center uppercase tracking-widest font-black text-xs">
+        <div class="bg-white dark:bg-[#111827] w-full max-w-sm rounded-[32px] p-8 relative z-10 shadow-2xl text-center">
             <i data-lucide="lock" class="w-12 h-12 text-[#0052FF] mx-auto mb-4"></i>
             <h3 class="text-xl font-black mb-6 dark:text-white uppercase">Enter PIN</h3>
             <div class="flex justify-center gap-3 mb-8">
-                <input type="password" maxlength="1" class="pin-box w-12 h-14 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-center text-xl font-black focus:border-[#0052FF] outline-none">
-                <input type="password" maxlength="1" class="pin-box w-12 h-14 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-center text-xl font-black focus:border-[#0052FF] outline-none">
-                <input type="password" maxlength="1" class="pin-box w-12 h-14 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-center text-xl font-black focus:border-[#0052FF] outline-none">
-                <input type="password" maxlength="1" class="pin-box w-12 h-14 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-center text-xl font-black focus:border-[#0052FF] outline-none">
+                <input type="password" maxlength="1" class="pin-box w-12 h-14 bg-slate-50 border border-slate-200 rounded-xl text-center text-xl font-black focus:border-[#0052FF] outline-none">
+                <input type="password" maxlength="1" class="pin-box w-12 h-14 bg-slate-50 border border-slate-200 rounded-xl text-center text-xl font-black focus:border-[#0052FF] outline-none">
+                <input type="password" maxlength="1" class="pin-box w-12 h-14 bg-slate-50 border border-slate-200 rounded-xl text-center text-xl font-black focus:border-[#0052FF] outline-none">
+                <input type="password" maxlength="1" class="pin-box w-12 h-14 bg-slate-50 border border-slate-200 rounded-xl text-center text-xl font-black focus:border-[#0052FF] outline-none">
             </div>
-            <button onclick="confirmPurchase()" id="confirmPinBtn" class="w-full bg-[#0052FF] text-white py-4 rounded-2xl font-black shadow-xl active:scale-95 transition-all">Confirm</button>
+            <button onclick="confirmPurchase()" id="confirmPinBtn" class="w-full bg-[#0052FF] text-white py-4 rounded-2xl font-black shadow-xl active:scale-95 transition-all">Confirm Payment</button>
             <button onclick="closePinModal()" class="w-full py-3 text-slate-400 font-bold text-[10px] uppercase">Cancel</button>
         </div>
     </div>
 
     <div class="flex min-h-screen">
+        <!-- SIDEBAR -->
         <aside id="sidebar" class="fixed lg:sticky top-0 left-0 h-screen w-72 bg-white border-r border-slate-100 z-[90] flex flex-col p-6 -translate-x-full lg:translate-x-0 transition-transform duration-300">
             <div class="flex items-center gap-3 mb-10">
                 <div class="w-10 h-10 bg-[#0052FF] rounded-xl flex items-center justify-center text-white shadow-lg"><i data-lucide="zap" class="w-6 h-6 fill-current"></i></div>
@@ -81,7 +90,7 @@
             </header>
 
             <header class="hidden lg:flex bg-white border-b border-slate-100 px-10 py-5 justify-between items-center sticky top-0 z-50">
-                <div class="font-bold text-sm">Welcome back, <span id="user-name-desktop" class="font-extrabold text-[#081B4B]">Loading...</span></div>
+                <div class="font-bold text-sm">Welcome back, <span id="user-name-desktop" class="font-extrabold">Loading...</span></div>
                 <div class="flex items-center gap-6">
                     <button onclick="toggleTheme()" class="bg-slate-50 p-2 rounded-xl border border-slate-100 transition-all"><i data-lucide="moon" class="w-5 h-5"></i></button>
                     <div class="flex items-center gap-4 bg-slate-50 px-4 py-2 rounded-xl border border-slate-100">
@@ -92,7 +101,7 @@
                 </div>
             </header>
 
-            <div class="w-full pb-32">
+            <div class="w-full pb-32 overflow-y-auto">
                 <div class="lg:hidden bg-[#0052FF] p-6 pb-24 text-white rounded-b-[40px] flex justify-between items-center">
                     <div class="flex-1"><p class="text-blue-100 text-[10px] font-bold uppercase mb-1">Pay Utility Bill,</p><h2 class="text-xl font-bold leading-tight">Electricity ⚡️</h2></div>
                     <div class="phone-container"><div class="phone-handset"><div class="phone-display"></div></div><div class="tile tile-data"><i data-lucide="wifi"></i><span>Data</span></div><div class="tile tile-airtime"><i data-lucide="wallet"></i><span>Airtime</span></div><div class="tile tile-tv"><i data-lucide="tv"></i><span>TV</span></div></div>
@@ -113,31 +122,31 @@
                             <section>
                                 <h4 class="font-extrabold text-sm mb-4 uppercase text-slate-400 px-2 font-bold tracking-widest">1. Select Provider</h4>
                                 <div class="grid grid-cols-3 md:grid-cols-4 gap-3">
-                                    <button onclick="setProvider('Ikeja_Electric', 18)" id="disco-18" class="disco-card active bg-white p-4 rounded-2xl border-2 border-slate-100 flex flex-col items-center gap-1 transition-all text-center">IKE<span class="text-[8px] font-bold uppercase">Ikeja</span></button>
-                                    <button onclick="setProvider('Ibadan_Electric', 19)" id="disco-19" class="disco-card bg-white p-4 rounded-2xl border-2 border-slate-100 flex flex-col items-center gap-1 transition-all text-center">IBA<span class="text-[8px] font-bold uppercase">Ibadan</span></button>
-                                    <button onclick="setProvider('Eko_Electric', 20)" id="disco-20" class="disco-card bg-white p-4 rounded-2xl border-2 border-slate-100 flex flex-col items-center gap-1 transition-all text-center">EKO<span class="text-[8px] font-bold uppercase">Eko</span></button>
-                                    <button onclick="setProvider('Abuja_Electric', 25)" id="disco-25" class="disco-card bg-white p-4 rounded-2xl border-2 border-slate-100 flex flex-col items-center gap-1 transition-all text-center">ABJ<span class="text-[8px] font-bold uppercase">Abuja</span></button>
+                                    <button onclick="setProvider('Ikeja_Electric', 18)" id="disco-18" class="disco-card active bg-white p-4 rounded-2xl border-2 border-slate-100 flex flex-col items-center gap-1 transition-all text-center">IKE<span class="text-[8px] font-bold uppercase text-[#081B4B]">Ikeja</span></button>
+                                    <button onclick="setProvider('Ibadan_Electric', 19)" id="disco-19" class="disco-card bg-white p-4 rounded-2xl border-2 border-slate-100 flex flex-col items-center gap-1 transition-all text-center">IBA<span class="text-[8px] font-bold uppercase text-[#081B4B]">Ibadan</span></button>
+                                    <button onclick="setProvider('Eko_Electric', 20)" id="disco-20" class="disco-card bg-white p-4 rounded-2xl border-2 border-slate-100 flex flex-col items-center gap-1 transition-all text-center">EKO<span class="text-[8px] font-bold uppercase text-[#081B4B]">Eko</span></button>
+                                    <button onclick="setProvider('Abuja_Electric', 25)" id="disco-25" class="disco-card bg-white p-4 rounded-2xl border-2 border-slate-100 flex flex-col items-center gap-1 transition-all text-center">ABJ<span class="text-[8px] font-bold uppercase text-[#081B4B]">Abuja</span></button>
                                 </div>
                             </section>
 
-                            <section class="space-y-6">
-                                <h4 class="font-extrabold text-sm uppercase text-slate-400 px-2 font-bold tracking-widest">2. Meter Details</h4>
+                            <section class="space-y-6 px-2">
+                                <h4 class="font-extrabold text-sm uppercase text-slate-400 font-bold tracking-widest">2. Meter Details</h4>
                                 <div class="flex gap-4">
                                     <label class="flex-1 bg-white p-4 rounded-2xl border border-slate-200 flex items-center gap-3 cursor-pointer"><input type="radio" name="mType" value="1" checked><span class="font-bold text-xs uppercase">Prepaid</span></label>
                                     <label class="flex-1 bg-white p-4 rounded-2xl border border-slate-200 flex items-center gap-3 cursor-pointer"><input type="radio" name="mType" value="2"><span class="font-bold text-xs uppercase">Postpaid</span></label>
                                 </div>
-                                <div class="relative"><i data-lucide="hash" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 w-5 h-5"></i><input type="number" id="meterNumber" oninput="verifyMeter()" class="w-full pl-12 pr-4 py-4 bg-white border border-slate-200 rounded-2xl outline-none focus:border-[#0052FF] font-medium text-sm" placeholder="Enter Meter Number"></div>
-                                <p id="meterNameDisplay" class="text-[11px] font-black text-[#0052FF] mt-2 ml-1 italic min-h-[1rem]"></p>
+                                <div class="relative"><i data-lucide="hash" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 w-5 h-5"></i><input type="number" id="meterNumber" oninput="verifyMeter()" class="w-full pl-12 pr-4 py-4 bg-white border border-slate-200 rounded-2xl outline-none focus:border-[#0052FF] font-medium" placeholder="Enter Meter Number"></div>
+                                <p id="meterNameDisplay" class="text-[11px] font-black text-[#0052FF] mt-2 ml-1 italic min-h-[1.2rem]"></p>
                             </section>
 
-                            <section>
-                                <h4 class="font-extrabold text-sm mb-4 uppercase text-slate-400 px-2 font-bold tracking-widest">3. Amount</h4>
+                            <section class="px-2">
+                                <h4 class="font-extrabold text-sm mb-4 uppercase text-slate-400 font-bold tracking-widest">3. Amount</h4>
                                 <input type="number" id="fundAmount" oninput="updateSummary()" class="w-full p-4 bg-white border border-slate-200 rounded-2xl outline-none focus:border-[#0052FF] font-bold text-sm shadow-sm" placeholder="Minimum ₦100">
                             </section>
 
                             <section class="bg-white p-8 rounded-[32px] border border-slate-100 shadow-sm">
                                 <h4 class="font-extrabold text-sm mb-6 uppercase tracking-wider text-slate-400 font-bold">Summary</h4>
-                                <div class="space-y-4 font-bold text-xs uppercase"><div class="flex justify-between text-slate-400"><span>Disco</span> <span id="sum-net">Ikeja Electric</span></div><div class="flex justify-between text-slate-400"><span>Meter No.</span> <span id="sum-meter">---</span></div><div class="flex justify-between items-center pt-4 border-t border-slate-50 mt-4 font-black"><span>Total Amount</span> <span class="text-xl text-[#0052FF]">₦<span id="sum-total">0.00</span></span></div></div>
+                                <div class="space-y-4 font-bold text-xs uppercase"><div class="flex justify-between text-slate-400"><span>Disco</span> <span id="sum-net">Ikeja Electric</span></div><div class="flex justify-between text-slate-400"><span>Meter</span> <span id="sum-meter">---</span></div><div class="flex justify-between items-center pt-4 border-t border-slate-50 mt-4 font-black"><span>Total Amount</span> <span class="text-xl text-[#0052FF]">₦<span id="sum-total">0.00</span></span></div></div>
                                 <button type="button" onclick="openPinModal()" id="payBtn" class="w-full bg-[#0052FF] text-white py-4.5 mt-8 rounded-2xl font-black text-sm shadow-xl active:scale-95 transition-all uppercase">Pay Bill Now</button>
                             </section>
                         </div>
@@ -172,7 +181,7 @@
                 display.innerText = "🔍 Verifying...";
                 const { data } = await _supabase.functions.invoke('buy-vtu', { body: { actionType: 'validate-meter', meterNumber: meter, discoId: providerName, meterType: mType } });
                 if (data && data.name) { display.innerText = "✅ USER: " + data.name; display.style.color="#10b981"; isMeterVerified = true; } 
-                else { display.innerText = "❌ Invalid Meter"; display.style.color="#ef4444"; isMeterVerified = false; }
+                else { display.innerText = "❌ Verification failed"; display.style.color="#ef4444"; isMeterVerified = false; }
             }
             updateSummary();
         }
