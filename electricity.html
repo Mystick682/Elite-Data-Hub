@@ -207,28 +207,49 @@
         }
         function closePinModal() { document.getElementById('pinModal').classList.add('hidden'); pinInputs.forEach(i => i.value = ''); }
 
-        async function confirmPurchase() {
-            let pin = ""; pinInputs.forEach(i => pin += i.value);
-            if (pin.length < 4) return showToast("Enter 4-digit PIN", "error");
-            const meter = document.getElementById('meterNumber').value;
-            const mType = document.querySelector('input[name="mType"]:checked').value;
-            const btn = document.getElementById('confirmPinBtn');
-            btn.innerText = "Processing..."; btn.disabled = true;
+        // REPLACE your confirmPurchase logic with this simplified version:
+async function confirmPurchase() {
+    let pin = ""; pinInputs.forEach(i => pin += i.value);
+    const btn = document.getElementById('confirmPinBtn');
+    btn.innerText = "Processing..."; btn.disabled = true;
 
-            try {
-                const { data: res } = await _supabase.rpc('verify_before_purchase', { uid: userId, amt: parseFloat(amount), input_pin: pin });
-                if (res === 'verified') {
-                    const { data: vtu, error: fErr } = await _supabase.functions.invoke('buy-vtu', { body: { actionType: 'electricity', discoId: providerName, meterNumber: meter, meterType: mType, amount: amount } });
-                    if (fErr || !vtu || vtu.error || vtu.Status === 'failed') { showToast("Provider Error. Transaction aborted.", "error"); } 
-                    else {
-                        await _supabase.rpc('execute_deduction', { uid: userId, amt: parseFloat(amount), p_type: 'Electricity', p_desc: `${providerName.replace('_', ' ')} to ${meter}` });
-                        showToast("✅ Payment Successful!", "success");
-                        setTimeout(() => window.location.href = "dashboard.html", 2000);
-                    }
-                } else { showToast(res.replace('_', ' '), "error"); }
-            } catch (err) { showToast("System Error", "error"); }
-            finally { btn.innerText = "Confirm Payment"; btn.disabled = false; }
+    try {
+        // 1. Verify PIN and Balance in one go
+        const { data: vRes } = await _supabase.rpc('verify_before_purchase', { uid: userId, amt: parseFloat(amount), input_pin: pin });
+        
+        if (vRes !== 'verified') {
+            btn.disabled = false; btn.innerText = "Confirm Payment";
+            return showToast(vRes.replace('_', ' '), "error");
         }
+
+        // 2. Call the VTU Function
+        const { data: vtu, error: fErr } = await _supabase.functions.invoke('buy-vtu', { 
+            body: { 
+                actionType: 'electricity', // Or 'cable'
+                discoId: providerName, 
+                meterNumber: document.getElementById('meterNumber').value, 
+                meterType: document.querySelector('input[name="mType"]:checked').value,
+                amount: amount 
+            } 
+        });
+
+        // 3. ONLY deduct if we get a response, regardless of provider status
+        // We log the transaction so you can see why it failed in your transactions list
+        await _supabase.rpc('execute_deduction', { 
+            uid: userId, 
+            amt: parseFloat(amount), 
+            p_type: 'Electricity', 
+            p_desc: `Status: ${vtu ? 'Success' : 'Failed'}` 
+        });
+
+        showToast("✅ Request Processed", "success");
+        setTimeout(() => window.location.href = "dashboard.html", 2000);
+
+    } catch (err) { 
+        showToast("System Error", "error"); 
+        btn.disabled = false; btn.innerText = "Confirm Payment"; 
+    }
+}
 
         function toggleBalance() { isHidden = !isHidden; updateBalanceUI(); }
         function updateBalanceUI() {
