@@ -12,79 +12,166 @@
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #F8FAFF; margin: 0; padding: 0; overflow-x: hidden; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .active-nav { background: #0052FF !important; color: white !important; }
-    </style>
-</head>
-<body class="text-[#081B4B] antialiased text-sm">
+        #sidebar { transition: transform 0.3s ease; }
 
-    <!-- PIN MODAL -->
+        /* 3D MOCKUP CSS */
+        .phone-container { position: relative; width: 85px; height: 90px; margin-right: -5px; }
+        .phone-handset { width: 44px; height: 82px; background: #081B4B; border: 2px solid rgba(255,255,255,0.2); border-radius: 8px; position: absolute; right: 10px; bottom: 0; transform: rotate(-8deg); overflow: hidden; }
+        .phone-display { position: absolute; inset: 2px; background: linear-gradient(180deg, #246BFD 0%, #0052FF 100%); border-radius: 6px; }
+        .tile { position: absolute; background: white; padding: 4px; border-radius: 6px; box-shadow: 0 8px 15px rgba(0,0,0,0.15); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 20; animation: float 3s ease-in-out infinite; }
+        .tile i { width: 12px; height: 12px; }
+        .tile span { font-size: 5px; font-weight: 900; text-transform: uppercase; margin-top: 1px; }
+        .tile-data { top: 5px; left: 0px; animation-delay: 0s; color: #0052FF; }
+        .tile-airtime { top: 32px; right: -5px; animation-delay: 1s; color: #10b981; }
+        .tile-tv { bottom: 10px; left: 10px; animation-delay: 0.5s; color: #a855f7; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+
+        /* Dark Mode Support */
+        .dark body { background-color: #0B1120 !important; color: #F1F5F9 !important; }
+        .dark .bg-white, .dark aside, .dark nav, .dark header { background-color: #111827 !important; border-color: #1F2937 !important; color: #F1F5F9 !important; }
+        .dark [class*="bg-[#F8FAFF]"], .dark .bg-slate-50 { background-color: #0B1120 !important; }
+        .dark [class*="text-[#081B4B]"], .dark .text-slate-900, .dark h2, .dark h3, .dark h4 { color: #ffffff !important; }
+        .dark input, .dark select { background-color: #1F2937 !important; border-color: #374151 !important; color: white !important; }
+        .dark .text-slate-400, .dark .text-slate-500 { color: #94A3B8 !important; }
+    </style>
+    <script src="theme.js"></script>
+</head>
+<body class="text-[#081B4B] antialiased">
+
+    <div id="overlay" class="fixed inset-0 bg-black/40 z-[80] hidden lg:hidden" onclick="toggleMenu()"></div>
+    
+    <!-- TRANSACTION PIN MODAL -->
     <div id="pinModal" class="fixed inset-0 z-[100] flex items-center justify-center p-6 hidden">
         <div class="fixed inset-0 bg-[#081B4B]/60 backdrop-blur-sm"></div>
-        <div class="bg-white rounded-[32px] p-8 relative z-10 shadow-2xl border border-slate-100 text-center max-w-sm w-full">
+        <div class="bg-white dark:bg-[#111827] w-full max-w-sm rounded-[32px] p-8 relative z-10 shadow-2xl border border-slate-100 dark:border-slate-800 text-center uppercase tracking-widest font-black text-xs">
             <i data-lucide="lock" class="w-12 h-12 text-[#0052FF] mx-auto mb-4"></i>
-            <h3 class="text-xl font-black mb-6">Enter PIN</h3>
+            <h3 class="text-xl font-black mb-6 dark:text-white">Enter PIN</h3>
             <div class="flex justify-center gap-3 mb-8">
-                <input type="password" maxlength="1" class="pin-box w-12 h-14 bg-slate-50 border border-slate-200 rounded-xl text-center text-xl font-black focus:border-[#0052FF] outline-none">
-                <input type="password" maxlength="1" class="pin-box w-12 h-14 bg-slate-50 border border-slate-200 rounded-xl text-center text-xl font-black focus:border-[#0052FF] outline-none">
-                <input type="password" maxlength="1" class="pin-box w-12 h-14 bg-slate-50 border border-slate-200 rounded-xl text-center text-xl font-black focus:border-[#0052FF] outline-none">
-                <input type="password" maxlength="1" class="pin-box w-12 h-14 bg-slate-50 border border-slate-200 rounded-xl text-center text-xl font-black focus:border-[#0052FF] outline-none">
+                <input type="password" maxlength="1" class="pin-box w-12 h-14 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-center text-xl font-black focus:border-[#0052FF] outline-none">
+                <input type="password" maxlength="1" class="pin-box w-12 h-14 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-center text-xl font-black focus:border-[#0052FF] outline-none">
+                <input type="password" maxlength="1" class="pin-box w-12 h-14 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-center text-xl font-black focus:border-[#0052FF] outline-none">
+                <input type="password" maxlength="1" class="pin-box w-12 h-14 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-center text-xl font-black focus:border-[#0052FF] outline-none">
             </div>
-            <button onclick="executeFinalTransfer()" id="confirmPinBtn" class="w-full bg-[#0052FF] text-white py-4 rounded-2xl font-black shadow-xl active:scale-95 transition-all uppercase text-xs">Verify & Send</button>
-            <button onclick="document.getElementById('pinModal').classList.add('hidden')" class="w-full py-3 text-slate-400 font-bold text-[10px] mt-2 uppercase">Cancel</button>
+            <button onclick="confirmWithdrawal()" id="confirmPinBtn" class="w-full bg-[#0052FF] text-white py-4 rounded-2xl font-black shadow-xl active:scale-95 transition-all">Verify & Send</button>
+            <button onclick="closePinModal()" class="w-full py-3 text-slate-400 font-bold text-[10px] mt-2 uppercase">Cancel</button>
         </div>
     </div>
 
     <div class="flex min-h-screen">
-        <!-- SIDEBAR -->
-        <aside class="hidden lg:flex w-72 bg-white border-r border-slate-100 flex-col sticky top-0 h-screen p-6">
-            <h1 class="text-lg font-black mb-10 text-[#0052FF]">Elite Data</h1>
-            <nav class="flex-1 space-y-1 font-bold text-[13px]">
-                <a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400 hover:bg-slate-50 transition-all"><i data-lucide="layout-grid" class="w-4 h-4"></i> Dashboard</a>
-                <a href="withdraw-bank.html" class="active-nav flex items-center gap-3 px-4 py-3 rounded-2xl"><i data-lucide="send" class="w-4 h-4"></i> Bank Transfer</a>
+        <!-- SIDEBAR (Full 10 Items) -->
+        <aside id="sidebar" class="fixed lg:sticky top-0 left-0 h-screen w-72 bg-white border-r border-slate-100 z-[90] flex flex-col p-6 -translate-x-full lg:translate-x-0 transition-transform duration-300">
+            <div class="flex items-center gap-3 mb-10">
+                <div class="w-10 h-10 bg-[#0052FF] rounded-xl flex items-center justify-center text-white shadow-lg"><i data-lucide="zap" class="w-6 h-6 fill-current"></i></div>
+                <h1 class="text-lg font-extrabold tracking-tight italic">Elite Data</h1>
+            </div>
+            <nav class="flex-1 space-y-1 font-bold text-[13px] overflow-y-auto no-scrollbar">
+                <a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="layout-grid" class="w-4 h-4"></i> Dashboard</a>
+                <a href="buy-data.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="shopping-cart" class="w-4 h-4"></i> Buy Data</a>
+                <a href="buy-airtime.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="smartphone" class="w-4 h-4"></i> Airtime</a>
+                <a href="cable-tv.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="tv" class="w-4 h-4"></i> Cable TV</a>
+                <a href="electricity.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="zap" class="w-4 h-4"></i> Electricity</a>
+                <a href="history.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="history" class="w-4 h-4"></i> History</a>
+                <a href="fund-wallet.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="wallet" class="w-4 h-4"></i> Wallet</a>
+                <a href="referrals.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="users" class="w-4 h-4"></i> Referrals</a>
+                <a href="support.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="headset" class="w-4 h-4"></i> Support</a>
+                <a href="settings.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="settings" class="w-4 h-4"></i> Settings</a>
             </nav>
         </aside>
 
         <main class="flex-1 flex flex-col min-w-0 bg-[#F8FAFF]">
+            <!-- MOBILE HEADER -->
             <header class="lg:hidden bg-white px-6 py-4 flex justify-between items-center border-b border-slate-50 sticky top-0 z-[60]">
-                <span class="font-extrabold text-[#0052FF]">Elite Bank Transfer</span>
-                <i data-lucide="bell" class="w-6 h-6 text-slate-400"></i>
+                <button onclick="toggleMenu()"><i data-lucide="menu" class="w-6 h-6 text-slate-700"></i></button>
+                <span class="font-extrabold text-sm text-[#0052FF]">Bank Transfer</span>
+                <div class="flex items-center gap-3">
+                    <i data-lucide="bell" class="w-6 h-6 text-slate-400"></i>
+                    <button onclick="toggleTheme()" class="w-8 h-8 flex items-center justify-center bg-slate-50 dark:bg-slate-800 rounded-lg transition-all"><i data-lucide="moon" class="w-4 h-4 text-slate-400 dark:hidden"></i><i data-lucide="sun" class="hidden dark:block w-4 h-4 text-yellow-400"></i></button>
+                </div>
             </header>
 
-            <div class="p-6 lg:p-10 max-w-2xl mx-auto w-full pb-32">
-                <div class="bg-white p-8 lg:p-10 rounded-[40px] shadow-2xl border border-slate-100">
-                    <h2 class="text-2xl font-black mb-1">Transfer to Bank</h2>
-                    <p class="text-slate-400 text-xs mb-10 uppercase tracking-widest font-bold">Fast & Secure Payouts</p>
-                    
-                    <form class="space-y-6">
-                        <div>
-                            <label class="text-[10px] font-black uppercase text-slate-400 tracking-widest ml-1">1. Select Bank</label>
-                            <select id="bankList" class="w-full p-4 mt-1 bg-slate-50 border border-slate-100 rounded-2xl font-bold outline-none focus:border-[#0052FF]">
-                                <option value="">Choose Bank...</option>
-                                <option value="999992">OPay Digital Services</option>
-                                <option value="999991">PalmPay</option>
-                                <option value="058">GTBank</option>
-                                <option value="011">First Bank</option>
-                                <option value="033">UBA</option>
-                                <option value="044">Access Bank</option>
-                                <option value="070">Fidelity Bank</option>
-                                <option value="050">Ecobank</option>
-                            </select>
-                        </div>
+            <!-- DESKTOP TOP NAV -->
+            <header class="hidden lg:flex bg-white border-b border-slate-100 px-10 py-5 justify-between items-center sticky top-0 z-50">
+                <div class="font-bold text-sm">Welcome back, <span id="user-name-desktop" class="font-extrabold text-[#081B4B]">Loading...</span></div>
+                <div class="flex items-center gap-6">
+                    <button onclick="toggleTheme()" class="w-10 h-10 flex items-center justify-center bg-slate-50 dark:bg-slate-800 rounded-xl transition-all"><i data-lucide="moon" class="w-5 h-5 text-slate-400 dark:hidden"></i><i data-lucide="sun" class="hidden dark:block w-5 h-5 text-yellow-400"></i></button>
+                    <div class="flex items-center gap-4 bg-slate-50 px-4 py-2 rounded-xl border border-slate-100">
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Balance</span>
+                        <span class="text-sm font-black text-[#0052FF]">₦<span id="user-balance-desktop">0.00</span></span>
+                        <a href="fund-wallet.html" class="ml-2 text-[#0052FF]"><i data-lucide="plus-circle" class="w-5 h-5"></i></a>
+                    </div>
+                    <img src="https://i.pravatar.cc/100" class="w-9 h-9 rounded-full border border-slate-200">
+                </div>
+            </header>
 
-                        <div>
-                            <label class="text-[10px] font-black uppercase text-slate-400 tracking-widest ml-1">2. Account Number</label>
-                            <input type="number" id="accountNumber" oninput="verifyReceiver()" class="w-full p-4 mt-1 bg-slate-50 border border-slate-100 rounded-2xl font-bold outline-none focus:border-[#0052FF]" placeholder="0123456789">
-                            <p id="accountNameDisplay" class="text-[11px] font-black text-[#0052FF] mt-2 ml-1 italic"></p>
-                        </div>
+            <div class="w-full pb-32">
+                <!-- MOBILE BLUE SECTION -->
+                <div class="lg:hidden bg-[#0052FF] p-6 pb-24 text-white rounded-b-[40px] flex justify-between items-center">
+                    <div class="flex-1">
+                        <p class="text-blue-100 text-[10px] font-bold uppercase tracking-widest mb-1">Transfer Funds,</p>
+                        <h2 class="text-xl font-bold leading-tight uppercase font-black tracking-widest">Send to Bank 🏦</h2>
+                    </div>
+                    <div class="phone-container">
+                        <div class="phone-handset"><div class="phone-display"></div></div>
+                        <div class="tile tile-data"><i data-lucide="wifi"></i><span>Data</span></div>
+                        <div class="tile tile-airtime"><i data-lucide="wallet"></i><span>Airtime</span></div>
+                        <div class="tile tile-tv"><i data-lucide="tv"></i><span>TV</span></div>
+                    </div>
+                </div>
 
-                        <div>
-                            <label class="text-[10px] font-black uppercase text-slate-400 tracking-widest ml-1">3. Amount (₦)</label>
-                            <input type="number" id="transferAmount" class="w-full p-4 mt-1 bg-slate-50 border border-slate-100 rounded-2xl font-black text-xl outline-none focus:border-[#0052FF]" placeholder="0.00">
+                <div class="max-w-6xl mx-auto px-4 lg:px-10">
+                    <!-- WALLET CARD (OVERLAP) -->
+                    <div class="lg:hidden relative z-20 bg-white p-8 rounded-[32px] -mt-16 shadow-2xl flex flex-col items-center border border-slate-50">
+                        <p class="text-slate-400 text-[10px] font-bold uppercase mb-2">Available Balance</p>
+                        <div class="flex items-center gap-3 mb-6">
+                            <h3 class="text-3xl font-black text-[#081B4B]">₦<span id="user-balance-mobile">0.00</span></h3>
+                            <button onclick="toggleBalance()"><i id="eye-icon-mobile" data-lucide="eye-off" class="w-5 h-5 text-blue-200"></i></button>
                         </div>
+                        <a href="fund-wallet.html" class="w-full bg-[#0052FF] text-white py-4 rounded-2xl font-extrabold text-sm text-center shadow-lg">+ Fund Wallet</a>
+                    </div>
 
-                        <button type="button" onclick="openModal()" id="mainBtn" class="w-full bg-[#0052FF] text-white py-5 rounded-2xl font-black shadow-xl active:scale-95 transition-all mt-4">
-                            Proceed to Transfer
-                        </button>
-                    </form>
+                    <div class="grid grid-cols-1 lg:grid-cols-12 lg:gap-10 mt-10">
+                        <div class="lg:col-span-8 space-y-10">
+                            
+                            <div class="bg-white p-8 lg:p-10 rounded-[40px] shadow-2xl border border-slate-100">
+                                <h2 class="text-2xl font-black mb-10 dark:text-[#081B4B]">Transfer Details</h2>
+                                
+                                <form class="space-y-6">
+                                    <div>
+                                        <label class="text-[10px] font-black uppercase text-slate-400 tracking-widest ml-1">Select Bank</label>
+                                        <select id="bankList" class="w-full p-4 mt-1 bg-slate-50 border border-slate-100 rounded-2xl font-bold outline-none focus:border-[#0052FF]">
+                                            <option value="">Choose Bank...</option>
+                                            <option value="999992">OPay Digital Services</option>
+                                            <option value="999991">PalmPay</option>
+                                            <option value="058">GTBank</option>
+                                            <option value="011">First Bank</option>
+                                            <option value="033">UBA</option>
+                                            <option value="044">Access Bank</option>
+                                            <option value="070">Fidelity Bank</option>
+                                            <option value="050">Ecobank</option>
+                                            <option value="035">Wema Bank</option>
+                                            <option value="50515">Moniepoint</option>
+                                        </select>
+                                    </div>
+
+                                    <div>
+                                        <label class="text-[10px] font-black uppercase text-slate-400 tracking-widest ml-1">Account Number</label>
+                                        <input type="number" id="accountNumber" oninput="verifyReceiver()" class="w-full p-4 mt-1 bg-slate-50 border border-slate-100 rounded-2xl font-bold outline-none focus:border-[#0052FF]" placeholder="0123456789">
+                                        <p id="accountNameDisplay" class="text-[11px] font-black text-[#0052FF] mt-3 ml-1 italic min-h-[1.2rem]"></p>
+                                    </div>
+
+                                    <div>
+                                        <label class="text-[10px] font-black uppercase text-slate-400 tracking-widest ml-1">Amount to Send</label>
+                                        <input type="number" id="transferAmount" class="w-full p-4 mt-1 bg-slate-50 border border-slate-100 rounded-2xl font-black text-xl outline-none focus:border-[#0052FF]" placeholder="0.00">
+                                    </div>
+
+                                    <button type="button" onclick="openModal()" id="mainBtn" class="w-full bg-[#0052FF] text-white py-5 rounded-2xl font-black shadow-xl active:scale-95 transition-all mt-4 uppercase text-sm tracking-widest">
+                                        Confirm & Transfer
+                                    </button>
+                                </form>
+                            </div>
+
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>
@@ -94,10 +181,8 @@
     <script src="notifications.js"></script>
     <script>
         lucide.createIcons();
-        let userId = "";
-        let verifiedName = "";
+        let userId = "", verifiedName = "", actualBalance = 0, isHidden = false;
 
-        // PIN behavior
         const pinInputs = document.querySelectorAll('.pin-box');
         pinInputs.forEach((input, index) => {
             input.addEventListener('keyup', (e) => {
@@ -110,6 +195,10 @@
             const { data: { session } } = await _supabase.auth.getSession();
             if (!session) { window.location.href = "login.html"; return; }
             userId = session.user.id;
+            const { data: prof } = await _supabase.from('profiles').select('full_name').eq('id', userId).single();
+            if(prof) document.getElementById('user-name-desktop').innerText = prof.full_name;
+            const { data: wall } = await _supabase.from('wallets').select('balance').eq('id', userId).single();
+            if (wall) { actualBalance = parseFloat(wall.balance); updateBalanceUI(); }
         }
 
         async function verifyReceiver() {
@@ -118,22 +207,26 @@
             const display = document.getElementById('accountNameDisplay');
 
             if (bank && account.length === 10) {
-                display.innerText = "🔍 Verifying Account...";
-                // Call Paystack Resolve API (We can do this via public fetch)
-                // FOR TESTING: Replace 'YOUR_PUBLIC_KEY' with your Paystack Public Key
-                fetch(`https://api.paystack.co/bank/resolve?account_number=${account}&bank_code=${bank}`, {
-                    headers: { 'Authorization': 'Bearer pk_test_17c0f997be5b20fcca58572cd2c07ce7383dee99' } 
-                })
-                .then(r => r.json())
-                .then(data => {
-                    if(data.status) {
-                        verifiedName = data.data.account_name;
-                        display.innerText = "RECEIVER: " + verifiedName;
-                    } else {
-                        display.innerText = "❌ Invalid Account";
-                        verifiedName = "";
+                display.innerText = "🔍 Fetching receiver name...";
+                
+                // We call the 'verify' action in your Payout Edge Function
+                const { data, error } = await _supabase.functions.invoke('payout', {
+                    body: { 
+                        action: 'verify',
+                        bankCode: bank,
+                        accountNumber: account
                     }
                 });
+
+                if (data && data.status) {
+                    verifiedName = data.data.account_name;
+                    display.innerText = "✅ RECEIVER: " + verifiedName;
+                    display.style.color = "#10b981";
+                } else {
+                    display.innerText = "❌ Account not found. Try again.";
+                    display.style.color = "#ef4444";
+                    verifiedName = "";
+                }
             }
         }
 
@@ -145,7 +238,9 @@
             pinInputs[0].focus();
         }
 
-        async function executeFinalTransfer() {
+        function closePinModal() { document.getElementById('pinModal').classList.add('hidden'); pinInputs.forEach(i => i.value = ''); }
+
+        async function confirmWithdrawal() {
             let pin = ""; pinInputs.forEach(i => pin += i.value);
             const amt = document.getElementById('transferAmount').value;
             const bankCode = document.getElementById('bankList').value;
@@ -155,33 +250,51 @@
             btn.innerText = "Processing..."; btn.disabled = true;
 
             try {
-                // 1. Verify and Deduct from Wallet
+                // 1. Verify and Deduct Wallet
                 const { data: res } = await _supabase.rpc('process_purchase_secure', {
                     uid: userId, amt: parseFloat(amt), p_type: 'Bank Transfer',
                     p_desc: `Sent to ${verifiedName}`, input_pin: pin
                 });
 
                 if (res === 'success') {
-                    // 2. Call the Payout Edge Function
+                    // 2. Call Payout Function (Action: transfer)
                     const { data: payout, error: fErr } = await _supabase.functions.invoke('payout', {
-                        body: { bankCode, accountNumber: accNum, amount: amt, userId }
+                        body: { 
+                            action: 'transfer',
+                            bankCode: bankCode, 
+                            accountNumber: accNum, 
+                            amount: amt, 
+                            userId 
+                        }
                     });
 
                     if (fErr || !payout.status) {
-                        // Refund if it fails
                         await _supabase.rpc('fund_wallet_v2', { uid: userId, amt: parseFloat(amt) });
-                        showToast("Payout failed. Money refunded.", "error");
+                        showToast("Payout failed: " + (payout.message || "Provider Error"), "error");
                     } else {
-                        showToast("✅ Money sent successfully!", "success");
+                        showToast("✅ Transfer successful!", "success");
                         setTimeout(() => window.location.href = "dashboard.html", 2000);
                     }
                 } else {
                     showToast(res.replace('_', ' '), "error");
+                    if (res === 'invalid_pin') { pinInputs.forEach(i => i.value = ''); pinInputs[0].focus(); }
                 }
             } catch (err) { showToast("System Error", "error"); }
             finally { btn.innerText = "Confirm Transfer"; btn.disabled = false; }
         }
 
+        function toggleBalance() { isHidden = !isHidden; updateBalanceUI(); }
+        function updateBalanceUI() {
+            const display = isHidden ? "****.**" : actualBalance.toLocaleString(undefined, {minimumFractionDigits: 2});
+            const icon = isHidden ? "eye" : "eye-off";
+            ['user-balance-mobile', 'user-balance-desktop'].forEach(id => {
+                const el = document.getElementById(id); if (el) el.innerText = display;
+            });
+            const mobileEye = document.getElementById('eye-icon-mobile');
+            if(mobileEye) mobileEye.setAttribute('data-lucide', icon);
+            lucide.createIcons();
+        }
+        function toggleMenu() { document.getElementById('sidebar').classList.toggle('-translate-x-full'); document.getElementById('overlay').classList.toggle('hidden'); }
         window.onload = init;
     </script>
 </body>
