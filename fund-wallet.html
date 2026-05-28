@@ -6,197 +6,119 @@
     <title>Fund Wallet | Elite Data Services</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
-    <!-- PAYSTACK SCRIPT (Keep this in head) -->
-    <script src="https://js.paystack.co/v1/inline.js"></script>
-    
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #F8FAFF; margin: 0; padding: 0; overflow-x: hidden; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .active-nav { background: #0052FF !important; color: white !important; }
-        #sidebar { transition: transform 0.3s ease-in-out; }
-        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-        .animate-toast { animation: slideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
-        
-        .dark body { background-color: #0B1120 !important; color: #F1F5F9 !important; }
-        .dark .bg-white, .dark aside, .dark nav, .dark header { background-color: #111827 !important; border-color: #1F2937 !important; color: #F1F5F9 !important; }
-        .dark [class*="bg-[#F8FAFF]"], .dark .bg-slate-50 { background-color: #0B1120 !important; }
-        .dark [class*="text-[#081B4B]"], .dark .text-slate-900 { color: #F1F5F9 !important; }
+        #sidebar { transition: transform 0.3s ease; }
+        .overlap-card { z-index: 70 !important; position: relative; }
+        .dark body { background-color: #0B1120 !important; color: #ffffff !important; }
+        .dark .bg-white, .dark aside, .dark nav, .dark header { background-color: #111827 !important; border-color: #1F2937 !important; color: #ffffff !important; }
         .dark input { background-color: #1F2937 !important; border-color: #374151 !important; color: white !important; }
     </style>
+    <script src="theme.js"></script>
 </head>
 <body class="text-[#081B4B] antialiased">
-
     <div id="overlay" class="fixed inset-0 bg-black/40 z-[80] hidden lg:hidden" onclick="toggleMenu()"></div>
     
     <div class="flex min-h-screen">
+        <!-- SIDEBAR -->
         <aside id="sidebar" class="fixed lg:sticky top-0 left-0 h-screen w-72 bg-white border-r border-slate-100 z-[90] flex flex-col p-6 -translate-x-full lg:translate-x-0 transition-transform duration-300">
-            <div class="flex items-center gap-3 mb-10">
-                <div class="w-10 h-10 bg-[#0052FF] rounded-xl flex items-center justify-center text-white shadow-lg"><i data-lucide="zap" class="w-6 h-6 fill-current"></i></div>
-                <h1 class="text-lg font-extrabold tracking-tight text-[#081B4B]">Elite Data</h1>
-            </div>
+            <h1 class="text-lg font-black mb-10 text-[#0052FF]">Elite Data</h1>
             <nav class="flex-1 space-y-1 font-bold text-[13px]">
-                <a href="dashboard.html" class="active-nav flex items-center gap-3 px-4 py-3 rounded-2xl"><i data-lucide="layout-grid" class="w-4 h-4"></i> Dashboard</a>
-                <a href="buy-data.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="shopping-cart" class="w-4 h-4"></i> Buy Data</a>
-                <a href="buy-airtime.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="smartphone" class="w-4 h-4"></i> Airtime</a>
-                <a href="cable-tv.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="tv" class="w-4 h-4"></i> Cable TV</a>
-                <a href="electricity.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="zap" class="w-4 h-4"></i> Electricity</a>
-                <a href="history.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="history" class="w-4 h-4"></i> History</a>
-                <a href="fund-wallet.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="wallet" class="w-4 h-4"></i> Wallet</a>
-                <a href="referrals.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="users" class="w-4 h-4"></i> Referrals</a>
-                <a href="support.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="headset" class="w-4 h-4"></i> Support</a>
-                <a href="settings.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="settings" class="w-4 h-4"></i> Settings</a>
+                <a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400"><i data-lucide="layout-grid" class="w-4 h-4"></i> Dashboard</a>
+                <a href="fund-wallet.html" class="active-nav flex items-center gap-3 px-4 py-3 rounded-2xl"><i data-lucide="plus-circle" class="w-4 h-4"></i> Fund Wallet</a>
             </nav>
         </aside>
 
-        <main class="flex-1 flex flex-col min-w-0">
+        <main class="flex-1 flex flex-col min-w-0 bg-[#F8FAFF]">
             <header class="lg:hidden bg-white px-6 py-4 flex justify-between items-center border-b border-slate-50 sticky top-0 z-[60]">
                 <button onclick="toggleMenu()"><i data-lucide="menu" class="w-6 h-6"></i></button>
-                <span class="font-extrabold text-sm text-[#0052FF]">Fund Wallet</span>
-                <div class="flex items-center gap-3">
-                    <button onclick="toggleTheme()" class="w-10 h-10 flex items-center justify-center bg-slate-50 dark:bg-slate-800 rounded-xl transition-all">
-                        <i data-lucide="moon" class="w-5 h-5 text-slate-400 dark:hidden"></i>
-                        <i data-lucide="sun" class="hidden dark:block w-4 h-4 text-yellow-400"></i>
-                    </button>
-                </div>
+                <span class="font-extrabold text-[#0052FF]">Fund Wallet</span>
+                <button onclick="toggleTheme()"><i data-lucide="moon" class="w-5 h-5 text-slate-400 dark:hidden"></i><i data-lucide="sun" class="hidden dark:block w-5 h-5 text-yellow-400"></i></button>
             </header>
 
             <div class="w-full pb-32">
-                <div class="lg:hidden bg-[#0052FF] p-6 pb-24 text-white flex justify-between items-start rounded-b-[40px]">
-                    <div><p class="text-blue-100 text-[10px] font-bold uppercase tracking-widest mb-1">Add Funds,</p><h2 class="text-xl font-bold">Refill Wallet 💳</h2></div>
+                <div class="lg:hidden bg-[#0052FF] p-6 pb-24 text-white rounded-b-[40px]">
+                    <p class="text-blue-100 text-[10px] font-bold uppercase mb-1">Step 1: Transfer Money</p>
+                    <h2 class="text-xl font-black">Bank Transfer 🏦</h2>
                 </div>
 
                 <div class="max-w-4xl mx-auto px-6">
-                    <div class="lg:hidden relative z-20 bg-white p-8 rounded-[32px] -mt-16 shadow-2xl flex flex-col items-center border border-slate-50">
-                        <p class="text-slate-400 text-[10px] font-bold uppercase mb-2 tracking-widest text-center">Current Balance</p>
-                        <h3 class="text-3xl font-black text-[#081B4B]">₦<span id="user-balance-mobile">0.00</span></h3>
+                    <!-- BANK DETAILS CARD -->
+                    <div class="relative z-20 bg-white dark:bg-[#111827] p-8 rounded-[32px] lg:mt-10 -mt-16 shadow-2xl border border-slate-50 flex flex-col items-center">
+                        <p class="text-slate-400 text-[10px] font-bold uppercase mb-4 tracking-widest">Pay into this account</p>
+                        <div class="text-center space-y-2">
+                            <h3 class="text-3xl font-black text-[#0052FF]">955 756 3864</h3>
+                            <p class="font-bold text-sm dark:text-white uppercase tracking-wider">OPay Digital Services</p>
+                            <p class="text-xs text-slate-400 font-bold uppercase">Elite Data Hub</p>
+                        </div>
                     </div>
 
-                    <div class="space-y-10 mt-10">
-                        <section>
-                            <h4 class="font-extrabold text-sm mb-4 uppercase tracking-wider text-slate-400 text-center lg:text-left">1. Enter Amount</h4>
-                            <div class="relative max-w-md mx-auto lg:mx-0">
-                                <span class="absolute left-5 top-1/2 -translate-y-1/2 font-black text-slate-300 text-xl">₦</span>
-                                <input type="number" id="fundAmount" class="w-full pl-12 pr-4 py-5 bg-white border border-slate-200 rounded-[24px] outline-none focus:border-[#0052FF] font-bold text-xl shadow-sm" placeholder="0.00">
+                    <!-- SUBMISSION FORM -->
+                    <div class="mt-10 space-y-8">
+                        <section class="bg-white dark:bg-[#111827] p-8 rounded-[32px] border border-slate-100 shadow-sm">
+                            <h4 class="font-extrabold text-sm mb-6 uppercase text-slate-400">Step 2: Submit Proof</h4>
+                            <div class="space-y-5">
+                                <div>
+                                    <label class="text-[10px] font-black uppercase text-slate-400 tracking-widest ml-1">Amount Sent (₦)</label>
+                                    <input type="number" id="depositAmount" class="w-full p-4 mt-1 bg-slate-50 dark:bg-slate-800 border border-slate-100 rounded-2xl font-black text-lg outline-none focus:border-[#0052FF]" placeholder="0.00">
+                                </div>
+                                <div>
+                                    <label class="text-[10px] font-black uppercase text-slate-400 tracking-widest ml-1">Your Bank Name / Account Name</label>
+                                    <input type="text" id="senderName" class="w-full p-4 mt-1 bg-slate-50 dark:bg-slate-800 border border-slate-100 rounded-2xl font-bold outline-none focus:border-[#0052FF]" placeholder="e.g. John Doe / GTB">
+                                </div>
+                                <button onclick="submitDeposit()" id="submitBtn" class="w-full bg-[#0052FF] text-white py-5 rounded-2xl font-black shadow-xl active:scale-95 transition-all">Notify Admin</button>
                             </div>
                         </section>
-
-                        <div class="max-w-md mx-auto lg:mx-0">
-                            <button type="button" onclick="payWithPaystack()" id="payBtn" class="w-full bg-[#0052FF] text-white py-5 rounded-2xl font-black text-lg shadow-blue-200 hover:bg-blue-700 transition-all active:scale-95">
-                                Pay Now
-                            </button>
-                        </div>
                     </div>
                 </div>
             </div>
         </main>
     </div>
 
-    
-    <script src="theme.js"></script>
-    <script src="supabase-config.js"></script>
-    <script src="notifications.js"></script>
+    <script src="supabase-config.js"></script><script src="notifications.js"></script>
     <script>
         lucide.createIcons();
-        let userId = "";
-        let userEmail = ""; // This starts empty
+        let userId = "", fullName = "";
 
-        async function loadData() {
-            try {
-                const { data: { session } } = await _supabase.auth.getSession();
-                if (!session) { 
-                    window.location.href = "login.html"; 
-                    return; 
-                }
-                
-                userId = session.user.id;
-                userEmail = session.user.email; // Now email is grabbed from Supabase
-                console.log("Supabase User Loaded:", userEmail);
-
-                const { data: wallet } = await _supabase.from('wallets').select('balance').eq('id', userId).single();
-                if (wallet) {
-                    document.getElementById('user-balance-mobile').innerText = parseFloat(wallet.balance).toLocaleString();
-                }
-            } catch (err) {
-                console.error("Profile Load Error:", err);
-            }
+        async function init() {
+            const { data: { session } } = await _supabase.auth.getSession();
+            if (!session) { window.location.href = "login.html"; return; }
+            userId = session.user.id;
+            const { data: prof } = await _supabase.from('profiles').select('full_name').eq('id', userId).single();
+            fullName = prof.full_name;
         }
 
-        async function updateDatabase(amount) {
-            const { error } = await _supabase.rpc('fund_wallet_v2', {
-                uid: userId,
-                amt: parseFloat(amount)
-            });
+        async function submitDeposit() {
+            const amt = document.getElementById('depositAmount').value;
+            const sender = document.getElementById('senderName').value;
+            const btn = document.getElementById('submitBtn');
+
+            if (!amt || !sender) return showToast("Fill all fields", "error");
+
+            btn.innerText = "Submitting..."; btn.disabled = true;
+
+            const { error } = await _supabase.from('manual_deposits').insert([{
+                user_id: userId,
+                user_name: fullName,
+                amount: parseFloat(amt),
+                sender_name: sender,
+                status: 'Pending'
+            }]);
 
             if (error) {
-                showToast("Database error: " + error.message, "error");
+                showToast(error.message, "error");
+                btn.innerText = "Notify Admin"; btn.disabled = false;
             } else {
-                showToast("Wallet Funded Successfully!", "success");
-                setTimeout(() => { window.location.href = "dashboard.html"; }, 2000);
+                showToast("Request sent! Wallet will be updated after verification.", "success");
+                setTimeout(() => window.location.href = "dashboard.html", 2500);
             }
         }
-
-        function payWithPaystack() {
-    // 1. Get and Sanitize Amount (Remove commas or spaces)
-    let rawAmount = document.getElementById('fundAmount').value;
-    let cleanAmount = rawAmount.replace(/,/g, ''); 
-    let amountNum = parseFloat(cleanAmount);
-    
-    const btn = document.getElementById('payBtn');
-    
-    // 2. Validations
-    if (!amountNum || amountNum < 1000) {
-        return showToast("Minimum funding is ₦1,000", "error");
-    }
-
-    if (!userEmail) {
-        return showToast("User data loading... please wait.", "error");
-    }
-
-    btn.innerText = "Initializing...";
-    btn.disabled = true;
-
-    // 3. Generate a SUPER UNIQUE reference to avoid the 400 error
-    const uniqueRef = 'ELITE-' + Math.floor(Math.random() * 1000000000) + '-' + Date.now();
-
-    try {
-        const handler = PaystackPop.setup({
-            // .trim() removes any accidental spaces in your key
-            key: 'pk_test_17c0f997be5b20fcca58572cd2c07ce7383dee99'.trim(), 
-            email: userEmail.trim(),
-            amount: Math.floor(amountNum * 100), // Convert to Kobo correctly
-            currency: 'NGN',
-            ref: uniqueRef,
-            callback: function(response) {
-                console.log("Paystack Success:", response);
-                updateDatabase(amountNum); 
-            },
-            onClose: function() {
-                showToast("Transaction cancelled", "error");
-                btn.innerText = "Pay Now";
-                btn.disabled = false;
-            }
-        });
-
-        handler.openIframe();
-    } catch (err) {
-        console.error("Paystack Error:", err);
-        showToast("Gateway error. Check your Public Key.", "error");
-        btn.disabled = false;
-        btn.innerText = "Pay Now";
-    }
-}
-
-        function toggleMenu() {
-            const sb = document.getElementById('sidebar');
-            const ov = document.getElementById('overlay');
-            sb.classList.toggle('-translate-x-full');
-            ov.classList.toggle('hidden');
-        }
-
-        window.onload = loadData;
+        function toggleMenu() { document.getElementById('sidebar').classList.toggle('-translate-x-full'); document.getElementById('overlay').classList.toggle('hidden'); }
+        window.onload = init;
     </script>
 </body>
 </html>
