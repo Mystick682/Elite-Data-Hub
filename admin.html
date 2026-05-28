@@ -12,12 +12,12 @@
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #F8FAFF; color: #081B4B; margin: 0; padding: 0; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .tab-btn.active { background: #0052FF; color: white; box-shadow: 0 10px 15px -3px rgba(0, 82, 255, 0.2); }
-        .admin-card { background: white; border-radius: 32px; border: 1px solid #f1f5f9; padding: 24px; }
+        .admin-card { background: white; border-radius: 32px; border: 1px solid #f1f5f9; padding: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.02); }
         
-        /* Dark Mode Support */
         .dark body { background-color: #0B1120 !important; color: #ffffff !important; }
-        .dark .bg-white, .dark aside, .dark nav, .dark header { background-color: #111827 !important; border-color: #1F2937 !important; }
-        .dark .admin-card { background-color: #111827 !important; border-color: #1F2937 !important; }
+        .dark .bg-white, .dark aside, .dark nav, .dark header, .dark .admin-card { 
+            background-color: #111827 !important; border-color: #1F2937 !important; 
+        }
     </style>
     <script src="theme.js"></script>
 </head>
@@ -25,7 +25,7 @@
 
     <div class="flex min-h-screen">
         
-        <!-- SIDEBAR (Matches Site Design) -->
+        <!-- SIDEBAR -->
         <aside id="sidebar" class="hidden lg:flex w-72 bg-white border-r border-slate-100 flex-col sticky top-0 h-screen p-8">
             <div class="flex items-center gap-3 mb-12">
                 <div class="w-10 h-10 bg-[#0052FF] rounded-xl flex items-center justify-center text-white shadow-lg"><i data-lucide="shield-check"></i></div>
@@ -34,71 +34,80 @@
             <nav class="flex-1 space-y-2 font-bold text-[13px]">
                 <a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400 hover:bg-slate-50 transition-all"><i data-lucide="layout-grid" class="w-4 h-4"></i> Site Home</a>
                 <div class="h-px bg-slate-50 my-4"></div>
-                <button onclick="switchTab('overview')" class="tab-btn active w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-left"><i data-lucide="pie-chart" class="w-4 h-4"></i> Overview</button>
-                <button onclick="switchTab('users')" class="tab-btn w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400 text-left"><i data-lucide="users" class="w-4 h-4"></i> User Directory</button>
-                <button onclick="switchTab('deposits')" class="tab-btn w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400 text-left"><i data-lucide="clock" class="w-4 h-4"></i> Pending Deposits</button>
-                <button onclick="switchTab('transactions')" class="tab-btn w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400 text-left"><i data-lucide="activity" class="w-4 h-4"></i> Global Logs</button>
+                <button onclick="switchTab('overview')" class="tab-btn active w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-left transition-all"><i data-lucide="pie-chart" class="w-4 h-4"></i> Overview</button>
+                <button onclick="switchTab('users')" class="tab-btn w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400 text-left transition-all"><i data-lucide="users" class="w-4 h-4"></i> User Directory</button>
+                <button onclick="switchTab('transactions')" class="tab-btn w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400 text-left transition-all"><i data-lucide="activity" class="w-4 h-4"></i> System Logs</button>
             </nav>
         </aside>
 
-        <main class="flex-1 flex flex-col min-w-0">
+        <main class="flex-1 flex flex-col min-w-0 bg-[#F8FAFF] dark:bg-[#0B1120]">
             <!-- TOP NAV -->
-            <header class="bg-white border-b border-slate-100 px-10 py-5 flex justify-between items-center sticky top-0 z-50">
-                <h2 class="font-black text-xl tracking-tight uppercase">Command Center 👑</h2>
+            <header class="bg-white border-b border-slate-100 px-6 lg:px-10 py-5 flex justify-between items-center sticky top-0 z-50">
+                <div class="flex items-center gap-4">
+                    <button onclick="toggleMenu()" class="lg:hidden"><i data-lucide="menu"></i></button>
+                    <h2 class="font-black text-lg tracking-tight uppercase">Admin Panel 👑</h2>
+                </div>
                 <div class="flex items-center gap-4">
                     <button onclick="toggleTheme()" class="w-10 h-10 flex items-center justify-center bg-slate-50 dark:bg-slate-800 rounded-xl transition-all">
                         <i data-lucide="moon" class="w-5 h-5 text-slate-400 dark:hidden"></i>
                         <i data-lucide="sun" class="hidden dark:block w-5 h-5 text-yellow-400"></i>
                     </button>
-                    <div class="w-10 h-10 rounded-full bg-[#081B4B] text-white flex items-center justify-center font-bold text-xs uppercase">Admin</div>
+                    <button onclick="loadAllData()" class="w-10 h-10 flex items-center justify-center bg-blue-50 text-[#0052FF] rounded-xl"><i data-lucide="refresh-cw" class="w-4 h-4"></i></button>
                 </div>
             </header>
 
-            <!-- CONTENT -->
+            <!-- DASHBOARD CONTENT -->
             <div class="p-6 lg:p-10 max-w-7xl mx-auto w-full space-y-10">
 
-                <!-- 1. OVERVIEW SECTION -->
-                <div id="section-overview" class="space-y-8">
-                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                        <div class="admin-card">
-                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Members</p>
-                            <h3 id="stat-users" class="text-3xl font-black">...</h3>
-                        </div>
-                        <div class="admin-card border-blue-100">
-                            <p class="text-blue-600 text-[10px] font-black uppercase tracking-widest mb-1">System Liability</p>
-                            <h3 id="stat-liability" class="text-3xl font-black text-blue-600">₦...</h3>
-                        </div>
-                        <div class="admin-card border-green-100">
-                            <p class="text-green-600 text-[10px] font-black uppercase tracking-widest mb-1">Total Revenue</p>
-                            <h3 id="stat-revenue" class="text-3xl font-black text-green-600">₦...</h3>
-                        </div>
-                        <div class="admin-card border-orange-100">
-                            <p class="text-orange-600 text-[10px] font-black uppercase tracking-widest mb-1">Pending Tasks</p>
-                            <h3 id="stat-pending" class="text-3xl font-black text-orange-600">...</h3>
+                <!-- 1. STATS CARDS -->
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+                    <div class="admin-card">
+                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Members</p>
+                        <h3 id="stat-users" class="text-2xl lg:text-3xl font-black text-[#081B4B] dark:text-white">...</h3>
+                    </div>
+                    <div class="admin-card border-blue-50">
+                        <p class="text-blue-600 text-[10px] font-black uppercase tracking-widest mb-1">System Liability</p>
+                        <h3 id="stat-liability" class="text-2xl lg:text-3xl font-black text-blue-600">₦...</h3>
+                    </div>
+                    <div class="admin-card border-green-50">
+                        <p class="text-green-600 text-[10px] font-black uppercase tracking-widest mb-1">Total Revenue</p>
+                        <h3 id="stat-revenue" class="text-2xl lg:text-3xl font-black text-green-600">₦...</h3>
+                    </div>
+                    <div class="admin-card border-orange-50 bg-orange-50/20">
+                        <p class="text-orange-600 text-[10px] font-black uppercase tracking-widest mb-1">Pending Tasks</p>
+                        <h3 id="stat-pending" class="text-2xl lg:text-3xl font-black text-orange-600">...</h3>
+                    </div>
+                </div>
+
+                <!-- 2. PENDING DEPOSITS GRID (NOW ON OVERVIEW) -->
+                <div id="section-overview" class="space-y-6">
+                    <div class="flex justify-between items-center px-1">
+                        <h4 class="font-black text-base uppercase tracking-widest flex items-center gap-2 text-orange-600">
+                            <span class="w-2 h-2 bg-orange-500 rounded-full animate-pulse"></span>
+                            Verify Money Sent to Bank
+                        </h4>
+                    </div>
+                    
+                    <div id="deposit-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                        <!-- Deposit cards load here -->
+                        <div class="col-span-full py-12 text-center text-slate-400 font-bold uppercase text-xs tracking-widest italic opacity-40">
+                            Fetching deposit requests...
                         </div>
                     </div>
                 </div>
 
-                <!-- 2. PENDING DEPOSITS SECTION (Manual Bank Transfers) -->
-                <div id="section-deposits" class="hidden space-y-6">
-                    <h4 class="font-black text-lg uppercase tracking-wider ml-1">Manual Deposit Requests</h4>
-                    <div id="deposit-list" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <!-- Requests load here -->
-                    </div>
-                </div>
-
-                <!-- 3. USERS SECTION -->
+                <!-- 3. USERS SECTION (HIDDEN BY DEFAULT) -->
                 <div id="section-users" class="hidden space-y-6">
                     <div class="flex justify-between items-center px-1">
                         <h4 class="font-black text-lg uppercase tracking-wider">User Directory</h4>
-                        <input type="text" onkeyup="searchUsers(this.value)" placeholder="Search name or phone..." class="bg-white border border-slate-200 px-4 py-2 rounded-xl text-xs outline-none focus:border-[#0052FF] w-64 shadow-sm">
+                        <input type="text" onkeyup="searchUsers(this.value)" placeholder="Search name or phone..." class="bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 px-4 py-2 rounded-xl text-xs outline-none focus:border-[#0052FF] w-64 shadow-sm">
                     </div>
-                    <div class="admin-card overflow-x-auto p-0">
+                    <div class="admin-card overflow-x-auto p-0 border-0 shadow-xl">
                         <table class="w-full text-left">
                             <thead class="bg-slate-50 dark:bg-slate-800/50 text-[10px] font-black uppercase text-slate-400">
                                 <tr>
-                                    <th class="p-5">Member</th>
-                                    <th class="p-5">Balance</th>
+                                    <th class="p-5">Member Details</th>
+                                    <th class="p-5 text-center">Balance</th>
                                     <th class="p-5 text-right">Actions</th>
                                 </tr>
                             </thead>
@@ -109,9 +118,9 @@
                     </div>
                 </div>
 
-                <!-- 4. GLOBAL TRANSACTIONS -->
+                <!-- 4. SYSTEM LOGS (HIDDEN BY DEFAULT) -->
                 <div id="section-transactions" class="hidden space-y-6">
-                    <h4 class="font-black text-lg uppercase tracking-wider ml-1">Global System Logs</h4>
+                    <h4 class="font-black text-lg uppercase tracking-wider ml-1">Recent System-wide Logs</h4>
                     <div id="global-logs" class="space-y-3">
                         <!-- Logs load here -->
                     </div>
@@ -133,26 +142,22 @@
 
             const { data: profile } = await _supabase.from('profiles').select('is_admin').eq('id', session.user.id).single();
             if (!profile || !profile.is_admin) {
-                alert("Restricted: Admin Eyes Only");
+                alert("Unauthorized Access");
                 window.location.href = "dashboard.html";
                 return;
             }
-
             loadAllData();
         }
 
         async function loadAllData() {
-            // 1. Fetch Users & Wallets
-            const { data: profs } = await _supabase.from('profiles').select('*');
+            // Fetch everything
+            const { data: profs } = await _supabase.from('profiles').select('*').order('created_at', {ascending: false});
             const { data: walls } = await _supabase.from('wallets').select('*');
-            cache.users = profs.map(u => ({ ...u, balance: walls.find(w => w.id === u.id)?.balance || 0 }));
-
-            // 2. Fetch Transactions
             const { data: trans } = await _supabase.from('transactions').select('*').order('created_at', {ascending: false});
-            cache.transactions = trans || [];
-
-            // 3. Fetch Manual Deposits
             const { data: deps } = await _supabase.from('manual_deposits').select('*').eq('status', 'Pending').order('created_at', {ascending: false});
+
+            cache.users = profs.map(u => ({ ...u, balance: walls.find(w => w.id === u.id)?.balance || 0 }));
+            cache.transactions = trans || [];
             cache.deposits = deps || [];
 
             updateStats();
@@ -172,49 +177,80 @@
             document.getElementById('stat-pending').innerText = cache.deposits.length;
         }
 
+        function renderDeposits(data) {
+            const container = document.getElementById('deposit-grid');
+            if (data.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full admin-card text-center border-dashed border-2 bg-transparent opacity-50 py-16">
+                        <p class="text-slate-400 font-black uppercase text-xs">No money waiting for approval</p>
+                    </div>`;
+                return;
+            }
+            container.innerHTML = data.map(d => `
+                <div class="admin-card border-orange-100 bg-white dark:bg-[#111827] shadow-xl transform transition-transform hover:-translate-y-1">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="w-10 h-10 bg-orange-50 dark:bg-orange-950 rounded-xl flex items-center justify-center text-orange-500"><i data-lucide="banknote"></i></div>
+                        <span class="text-[9px] font-black uppercase bg-orange-50 text-orange-600 px-2 py-1 rounded-lg">Verify Bank app</span>
+                    </div>
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Elite Member</p>
+                    <h5 class="font-black text-[#081B4B] dark:text-white mb-4 truncate text-sm">${d.user_name}</h5>
+                    
+                    <div class="space-y-1 py-4 border-y border-slate-50 dark:border-slate-800 mb-6">
+                        <p class="text-[9px] font-bold text-slate-400 uppercase">Bank/Sender Name:</p>
+                        <p class="text-xs font-black text-[#081B4B] dark:text-white uppercase">${d.sender_name}</p>
+                    </div>
+
+                    <div class="flex justify-between items-center mb-6">
+                        <span class="text-xs font-black text-slate-400">AMOUNT:</span>
+                        <span class="text-2xl font-black text-[#0052FF]">₦${parseFloat(d.amount).toLocaleString()}</span>
+                    </div>
+
+                    <div class="flex gap-2">
+                        <button onclick="approveDeposit('${d.id}', '${d.user_id}', ${d.amount})" class="flex-1 bg-[#10b981] text-white py-3 rounded-2xl font-black text-[10px] uppercase shadow-lg shadow-green-200 transition-all active:scale-95">Approve ₦</button>
+                        <button onclick="rejectDeposit('${d.id}')" class="w-12 h-12 bg-slate-50 dark:bg-slate-800 text-red-500 rounded-2xl flex items-center justify-center border border-slate-100 dark:border-slate-700"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                    </div>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        async function approveDeposit(reqId, uid, amt) {
+            if(!confirm("Elite Admin: Did you receive this money in your bank account?")) return;
+            const { error } = await _supabase.rpc('approve_manual_deposit', { request_id: reqId, target_uid: uid, amt: parseFloat(amt) });
+            if (error) showToast(error.message, "error");
+            else { showToast("Wallet Funded Successfully!", "success"); loadAllData(); }
+        }
+
         function renderUsers(data) {
             const container = document.getElementById('user-table');
             container.innerHTML = data.map(u => `
-                <tr class="border-b border-slate-50 last:border-0 hover:bg-slate-50/50 transition-colors">
+                <tr class="border-b border-slate-50 dark:border-slate-800 last:border-0 hover:bg-slate-50/50 transition-colors">
                     <td class="p-5">
                         <p class="font-black">${u.full_name}</p>
                         <p class="text-[10px] text-slate-400 font-bold uppercase tracking-tighter">${u.phone_number || 'No Phone'}</p>
                     </td>
-                    <td class="p-5 font-black text-blue-600">₦${parseFloat(u.balance).toLocaleString()}</td>
+                    <td class="p-5 text-center font-black text-blue-600">₦${parseFloat(u.balance).toLocaleString()}</td>
                     <td class="p-5 text-right">
-                        <button onclick="manualFund('${u.id}', '${u.full_name}')" class="bg-blue-50 text-blue-600 px-4 py-1.5 rounded-xl text-[10px] font-black uppercase hover:bg-blue-600 hover:text-white transition-all">Fund</button>
+                        <button onclick="manualFund('${u.id}', '${u.full_name}')" class="bg-slate-900 text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase active:scale-95 transition-all">Manual Fund</button>
                     </td>
                 </tr>
             `).join('');
         }
 
-        function renderDeposits(data) {
-            const container = document.getElementById('deposit-list');
-            if (data.length === 0) {
-                container.innerHTML = `<p class="text-slate-400 font-bold text-xs p-4">No pending deposit requests.</p>`;
-                return;
-            }
-            container.innerHTML = data.map(d => `
-                <div class="admin-card border-blue-50 bg-blue-50/20 flex justify-between items-center">
-                    <div>
-                        <p class="font-black text-sm uppercase">${d.user_name}</p>
-                        <p class="text-[10px] text-slate-500 font-bold">SENDER: ${d.sender_name}</p>
-                        <h4 class="text-xl font-black text-[#0052FF] mt-2">₦${parseFloat(d.amount).toLocaleString()}</h4>
-                    </div>
-                    <div class="flex flex-col gap-2">
-                        <button onclick="approveDeposit('${d.id}', '${d.user_id}', ${d.amount})" class="bg-[#10b981] text-white px-5 py-2 rounded-xl font-black text-[10px] uppercase shadow-lg">Approve</button>
-                        <button onclick="rejectDeposit('${d.id}')" class="text-red-500 font-black text-[9px] uppercase tracking-widest">Reject</button>
-                    </div>
-                </div>
-            `).join('');
+        async function manualFund(uid, name) {
+            const amt = prompt(`Elite Manual Override: Add funds to ${name}`);
+            if(!amt || isNaN(amt)) return;
+            const { error } = await _supabase.rpc('admin_fund_wallet', { target_uid: uid, amt: parseFloat(amt) });
+            if (error) showToast(error.message, "error");
+            else { showToast("Manual Fund Success!", "success"); loadAllData(); }
         }
 
         function renderLogs(data) {
             const container = document.getElementById('global-logs');
-            container.innerHTML = data.map(t => `
-                <div class="flex items-center justify-between p-4 bg-white rounded-2xl border border-slate-50 shadow-sm">
+            container.innerHTML = data.slice(0, 10).map(t => `
+                <div class="flex items-center justify-between p-4 bg-white dark:bg-[#111827] rounded-2xl border border-slate-50 dark:border-slate-800">
                     <div class="flex items-center gap-4">
-                        <div class="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center"><i data-lucide="activity" class="w-4 h-4 text-slate-400"></i></div>
+                        <div class="w-10 h-10 bg-slate-50 dark:bg-slate-800 rounded-xl flex items-center justify-center"><i data-lucide="activity" class="w-4 h-4 text-slate-400"></i></div>
                         <div>
                             <p class="font-black text-xs uppercase">${t.type}</p>
                             <p class="text-[9px] text-slate-400 font-bold uppercase">${new Date(t.created_at).toLocaleString()}</p>
@@ -226,27 +262,17 @@
             lucide.createIcons();
         }
 
-        async function approveDeposit(reqId, uid, amt) {
-            if(!confirm("Are you sure you received this money in your real bank?")) return;
-            const { error } = await _supabase.rpc('approve_manual_deposit', { request_id: reqId, target_uid: uid, amt: parseFloat(amt) });
-            if (error) showToast(error.message, "error");
-            else { showToast("Wallet Funded!"); loadAllData(); }
-        }
-
-        async function manualFund(uid, name) {
-            const amt = prompt(`Enter amount to add to ${name}'s wallet:`);
-            if(!amt || isNaN(amt)) return;
-            const { error } = await _supabase.rpc('admin_fund_wallet', { target_uid: uid, amt: parseFloat(amt) });
-            if (error) showToast(error.message, "error");
-            else { showToast("Success!"); loadAllData(); }
-        }
-
         function switchTab(tab) {
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active', 'text-slate-400'));
-            event.currentTarget.classList.add('active');
-            ['overview', 'users', 'deposits', 'transactions'].forEach(s => {
-                document.getElementById('section-' + s).classList.toggle('hidden', s !== tab);
+            document.querySelectorAll('.tab-btn').forEach(b => {
+                b.classList.remove('active');
+                b.classList.add('text-slate-400');
             });
+            event.currentTarget.classList.add('active');
+            event.currentTarget.classList.remove('text-slate-400');
+            
+            document.getElementById('section-overview').classList.toggle('hidden', tab !== 'overview');
+            document.getElementById('section-users').classList.toggle('hidden', tab !== 'users');
+            document.getElementById('section-transactions').classList.toggle('hidden', tab !== 'transactions');
         }
 
         function searchUsers(val) {
