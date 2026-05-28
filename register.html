@@ -260,24 +260,30 @@
             // ── END PIN validation ──
 
             const { data, error } = await _supabase.auth.signUp({
-                email: email,
-                password: password,
-                options: {
-                    data: {
-                        full_name: fullName,
-                        phone_number: phone,
-                        referred_by: refCodeFromUrl,
-                        transaction_pin: pin   // ── PIN passed to DB trigger (new) ──
-                    }
+            email: email,
+            password: password,
+            options: {
+                data: {
+                    full_name: fullName,
+                    phone_number: phone,
+                    referred_by: refCodeFromUrl
+                    // transaction_pin removed from here
                 }
-            });
-
-            if (error) {
-                showToast(error.message, "error");
-            } else {
-                showToast("Welcome to the Elite family!");
-                setTimeout(() => { window.location.href = "login.html"; }, 1500);
             }
+        });
+        
+        if (error) {
+            showToast(error.message, "error");
+        } else {
+            // Save the PIN separately after the user is created
+            await _supabase
+                .from('profiles')
+                .update({ transaction_pin: pin })
+                .eq('id', data.user.id);
+        
+            showToast("Welcome to the Elite family!");
+            setTimeout(() => { window.location.href = "login.html"; }, 1500);
+        }
         });
     </script>
 </body>
