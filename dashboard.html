@@ -327,7 +327,7 @@
 
                 const { data: profile } = await _supabase.from('profiles').select('full_name, is_admin').eq('id', uid).single();
                 if (profile) {
-                    const n = (profile.full_name || 'Elite Member') + ' 👋';
+                    const n = (profile.full_name || 'Elite Member') + ' ';
                     document.getElementById('user-name-mobile').innerText = n;
                     document.getElementById('user-name-desktop').innerText = n;
                     if (profile.is_admin === true) {
