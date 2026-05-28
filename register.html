@@ -167,14 +167,25 @@
                             <label class="text-[11px] font-bold text-slate-500 uppercase tracking-[0.15em] ml-1">Password</label>
                             <div class="input-group flex items-center border border-slate-200 rounded-2xl bg-slate-50/50 px-4 transition-all relative">
                                 <i data-lucide="lock" class="w-5 h-5 text-slate-300"></i>
-                                <!-- Updated Password Input -->
                                 <input type="password" id="password" class="w-full p-3.5 bg-transparent outline-none text-sm font-medium" placeholder="Create a password" required minlength="6">
-                                <!-- Eye Toggle Button -->
                                 <button type="button" onclick="togglePasswordVisibility()" class="focus:outline-none">
                                     <i id="eyeIcon" data-lucide="eye-off" class="w-5 h-5 text-slate-300 hover:text-[#0052FF] transition-colors"></i>
                                 </button>
                             </div>
                         </div>
+
+                        <!-- ── TRANSACTION PIN (new) ── -->
+                        <div class="space-y-1.5">
+                            <label class="text-[11px] font-bold text-slate-500 uppercase tracking-[0.15em] ml-1">Transaction PIN</label>
+                            <div class="input-group flex items-center border border-slate-200 rounded-2xl bg-slate-50/50 px-4 transition-all">
+                                <i data-lucide="shield" class="w-5 h-5 text-slate-300"></i>
+                                <input type="password" id="transactionPin" maxlength="4" pattern="\d{4}"
+                                    class="w-full p-3.5 bg-transparent outline-none text-sm font-medium tracking-[0.5em]"
+                                    placeholder="4-digit PIN" required inputmode="numeric">
+                            </div>
+                            <p class="text-[10px] text-slate-400 ml-1">Used to authorise transactions. Keep it secret.</p>
+                        </div>
+                        <!-- ── END TRANSACTION PIN ── -->
 
                         <div class="flex items-start gap-3 py-2">
                             <input type="checkbox" class="mt-1 w-5 h-5 rounded-lg border-slate-300 text-[#0052FF] focus:ring-[#0052FF]" required>
@@ -215,11 +226,9 @@
     <script>
         lucide.createIcons();
 
-        // --- PASSWORD TOGGLE LOGIC ---
         function togglePasswordVisibility() {
             const passwordInput = document.getElementById('password');
             const eyeIcon = document.getElementById('eyeIcon');
-
             if (passwordInput.type === 'password') {
                 passwordInput.type = 'text';
                 eyeIcon.setAttribute('data-lucide', 'eye');
@@ -227,41 +236,49 @@
                 passwordInput.type = 'password';
                 eyeIcon.setAttribute('data-lucide', 'eye-off');
             }
-            lucide.createIcons(); // Refresh icons
+            lucide.createIcons();
         }
 
         const form = document.getElementById('registerForm');
         form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    
-    // Catch the referral code from the URL (e.g. ?ref=ELITE-XXXXXX)
-    const urlParams = new URLSearchParams(window.location.search);
-    const refCodeFromUrl = urlParams.get('ref');
+            e.preventDefault();
 
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-    const fullName = document.getElementById('fullName').value;
-    const phone = document.getElementById('phone').value;
+            const urlParams = new URLSearchParams(window.location.search);
+            const refCodeFromUrl = urlParams.get('ref');
 
-    const { data, error } = await _supabase.auth.signUp({
-        email: email,
-        password: password,
-        options: {
-            data: {
-                full_name: fullName, 
-                phone_number: phone,
-                referred_by: refCodeFromUrl // Pass the code to the database trigger
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const fullName = document.getElementById('fullName').value;
+            const phone = document.getElementById('phone').value;
+
+            // ── PIN validation (new) ──
+            const pin = document.getElementById('transactionPin').value;
+            if (!/^\d{4}$/.test(pin)) {
+                showToast("Transaction PIN must be exactly 4 digits", "error");
+                return;
             }
-        }
-    });
+            // ── END PIN validation ──
 
-    if (error) {
-        showToast(error.message, "error");
-    } else {
-        showToast("Welcome to the Elite family!");
-        setTimeout(() => { window.location.href = "login.html"; }, 1500);
-    }
-});
+            const { data, error } = await _supabase.auth.signUp({
+                email: email,
+                password: password,
+                options: {
+                    data: {
+                        full_name: fullName,
+                        phone_number: phone,
+                        referred_by: refCodeFromUrl,
+                        transaction_pin: pin   // ── PIN passed to DB trigger (new) ──
+                    }
+                }
+            });
+
+            if (error) {
+                showToast(error.message, "error");
+            } else {
+                showToast("Welcome to the Elite family!");
+                setTimeout(() => { window.location.href = "login.html"; }, 1500);
+            }
+        });
     </script>
 </body>
 </html>
