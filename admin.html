@@ -11,119 +11,225 @@
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #F8FAFF; color: #081B4B; margin: 0; padding: 0; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        .tab-btn.active { background: #0052FF; color: white; box-shadow: 0 10px 15px -3px rgba(0, 82, 255, 0.2); }
-        .admin-card { background: white; border-radius: 32px; border: 1px solid #f1f5f9; padding: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.02); }
-        
-        .dark body { background-color: #0B1120 !important; color: #ffffff !important; }
-        .dark .bg-white, .dark aside, .dark nav, .dark header, .dark .admin-card { 
-            background-color: #111827 !important; border-color: #1F2937 !important; 
+
+        /* ── Tab active state ── */
+        .tab-btn.active { background: #0052FF; color: white !important; box-shadow: 0 10px 15px -3px rgba(0, 82, 255, 0.2); }
+
+        /* ── Card base ── */
+        .admin-card {
+            background: white;
+            border-radius: 32px;
+            border: 1px solid #f1f5f9;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+            min-width: 0; /* prevent overflow */
+        }
+
+        /* ── Stat value: fluid font so it never busts the card ── */
+        .stat-val {
+            font-weight: 900;
+            font-size: clamp(0.95rem, 3.5vw, 1.75rem);
+            line-height: 1.2;
+            word-break: break-all;
+            overflow-wrap: anywhere;
+        }
+
+        /* ════════════════════════════════════════
+           DARK MODE — complete coverage
+        ════════════════════════════════════════ */
+        .dark body {
+            background-color: #0B1120 !important;
+            color: #F1F5F9 !important;
+        }
+        /* Page background */
+        .dark main,
+        .dark [class*="bg-[#F8FAFF]"],
+        .dark .bg-slate-50 {
+            background-color: #0B1120 !important;
+        }
+        /* Sidebar, header, white surfaces */
+        .dark aside,
+        .dark header,
+        .dark .bg-white {
+            background-color: #111827 !important;
+            border-color: #1F2937 !important;
+            color: #F1F5F9 !important;
+        }
+        /* Cards */
+        .dark .admin-card {
+            background-color: #111827 !important;
+            border-color: #1F2937 !important;
+            color: #F1F5F9 !important;
+        }
+        /* Muted text */
+        .dark .text-slate-400,
+        .dark .text-slate-500 {
+            color: #94A3B8 !important;
+        }
+        .dark [class*="text-[#081B4B]"],
+        .dark .text-slate-900 {
+            color: #F1F5F9 !important;
+        }
+        /* Inputs */
+        .dark input {
+            background-color: #1F2937 !important;
+            border-color: #374151 !important;
+            color: #F1F5F9 !important;
+        }
+        /* Subtle backgrounds inside cards */
+        .dark .bg-slate-50,
+        .dark [class*="bg-slate-50"] {
+            background-color: #1F2937 !important;
+        }
+        /* Table header */
+        .dark thead {
+            background-color: #1a2235 !important;
+        }
+        /* Tab buttons inactive */
+        .dark .tab-btn:not(.active) {
+            color: #94A3B8 !important;
+        }
+        .dark .tab-btn:not(.active):hover {
+            background-color: #1F2937 !important;
+        }
+        /* Deposit / log cards rendered via JS */
+        .dark .log-row {
+            background-color: #111827 !important;
+            border-color: #1F2937 !important;
+        }
+        /* Orange badge inside deposit card */
+        .dark .badge-orange {
+            background-color: rgba(251,146,60,0.15) !important;
+        }
+        /* Dividers */
+        .dark .border-slate-50,
+        .dark .divide-slate-50 {
+            border-color: #1F2937 !important;
+        }
+        /* Refresh / icon buttons */
+        .dark .bg-blue-50 {
+            background-color: rgba(0,82,255,0.15) !important;
+        }
+        .dark .bg-slate-800 {
+            background-color: #1F2937 !important;
         }
     </style>
     <script src="theme.js"></script>
 </head>
 <body class="antialiased">
 
+    <!-- ── Mobile overlay ── -->
+    <div id="overlay" class="fixed inset-0 bg-black/40 z-[80] hidden lg:hidden" onclick="toggleMenu()"></div>
+
     <div class="flex min-h-screen">
-        
-        <!-- SIDEBAR -->
-        <aside id="sidebar" class="hidden lg:flex w-72 bg-white border-r border-slate-100 flex-col sticky top-0 h-screen p-8">
+
+        <!-- ── SIDEBAR — translate-x approach (consistent with all other pages) ── -->
+        <aside id="sidebar" class="fixed lg:sticky top-0 left-0 h-screen w-72 bg-white border-r border-slate-100 z-[90] flex flex-col p-8 -translate-x-full lg:translate-x-0 transition-transform duration-300">
             <div class="flex items-center gap-3 mb-12">
-                <div class="w-10 h-10 bg-[#0052FF] rounded-xl flex items-center justify-center text-white shadow-lg"><i data-lucide="shield-check"></i></div>
+                <div class="w-10 h-10 bg-[#0052FF] rounded-xl flex items-center justify-center text-white shadow-lg">
+                    <i data-lucide="shield-check"></i>
+                </div>
                 <h1 class="text-lg font-extrabold tracking-tight uppercase italic">Elite Admin</h1>
             </div>
             <nav class="flex-1 space-y-2 font-bold text-[13px]">
-                <a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400 hover:bg-slate-50 transition-all"><i data-lucide="layout-grid" class="w-4 h-4"></i> Site Home</a>
-                <div class="h-px bg-slate-50 my-4"></div>
-                <button onclick="switchTab('overview')" class="tab-btn active w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-left transition-all"><i data-lucide="pie-chart" class="w-4 h-4"></i> Overview</button>
-                <button onclick="switchTab('users')" class="tab-btn w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400 text-left transition-all"><i data-lucide="users" class="w-4 h-4"></i> User Directory</button>
-                <button onclick="switchTab('transactions')" class="tab-btn w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400 text-left transition-all"><i data-lucide="activity" class="w-4 h-4"></i> System Logs</button>
+                <a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400 hover:bg-slate-50 transition-all">
+                    <i data-lucide="layout-grid" class="w-4 h-4"></i> Site Home
+                </a>
+                <div class="h-px bg-slate-100 my-4"></div>
+                <button onclick="switchTab('overview', event)" class="tab-btn active w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-left transition-all">
+                    <i data-lucide="pie-chart" class="w-4 h-4"></i> Overview
+                </button>
+                <button onclick="switchTab('users', event)" class="tab-btn w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400 text-left transition-all">
+                    <i data-lucide="users" class="w-4 h-4"></i> User Directory
+                </button>
+                <button onclick="switchTab('transactions', event)" class="tab-btn w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400 text-left transition-all">
+                    <i data-lucide="activity" class="w-4 h-4"></i> System Logs
+                </button>
             </nav>
         </aside>
 
-        <main class="flex-1 flex flex-col min-w-0 bg-[#F8FAFF] dark:bg-[#0B1120]">
-            <!-- TOP NAV -->
-            <header class="bg-white border-b border-slate-100 px-6 lg:px-10 py-5 flex justify-between items-center sticky top-0 z-50">
-                <div class="flex items-center gap-4">
-                    <button onclick="toggleMenu()" class="lg:hidden"><i data-lucide="menu"></i></button>
-                    <h2 class="font-black text-lg tracking-tight uppercase">Admin Panel 👑</h2>
+        <main class="flex-1 flex flex-col min-w-0">
+            <!-- ── TOP NAV ── -->
+            <header class="bg-white border-b border-slate-100 px-5 lg:px-10 py-4 flex justify-between items-center sticky top-0 z-50">
+                <div class="flex items-center gap-3">
+                    <!-- Hamburger — always visible on mobile -->
+                    <button onclick="toggleMenu()" class="lg:hidden w-10 h-10 flex items-center justify-center rounded-xl hover:bg-slate-50 transition-all">
+                        <i data-lucide="menu" class="w-5 h-5"></i>
+                    </button>
+                    <h2 class="font-black text-base lg:text-lg tracking-tight uppercase">Admin Panel 👑</h2>
                 </div>
-                <div class="flex items-center gap-4">
+                <div class="flex items-center gap-2">
                     <button onclick="toggleTheme()" class="w-10 h-10 flex items-center justify-center bg-slate-50 dark:bg-slate-800 rounded-xl transition-all">
                         <i data-lucide="moon" class="w-5 h-5 text-slate-400 dark:hidden"></i>
                         <i data-lucide="sun" class="hidden dark:block w-5 h-5 text-yellow-400"></i>
                     </button>
-                    <button onclick="loadAllData()" class="w-10 h-10 flex items-center justify-center bg-blue-50 text-[#0052FF] rounded-xl"><i data-lucide="refresh-cw" class="w-4 h-4"></i></button>
+                    <button onclick="loadAllData()" class="w-10 h-10 flex items-center justify-center bg-blue-50 text-[#0052FF] rounded-xl">
+                        <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+                    </button>
                 </div>
             </header>
 
-            <!-- DASHBOARD CONTENT -->
-            <div class="p-6 lg:p-10 max-w-7xl mx-auto w-full space-y-10">
+            <!-- ── CONTENT ── -->
+            <div class="p-4 lg:p-10 max-w-7xl mx-auto w-full space-y-8">
 
-                <!-- 1. STATS CARDS -->
-                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+                <!-- 1. STAT CARDS -->
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-6">
                     <div class="admin-card">
-                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Members</p>
-                        <h3 id="stat-users" class="text-2xl lg:text-3xl font-black text-[#081B4B] dark:text-white">...</h3>
+                        <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2 truncate">Total Members</p>
+                        <div id="stat-users" class="stat-val text-[#081B4B] dark:text-white">…</div>
                     </div>
-                    <div class="admin-card border-blue-50">
-                        <p class="text-blue-600 text-[10px] font-black uppercase tracking-widest mb-1">System Liability</p>
-                        <h3 id="stat-liability" class="text-2xl lg:text-3xl font-black text-blue-600">₦...</h3>
+                    <div class="admin-card">
+                        <p class="text-[9px] font-black text-blue-500 uppercase tracking-widest mb-2 truncate">Liability</p>
+                        <div id="stat-liability" class="stat-val text-blue-600">…</div>
                     </div>
-                    <div class="admin-card border-green-50">
-                        <p class="text-green-600 text-[10px] font-black uppercase tracking-widest mb-1">Total Revenue</p>
-                        <h3 id="stat-revenue" class="text-2xl lg:text-3xl font-black text-green-600">₦...</h3>
+                    <div class="admin-card">
+                        <p class="text-[9px] font-black text-green-600 uppercase tracking-widest mb-2 truncate">Revenue</p>
+                        <div id="stat-revenue" class="stat-val text-green-600">…</div>
                     </div>
-                    <div class="admin-card border-orange-50 bg-orange-50/20">
-                        <p class="text-orange-600 text-[10px] font-black uppercase tracking-widest mb-1">Pending Tasks</p>
-                        <h3 id="stat-pending" class="text-2xl lg:text-3xl font-black text-orange-600">...</h3>
+                    <div class="admin-card">
+                        <p class="text-[9px] font-black text-orange-500 uppercase tracking-widest mb-2 truncate">Pending</p>
+                        <div id="stat-pending" class="stat-val text-orange-500">…</div>
                     </div>
                 </div>
 
-                <!-- 2. PENDING DEPOSITS GRID (NOW ON OVERVIEW) -->
+                <!-- 2. PENDING DEPOSITS -->
                 <div id="section-overview" class="space-y-6">
-                    <div class="flex justify-between items-center px-1">
-                        <h4 class="font-black text-base uppercase tracking-widest flex items-center gap-2 text-orange-600">
-                            <span class="w-2 h-2 bg-orange-500 rounded-full animate-pulse"></span>
-                            Verify Money Sent to Bank
-                        </h4>
-                    </div>
-                    
+                    <h4 class="font-black text-sm uppercase tracking-widest flex items-center gap-2 text-orange-600 px-1">
+                        <span class="w-2 h-2 bg-orange-500 rounded-full animate-pulse shrink-0"></span>
+                        Verify Money Sent to Bank
+                    </h4>
                     <div id="deposit-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                        <!-- Deposit cards load here -->
                         <div class="col-span-full py-12 text-center text-slate-400 font-bold uppercase text-xs tracking-widest italic opacity-40">
-                            Fetching deposit requests...
+                            Fetching deposit requests…
                         </div>
                     </div>
                 </div>
 
-                <!-- 3. USERS SECTION (HIDDEN BY DEFAULT) -->
+                <!-- 3. USERS -->
                 <div id="section-users" class="hidden space-y-6">
-                    <div class="flex justify-between items-center px-1">
-                        <h4 class="font-black text-lg uppercase tracking-wider">User Directory</h4>
-                        <input type="text" onkeyup="searchUsers(this.value)" placeholder="Search name or phone..." class="bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 px-4 py-2 rounded-xl text-xs outline-none focus:border-[#0052FF] w-64 shadow-sm">
+                    <div class="flex flex-col sm:flex-row justify-between gap-3 items-start sm:items-center px-1">
+                        <h4 class="font-black text-base uppercase tracking-wider">User Directory</h4>
+                        <input type="text" onkeyup="searchUsers(this.value)" placeholder="Search name or phone…"
+                            class="bg-white border border-slate-200 px-4 py-2 rounded-xl text-xs outline-none focus:border-[#0052FF] w-full sm:w-64 shadow-sm">
                     </div>
-                    <div class="admin-card overflow-x-auto p-0 border-0 shadow-xl">
-                        <table class="w-full text-left">
-                            <thead class="bg-slate-50 dark:bg-slate-800/50 text-[10px] font-black uppercase text-slate-400">
+                    <div class="admin-card overflow-x-auto p-0 border-0 shadow-xl rounded-[32px]">
+                        <table class="w-full text-left min-w-[420px]">
+                            <thead class="bg-slate-50 text-[10px] font-black uppercase text-slate-400">
                                 <tr>
-                                    <th class="p-5">Member Details</th>
-                                    <th class="p-5 text-center">Balance</th>
-                                    <th class="p-5 text-right">Actions</th>
+                                    <th class="p-4 lg:p-5 rounded-tl-[32px]">Member</th>
+                                    <th class="p-4 lg:p-5 text-center">Balance</th>
+                                    <th class="p-4 lg:p-5 text-right rounded-tr-[32px]">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody id="user-table" class="text-sm font-bold">
-                                <!-- Users load here -->
-                            </tbody>
+                            <tbody id="user-table" class="text-sm font-bold divide-y divide-slate-50"></tbody>
                         </table>
                     </div>
                 </div>
 
-                <!-- 4. SYSTEM LOGS (HIDDEN BY DEFAULT) -->
+                <!-- 4. SYSTEM LOGS -->
                 <div id="section-transactions" class="hidden space-y-6">
-                    <h4 class="font-black text-lg uppercase tracking-wider ml-1">Recent System-wide Logs</h4>
-                    <div id="global-logs" class="space-y-3">
-                        <!-- Logs load here -->
-                    </div>
+                    <h4 class="font-black text-base uppercase tracking-wider ml-1">Recent System-wide Logs</h4>
+                    <div id="global-logs" class="space-y-3"></div>
                 </div>
 
             </div>
@@ -136,30 +242,37 @@
         lucide.createIcons();
         let cache = { users: [], transactions: [], deposits: [] };
 
+        /* ── Hamburger ── */
+        function toggleMenu() {
+            document.getElementById('sidebar').classList.toggle('-translate-x-full');
+            document.getElementById('overlay').classList.toggle('hidden');
+        }
+
+        /* ── Compact number (keeps cards tidy on mobile) ── */
+        function fmtNum(n) {
+            if (n >= 1_000_000) return '₦' + (n / 1_000_000).toFixed(1) + 'M';
+            if (n >= 1_000)     return '₦' + (n / 1_000).toFixed(1) + 'K';
+            return '₦' + Number(n).toLocaleString();
+        }
+
         async function initAdmin() {
             const { data: { session } } = await _supabase.auth.getSession();
-            if (!session) { window.location.href = "login.html"; return; }
-
+            if (!session) { window.location.href = 'login.html'; return; }
             const { data: profile } = await _supabase.from('profiles').select('is_admin').eq('id', session.user.id).single();
-            if (!profile || !profile.is_admin) {
-                alert("Unauthorized Access");
-                window.location.href = "dashboard.html";
-                return;
-            }
+            if (!profile?.is_admin) { alert('Unauthorized Access'); window.location.href = 'dashboard.html'; return; }
             loadAllData();
         }
 
         async function loadAllData() {
-            // Fetch everything
-            const { data: profs } = await _supabase.from('profiles').select('*').order('created_at', {ascending: false});
-            const { data: walls } = await _supabase.from('wallets').select('*');
-            const { data: trans } = await _supabase.from('transactions').select('*').order('created_at', {ascending: false});
-            const { data: deps } = await _supabase.from('manual_deposits').select('*').eq('status', 'Pending').order('created_at', {ascending: false});
-
-            cache.users = profs.map(u => ({ ...u, balance: walls.find(w => w.id === u.id)?.balance || 0 }));
-            cache.transactions = trans || [];
-            cache.deposits = deps || [];
-
+            const [{ data: profs }, { data: walls }, { data: trans }, { data: deps }] = await Promise.all([
+                _supabase.from('profiles').select('*').order('created_at', { ascending: false }),
+                _supabase.from('wallets').select('*'),
+                _supabase.from('transactions').select('*').order('created_at', { ascending: false }),
+                _supabase.from('manual_deposits').select('*').eq('status', 'Pending').order('created_at', { ascending: false })
+            ]);
+            cache.users        = (profs || []).map(u => ({ ...u, balance: walls?.find(w => w.id === u.id)?.balance || 0 }));
+            cache.transactions = trans  || [];
+            cache.deposits     = deps   || [];
             updateStats();
             renderUsers(cache.users);
             renderDeposits(cache.deposits);
@@ -167,117 +280,124 @@
         }
 
         function updateStats() {
-            document.getElementById('stat-users').innerText = cache.users.length;
-            const liability = cache.users.reduce((s, u) => s + parseFloat(u.balance), 0);
-            document.getElementById('stat-liability').innerText = "₦" + liability.toLocaleString();
-            
-            const revenue = cache.transactions.reduce((s, t) => s + parseFloat(t.amount), 0);
-            document.getElementById('stat-revenue').innerText = "₦" + revenue.toLocaleString();
-            
-            document.getElementById('stat-pending').innerText = cache.deposits.length;
+            document.getElementById('stat-users').innerText     = cache.users.length;
+            document.getElementById('stat-liability').innerText = fmtNum(cache.users.reduce((s, u) => s + parseFloat(u.balance || 0), 0));
+            document.getElementById('stat-revenue').innerText   = fmtNum(cache.transactions.reduce((s, t) => s + parseFloat(t.amount || 0), 0));
+            document.getElementById('stat-pending').innerText   = cache.deposits.length;
         }
 
         function renderDeposits(data) {
-            const container = document.getElementById('deposit-grid');
-            if (data.length === 0) {
-                container.innerHTML = `
-                    <div class="col-span-full admin-card text-center border-dashed border-2 bg-transparent opacity-50 py-16">
-                        <p class="text-slate-400 font-black uppercase text-xs">No money waiting for approval</p>
-                    </div>`;
+            const c = document.getElementById('deposit-grid');
+            if (!data.length) {
+                c.innerHTML = `<div class="col-span-full admin-card text-center border-dashed border-2 bg-transparent opacity-50 py-16">
+                    <p class="text-slate-400 font-black uppercase text-xs">No deposits awaiting approval</p></div>`;
                 return;
             }
-            container.innerHTML = data.map(d => `
-                <div class="admin-card border-orange-100 bg-white dark:bg-[#111827] shadow-xl transform transition-transform hover:-translate-y-1">
-                    <div class="flex justify-between items-start mb-6">
-                        <div class="w-10 h-10 bg-orange-50 dark:bg-orange-950 rounded-xl flex items-center justify-center text-orange-500"><i data-lucide="banknote"></i></div>
-                        <span class="text-[9px] font-black uppercase bg-orange-50 text-orange-600 px-2 py-1 rounded-lg">Verify Bank app</span>
+            c.innerHTML = data.map(d => `
+                <div class="admin-card border-orange-100 shadow-xl hover:-translate-y-1 transition-transform">
+                    <div class="flex justify-between items-start mb-5">
+                        <div class="w-10 h-10 bg-orange-50 rounded-xl flex items-center justify-center text-orange-500 shrink-0">
+                            <i data-lucide="banknote"></i>
+                        </div>
+                        <span class="badge-orange text-[9px] font-black uppercase bg-orange-50 text-orange-600 px-2 py-1 rounded-lg">Verify Bank</span>
                     </div>
                     <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Elite Member</p>
-                    <h5 class="font-black text-[#081B4B] dark:text-white mb-4 truncate text-sm">${d.user_name}</h5>
-                    
-                    <div class="space-y-1 py-4 border-y border-slate-50 dark:border-slate-800 mb-6">
-                        <p class="text-[9px] font-bold text-slate-400 uppercase">Bank/Sender Name:</p>
-                        <p class="text-xs font-black text-[#081B4B] dark:text-white uppercase">${d.sender_name}</p>
+                    <h5 class="font-black mb-4 truncate text-sm">${d.user_name}</h5>
+                    <div class="py-3 border-y border-slate-100 mb-5 space-y-1">
+                        <p class="text-[9px] font-bold text-slate-400 uppercase">Sender Name</p>
+                        <p class="text-xs font-black uppercase">${d.sender_name}</p>
                     </div>
-
-                    <div class="flex justify-between items-center mb-6">
-                        <span class="text-xs font-black text-slate-400">AMOUNT:</span>
-                        <span class="text-2xl font-black text-[#0052FF]">₦${parseFloat(d.amount).toLocaleString()}</span>
+                    <div class="flex justify-between items-center mb-5">
+                        <span class="text-xs font-black text-slate-400">AMOUNT</span>
+                        <span class="text-xl font-black text-[#0052FF]">₦${parseFloat(d.amount).toLocaleString()}</span>
                     </div>
-
                     <div class="flex gap-2">
-                        <button onclick="approveDeposit('${d.id}', '${d.user_id}', ${d.amount})" class="flex-1 bg-[#10b981] text-white py-3 rounded-2xl font-black text-[10px] uppercase shadow-lg shadow-green-200 transition-all active:scale-95">Approve ₦</button>
-                        <button onclick="rejectDeposit('${d.id}')" class="w-12 h-12 bg-slate-50 dark:bg-slate-800 text-red-500 rounded-2xl flex items-center justify-center border border-slate-100 dark:border-slate-700"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                        <button onclick="approveDeposit('${d.id}','${d.user_id}',${d.amount})"
+                            class="flex-1 bg-[#10b981] text-white py-3 rounded-2xl font-black text-[10px] uppercase shadow-lg shadow-green-200 active:scale-95 transition-all">
+                            ✓ Approve
+                        </button>
+                        <button onclick="rejectDeposit('${d.id}')"
+                            class="w-12 h-12 bg-slate-50 text-red-500 rounded-2xl flex items-center justify-center border border-slate-100 active:scale-95 transition-all">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        </button>
                     </div>
-                </div>
-            `).join('');
+                </div>`).join('');
             lucide.createIcons();
         }
 
         async function approveDeposit(reqId, uid, amt) {
-            if(!confirm("Elite Admin: Did you receive this money in your bank account?")) return;
+            if (!confirm('Did you receive this money in your bank account?')) return;
             const { error } = await _supabase.rpc('approve_manual_deposit', { request_id: reqId, target_uid: uid, amt: parseFloat(amt) });
-            if (error) showToast(error.message, "error");
-            else { showToast("Wallet Funded Successfully!", "success"); loadAllData(); }
+            error ? showToast(error.message, 'error') : (showToast('Wallet Funded!', 'success'), loadAllData());
+        }
+
+        async function rejectDeposit(id) {
+            if (!confirm('Reject this deposit?')) return;
+            const { error } = await _supabase.from('manual_deposits').update({ status: 'Rejected' }).eq('id', id);
+            error ? showToast(error.message, 'error') : (showToast('Deposit rejected.', 'error'), loadAllData());
         }
 
         function renderUsers(data) {
-            const container = document.getElementById('user-table');
-            container.innerHTML = data.map(u => `
-                <tr class="border-b border-slate-50 dark:border-slate-800 last:border-0 hover:bg-slate-50/50 transition-colors">
-                    <td class="p-5">
-                        <p class="font-black">${u.full_name}</p>
-                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-tighter">${u.phone_number || 'No Phone'}</p>
+            document.getElementById('user-table').innerHTML = data.map(u => `
+                <tr class="hover:bg-slate-50/50 transition-colors">
+                    <td class="p-4 lg:p-5">
+                        <p class="font-black text-sm truncate max-w-[140px]">${u.full_name}</p>
+                        <p class="text-[10px] text-slate-400 font-bold uppercase">${u.phone_number || 'No Phone'}</p>
                     </td>
-                    <td class="p-5 text-center font-black text-blue-600">₦${parseFloat(u.balance).toLocaleString()}</td>
-                    <td class="p-5 text-right">
-                        <button onclick="manualFund('${u.id}', '${u.full_name}')" class="bg-slate-900 text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase active:scale-95 transition-all">Manual Fund</button>
+                    <td class="p-4 lg:p-5 text-center font-black text-blue-600 text-sm whitespace-nowrap">
+                        ₦${parseFloat(u.balance).toLocaleString()}
                     </td>
-                </tr>
-            `).join('');
+                    <td class="p-4 lg:p-5 text-right">
+                        <button onclick="manualFund('${u.id}','${u.full_name}')"
+                            class="bg-slate-900 text-white px-3 py-2 rounded-xl text-[10px] font-black uppercase active:scale-95 transition-all whitespace-nowrap">
+                            Fund
+                        </button>
+                    </td>
+                </tr>`).join('');
         }
 
         async function manualFund(uid, name) {
-            const amt = prompt(`Elite Manual Override: Add funds to ${name}`);
-            if(!amt || isNaN(amt)) return;
+            const amt = prompt(`Add funds to ${name}`);
+            if (!amt || isNaN(amt)) return;
             const { error } = await _supabase.rpc('admin_fund_wallet', { target_uid: uid, amt: parseFloat(amt) });
-            if (error) showToast(error.message, "error");
-            else { showToast("Manual Fund Success!", "success"); loadAllData(); }
+            error ? showToast(error.message, 'error') : (showToast('Manual Fund Success!', 'success'), loadAllData());
         }
 
         function renderLogs(data) {
-            const container = document.getElementById('global-logs');
-            container.innerHTML = data.slice(0, 10).map(t => `
-                <div class="flex items-center justify-between p-4 bg-white dark:bg-[#111827] rounded-2xl border border-slate-50 dark:border-slate-800">
-                    <div class="flex items-center gap-4">
-                        <div class="w-10 h-10 bg-slate-50 dark:bg-slate-800 rounded-xl flex items-center justify-center"><i data-lucide="activity" class="w-4 h-4 text-slate-400"></i></div>
-                        <div>
-                            <p class="font-black text-xs uppercase">${t.type}</p>
-                            <p class="text-[9px] text-slate-400 font-bold uppercase">${new Date(t.created_at).toLocaleString()}</p>
+            document.getElementById('global-logs').innerHTML = data.slice(0, 10).map(t => `
+                <div class="log-row flex items-center justify-between p-4 bg-white rounded-2xl border border-slate-50">
+                    <div class="flex items-center gap-3 min-w-0">
+                        <div class="w-10 h-10 shrink-0 bg-slate-50 rounded-xl flex items-center justify-center">
+                            <i data-lucide="activity" class="w-4 h-4 text-slate-400"></i>
+                        </div>
+                        <div class="min-w-0">
+                            <p class="font-black text-xs uppercase truncate">${t.type}</p>
+                            <p class="text-[9px] text-slate-400 font-bold">${new Date(t.created_at).toLocaleString()}</p>
                         </div>
                     </div>
-                    <div class="text-right font-black text-sm">₦${parseFloat(t.amount).toLocaleString()}</div>
-                </div>
-            `).join('');
+                    <div class="font-black text-sm shrink-0 ml-4 whitespace-nowrap">₦${parseFloat(t.amount).toLocaleString()}</div>
+                </div>`).join('');
             lucide.createIcons();
         }
 
-        function switchTab(tab) {
+        function switchTab(tab, e) {
+            const ev = e || event;
             document.querySelectorAll('.tab-btn').forEach(b => {
                 b.classList.remove('active');
                 b.classList.add('text-slate-400');
             });
-            event.currentTarget.classList.add('active');
-            event.currentTarget.classList.remove('text-slate-400');
-            
-            document.getElementById('section-overview').classList.toggle('hidden', tab !== 'overview');
-            document.getElementById('section-users').classList.toggle('hidden', tab !== 'users');
-            document.getElementById('section-transactions').classList.toggle('hidden', tab !== 'transactions');
+            ev.currentTarget.classList.add('active');
+            ev.currentTarget.classList.remove('text-slate-400');
+            ['overview','users','transactions'].forEach(s =>
+                document.getElementById('section-' + s).classList.toggle('hidden', s !== tab));
+            // close sidebar on mobile after navigation
+            if (window.innerWidth < 1024) toggleMenu();
         }
 
         function searchUsers(val) {
-            const filtered = cache.users.filter(u => u.full_name.toLowerCase().includes(val.toLowerCase()) || (u.phone_number && u.phone_number.includes(val)));
-            renderUsers(filtered);
+            renderUsers(cache.users.filter(u =>
+                u.full_name.toLowerCase().includes(val.toLowerCase()) ||
+                (u.phone_number && u.phone_number.includes(val))));
         }
 
         window.onload = initAdmin;
