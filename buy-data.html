@@ -337,34 +337,106 @@
         lucide.createIcons();
 
         const allNetworkPlans = {
-            1: [
-                { id:233, size:"1GB",    valid:"7 Days",   price:772 },
-                { id:355, size:"3GB",    valid:"30 Days",  price:1740 },
-                { id:356, size:"5GB",    valid:"30 Days",  price:1790 },
-                { id:357, size:"10GB",   valid:"30 Days",  price:8050 },
-                { id:513, size:"12.5GB", valid:"30 Days",  price:5307.50 }
-            ],
-            3: [
-                { id:426, size:"1.5GB",  valid:"1 Day",    price:485 },
-                { id:564, size:"2GB",    valid:"30 Days",  price:1450 },
-                { id:527, size:"3GB",    valid:"30 Days",  price:1920 },
-                { id:483, size:"10GB",   valid:"30 Days",  price:3007 }
-            ],
-            2: [
-                { id:632, size:"1GB",    valid:"3 Days",   price:250 },
-                { id:633, size:"3GB",    valid:"3 Days",   price:750 },
-                { id:634, size:"5GB",    valid:"3 Days",   price:1250 },
-                { id:335, size:"10GB",   valid:"30 Days",  price:4000 }
-            ],
-            4: [
-                { id:298, size:"1GB",    valid:"30 Days",  price:475 },
-                { id:299, size:"2GB",    valid:"30 Days",  price:950 },
-                { id:303, size:"3GB",    valid:"30 Days",  price:1425 },
-                { id:304, size:"5GB",    valid:"30 Days",  price:2375 },
-                { id:305, size:"10GB",   valid:"30 Days",  price:4750 }
-            ]
-        };
+    // ── MTN ──────────────────────────────────────────────
+    1: [
+        { id:579,  size:"40MB",    valid:"1 Day",    price:48.95 },
+        { id:581,  size:"110MB",   valid:"1 Day",    price:97 },
+        { id:291,  size:"1GB",     valid:"1 Day",    price:482.50 },
+        { id:294,  size:"2.5GB",   valid:"1 Day",    price:734 },
+        { id:809,  size:"500MB",   valid:"2 Days",   price:200 },
+        { id:808,  size:"1GB",     valid:"2 Days",   price:370 },
+        { id:516,  size:"3.2GB",   valid:"2 Days",   price:970 },
+        { id:233,  size:"1GB",     valid:"7 Days",   price:772 },
+        { id:228,  size:"1.5GB",   valid:"7 Days",   price:965 },
+        { id:619,  size:"3.5GB",   valid:"7 Days",   price:1449 },
+        { id:397,  size:"11GB",    valid:"7 Days",   price:3377 },
+        { id:259,  size:"15GB",    valid:"7 Days",   price:3848 },
+        { id:591,  size:"20GB",    valid:"7 Days",   price:4880 },
+        { id:221,  size:"2GB",     valid:"30 Days",  price:1455 },
+        { id:355,  size:"3GB",     valid:"30 Days",  price:1740 },
+        { id:356,  size:"5GB",     valid:"30 Days",  price:1790 },
+        { id:401,  size:"10GB",    valid:"30 Days",  price:4345.50 },
+        { id:513,  size:"12.5GB",  valid:"30 Days",  price:5307.50 },
+        { id:279,  size:"20GB",    valid:"30 Days",  price:7275 },
+        { id:586,  size:"25GB",    valid:"30 Days",  price:8685 },
+        { id:797,  size:"34GB",    valid:"30 Days",  price:9900 },
+        { id:606,  size:"65GB",    valid:"30 Days",  price:15440 }
+    ],
 
+    // ── Airtel ───────────────────────────────────────────
+    3: [
+        { id:526,  size:"75MB",    valid:"1 Day",    price:72 },
+        { id:552,  size:"110MB",   valid:"1 Day",    price:95 },
+        { id:611,  size:"1.5GB",   valid:"1 Day",    price:485 },
+        { id:553,  size:"200MB",   valid:"2 Days",   price:97 },
+        { id:554,  size:"230MB",   valid:"2 Days",   price:194 },
+        { id:617,  size:"2GB",     valid:"2 Days",   price:580 },
+        { id:556,  size:"4GB",     valid:"2 Days",   price:965 },
+        { id:557,  size:"5GB",     valid:"2 Days",   price:1455 },
+        { id:558,  size:"500MB",   valid:"7 Days",   price:480 },
+        { id:560,  size:"1GB",     valid:"7 Days",   price:776 },
+        { id:429,  size:"1.5GB",   valid:"7 Days",   price:970 },
+        { id:562,  size:"10GB",    valid:"7 Days",   price:2910 },
+        { id:563,  size:"18GB",    valid:"7 Days",   price:4800 },
+        { id:564,  size:"2GB",     valid:"30 Days",  price:1450 },
+        { id:565,  size:"3GB",     valid:"30 Days",  price:1920 },
+        { id:483,  size:"10GB",    valid:"30 Days",  price:3007 },
+        { id:430,  size:"13GB",    valid:"30 Days",  price:4850 },
+        { id:431,  size:"25GB",    valid:"30 Days",  price:7600 },
+        { id:434,  size:"35GB",    valid:"30 Days",  price:9600 },
+        { id:209,  size:"60GB",    valid:"30 Days",  price:14300 },
+        { id:568,  size:"100GB",   valid:"30 Days",  price:19400 }
+    ],
+
+    // ── Glo ──────────────────────────────────────────────
+    2: [
+        { id:731,  size:"40MB",    valid:"1 Day",    price:48.50 },
+        { id:680,  size:"125MB",   valid:"1 Day",    price:93 },
+        { id:811,  size:"1GB",     valid:"1 Day",    price:195 },
+        { id:681,  size:"235MB",   valid:"2 Days",   price:186 },
+        { id:632,  size:"1GB",     valid:"3 Days",   price:250 },
+        { id:633,  size:"3GB",     valid:"3 Days",   price:750 },
+        { id:634,  size:"5GB",     valid:"3 Days",   price:1250 },
+        { id:635,  size:"1GB",     valid:"7 Days",   price:295 },
+        { id:636,  size:"3GB",     valid:"7 Days",   price:855 },
+        { id:637,  size:"5GB",     valid:"7 Days",   price:1425 },
+        { id:629,  size:"3.5GB",   valid:"7 Days",   price:1020 },
+        { id:735,  size:"2.6GB",   valid:"30 Days",  price:970 },
+        { id:736,  size:"5GB",     valid:"30 Days",  price:1455 },
+        { id:737,  size:"6.25GB",  valid:"30 Days",  price:1940 },
+        { id:738,  size:"7.5GB",   valid:"30 Days",  price:2425 },
+        { id:739,  size:"11GB",    valid:"30 Days",  price:2910 },
+        { id:740,  size:"14GB",    valid:"30 Days",  price:3880 },
+        { id:741,  size:"18GB",    valid:"30 Days",  price:4850 },
+        { id:742,  size:"29GB",    valid:"30 Days",  price:7760 },
+        { id:743,  size:"40GB",    valid:"30 Days",  price:9650 },
+        { id:220,  size:"64GB",    valid:"30 Days",  price:13950 }
+    ],
+
+    // ── 9mobile ──────────────────────────────────────────
+    4: [
+        { id:761,  size:"40MB",    valid:"1 Day",    price:48.50 },
+        { id:752,  size:"83MB",    valid:"1 Day",    price:97 },
+        { id:753,  size:"150MB",   valid:"1 Day",    price:145.50 },
+        { id:754,  size:"650MB",   valid:"3 Days",   price:485 },
+        { id:763,  size:"250MB",   valid:"7 Days",   price:194 },
+        { id:182,  size:"500MB",   valid:"30 Days",  price:237.50 },
+        { id:298,  size:"1GB",     valid:"30 Days",  price:475 },
+        { id:299,  size:"2GB",     valid:"30 Days",  price:950 },
+        { id:755,  size:"2GB",     valid:"30 Days",  price:970 },
+        { id:760,  size:"2.3GB",   valid:"30 Days",  price:1164 },
+        { id:303,  size:"3GB",     valid:"30 Days",  price:1425 },
+        { id:347,  size:"4GB",     valid:"30 Days",  price:1900 },
+        { id:757,  size:"4.5GB",   valid:"30 Days",  price:1940 },
+        { id:304,  size:"5GB",     valid:"30 Days",  price:2375 },
+        { id:762,  size:"5.2GB",   valid:"30 Days",  price:2425 },
+        { id:759,  size:"6.2GB",   valid:"30 Days",  price:2910 },
+        { id:756,  size:"8.4GB",   valid:"30 Days",  price:3880 },
+        { id:305,  size:"10GB",    valid:"30 Days",  price:4750 },
+        { id:758,  size:"11.4GB",  valid:"30 Days",  price:4850 },
+        { id:362,  size:"11GB",    valid:"30 Days",  price:5225 }
+    ]
+};
         let networkName = 'MTN', selectedNetworkId = 1, planName = '', selectedPlanId = 0, amount = 0;
         let userId = '', actualBalance = 0, isHidden = false;
 
